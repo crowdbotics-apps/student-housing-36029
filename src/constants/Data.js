@@ -1,3 +1,5 @@
+import images from "../assets/images";
+
 export const COUNTRIES = [
   { id: 7, name: "Afghanistan" },
   { id: 8, name: "Albania" },
@@ -267,3 +269,10 @@ export const EXPERIENCE = [
   { id: 11, name: "10 years" },
   { id: 11, name: "10+ years" },
 ];
+
+
+export const PROPERTIES = [
+  { id: 1, image: images.dummy1, name: 'Property name', description: 'Some short descriptive text about the property.',  rating: 5},
+  { id: 2, image: images.dummy1, name: 'Property name', description: 'Some short descriptive text about the property.',  rating: 5},
+  { id: 3, image: images.dummy1, name: 'Property name', description: 'Some short descriptive text about the property.',  rating: 5},
+]; 

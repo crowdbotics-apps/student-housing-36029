@@ -1,86 +1,67 @@
-import React, { useContext } from "react"
-import { Provider } from "react-redux"
-import "react-native-gesture-handler"
-import { NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
+import 'react-native-gesture-handler';
+import React from 'react';
 import {
-  configureStore,
-  createReducer,
-  combineReducers
-} from "@reduxjs/toolkit"
+  StatusBar,
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  BackHandler,
+} from 'react-native';
+import {ThemeProvider} from 'react-native-elements';
+import {ErrorBoundary} from 'react-error-boundary';
+import {enableScreens} from 'react-native-screens';
+import Navigation from './src/navigations';
+import { Provider } from 'react-redux';
+import store from "./src/redux/store";
+import AppTheme from './src/constants/AppTheme';
 
-import { screens } from "@screens"
-import { modules, reducers, hooks, initialRoute } from "@modules"
-import { connectors } from "@store"
+enableScreens();
 
-const Stack = createStackNavigator()
-
-import { GlobalOptionsContext, OptionsContext, getOptions } from "@options"
-
-const getNavigation = (modules, screens, initialRoute) => {
-  const Navigation = () => {
-    const routes = modules.concat(screens).map(mod => {
-      const pakage = mod.package;
-      const name = mod.value.title;
-      const Navigator = mod.value.navigator;
-      const Component = () => {
-        return (
-          <OptionsContext.Provider value={getOptions(pakage)}>
-            <Navigator />
-          </OptionsContext.Provider>
-        )
-      }
-      return <Stack.Screen key={name} name={name} component={Component} />
-    })
-
-    const screenOptions = { headerShown: true };
-
-    return (
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={initialRoute}
-          screenOptions={screenOptions}
-        >
-          {routes}
-        </Stack.Navigator>
-      </NavigationContainer>
-    )
-  }
-  return Navigation
-}
-
-const getStore = (globalState) => {
-  const appReducer = createReducer(globalState, _ => {
-    return globalState
-  })
-
-  const reducer = combineReducers({
-    app: appReducer,
-    ...reducers,
-    ...connectors
-  })
-
-  return configureStore({
-    reducer: reducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware()
-  })
-}
-
-const App = () => {
-  const global = useContext(GlobalOptionsContext)
-  const Navigation = getNavigation(modules, screens, initialRoute)
-  const store = getStore(global)
-
-  let effects = {}
-  hooks.map(hook => {
-    effects[hook.name] = hook.value()
-  })
+export default function App() {
 
   return (
-    <Provider store={store}>
-      <Navigation />
-    </Provider>
-  )
+    <ThemeProvider theme={AppTheme}>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar barStyle="default" translucent backgroundColor={'transparent'} />
+          <ErrorBoundary
+            FallbackComponent={ErrorFallbackScreen}
+            onReset={() => {
+              BackHandler.exitApp();
+            }}>
+            <Navigation />
+          </ErrorBoundary>
+        </View>
+      </Provider>
+    </ThemeProvider>
+  );
 }
 
-export default App
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+
+});
+
+function ErrorFallbackScreen({error, resetErrorBoundary}) {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text
+        style={{color: 'red', fontSize: 20, fontWeight: 'bold', margin: 20}}>
+        Oops! Something went wrong ...!!
+      </Text>
+      <Button
+        onClick={resetErrorBoundary}
+        title="Reload"
+        style={{width: 150, height: 40, marginVertical: 30}}
+      />
+      <Text style={{color: '#666', fontWeight: 'bold', margin: 20}}>
+        Error details:{' '}
+      </Text>
+      <Text style={{color: '#666', margin: 20}}>{error.message}</Text>
+    </View>
+  );
+}

@@ -10,7 +10,8 @@ export const authSlice = createSlice({
     authToken: null,
     user: null,
     error: null,
-    success: false
+    success: false,
+    counter: 60
   },
   reducers: {
     startLogin: (state, action) => {
@@ -39,6 +40,12 @@ export const authSlice = createSlice({
       state.error = null;
       state.isLoading = false;
     },
+    setCounter: (state, action) => {
+      state.counter = action.payload;
+      state.success = true;
+      state.error = null;
+      state.isLoading = false;
+    },
     logoutUser: (state, action) => {
       state.isLoading = false;
       state.user = null;
@@ -55,13 +62,13 @@ export const {
   setError,
   setAuthToken,
   setUser,
-  setUserIsSupervisor,
+  setCounter,
   logoutUser
 } = authSlice.actions;
 
 export const useAuhToken = () => useSelector((state) => state.Auth.authToken);
 export const useUser = () => useSelector((state) => state.Auth.user);
-export const useIsSupervisor = () => useSelector((state) => state.Auth.isSupervisor);
+export const useCounter = () => useSelector((state) => state.Auth.counter);
 export const useIsLoading = () => useSelector((state) => state.Auth.isLoading);
 export const useSuccess = () => useSelector((state) => state.Auth.success);
 export const useError = () => useSelector((state) => state.Auth.error);

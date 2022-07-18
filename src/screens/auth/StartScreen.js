@@ -11,7 +11,9 @@ export default function StartScreen() {
   
     return (
           <View style={styles.container}>
+            
             <NavigationHeader />
+            
             <ImageBackground
               source={images.background}
               style={styles.container}
@@ -27,7 +29,7 @@ export default function StartScreen() {
                   type='solid'
                   onPress={() => navigate('Signin', { tab: 0 })}
                   titleStyle={{ color: Colors.white, fontSize: rf(1.8), fontFamily: 'Lato-Bold', }}
-                  buttonStyle={{ backgroundColor: Colors.primaryColor, width: wp('80%'),height: 50, borderRadius: 25,borderWidth: 2  }}
+                  buttonStyle={{ backgroundColor: Colors.primaryColor, width: wp('80%'),height: 50, borderRadius: 25, borderWidth: 2  }}
                   containerStyle={{ width: wp('80%'), height: 50,borderRadius: 25, marginBottom: 20 }}
                   />  
                 <Button
@@ -38,7 +40,6 @@ export default function StartScreen() {
                   buttonStyle={{ borderColor: Colors.primaryColor, backgroundColor: "transparent", width: wp('80%'), height: 50,borderRadius: 25,borderWidth: 2 }}
                   containerStyle={{ width: wp('80%'), height: 50,borderRadius: 25 }}
                   />  
-
               </View>
 
             </ImageBackground>

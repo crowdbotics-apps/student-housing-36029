@@ -13,7 +13,7 @@ export default function Footer() {
         <View style={styles.container}>
           
           <Row style={{ width: wp('90%'), height: 28, }}>
-            <Row style={{ width: wp('50%'),   justifyContent: 'flex-start' }}>
+            <Row style={{ width: wp('50%'), justifyContent: 'flex-start' }}>
               <Button
                 title={'About Us'}
                 type='clear'
@@ -29,7 +29,7 @@ export default function Footer() {
                 titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold' }}
                 buttonStyle={{ padding: 0, marginLeft: 20 }}
                 TouchableComponent={TouchableOpacity}
-                />  
+                />
             </Row>
             <Button
               title={'Help'}
@@ -38,14 +38,13 @@ export default function Footer() {
               icon={<Icon.Material name='help-outline' size={14} color='white' />}
               titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', marginLeft: 5 }}
               buttonStyle={{ padding: 0 }}
-
               TouchableComponent={TouchableOpacity}
-              />   
+              />
           </Row>
 
           <View style={styles.separator}  />
 
-          <LatoText fontSize={rf(1.0)} color='#FFF'>{`Student Housing app. 2021`}</LatoText>
+          <LatoText fontSize={rf(1.0)} color='#FFF'>{`Student Housing app, 2021`}</LatoText>
 
         </View>
     )

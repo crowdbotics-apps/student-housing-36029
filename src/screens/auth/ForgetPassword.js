@@ -35,7 +35,7 @@ function ForgetPassword() {
   }
   
     const submitForm = () => {
-      // dispatch(forgetPassAction(formValues));
+      dispatch(forgetPassAction(formValues));
     }   
 
     return (
@@ -68,14 +68,14 @@ function ForgetPassword() {
             placeholder={"Your Email"}
             keyboardType="default"
             returnKeyType="done"
-            onEndEditing={(text) => onSubmitValue("email", text)}
+            onChangeText={(text) => onSubmitValue("email", text)}
           />
         </View>
 
         <PrimaryButton
           title={'Recover'}
           buttonStyle={{ width: '100%', height: hp('5%'),  }}
-          // onPress={submitForm}
+          onPress={submitForm}
           loading={isLoading}
           />
 

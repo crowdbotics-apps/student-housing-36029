@@ -13,10 +13,16 @@ const CommonStyles =  StyleSheet.create({
         height: 45,
         marginTop: 10,
         backgroundColor: 'transparent',
-        elevation: 4,
+        elevation: 6,
+        shadowColor: "rgba(0, 0, 0, 0.5)",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,        
         paddingHorizontal:0,
         borderRadius: 6
-
     },
     input2: {
         width: '95%',

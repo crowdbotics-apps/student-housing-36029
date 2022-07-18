@@ -20,14 +20,16 @@ import {
   useIsLoading,
   useUser,
 } from "../../redux/reducers/AuthReducer";
-import { signInAction } from "../../redux/sagas/auth/AuthSagas";
-import { validateLoginForm } from '../../services/AuthValidation';
+import { signInAction, signUpAction } from "../../redux/sagas/auth/AuthSagas";
+import { validateLoginForm, validateSignup1 } from '../../services/AuthValidation';
 import NavigationHeader from '../../components/NavigationHeader';
 import images from '../../assets/images';
 import { Button, Image } from 'react-native-elements';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Animated from 'react-native-reanimated';
 import RadioButtons from '../../components/RadioButtons';
+import PhoneInput from '../../components/PhoneInput';
+import { useKeyboard } from '../../utilities/hooks';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -38,10 +40,6 @@ const inputRef = {
 };  
 
 function SigninScreen() {
-  const dispatch = useDispatch();
-  const authUser = useUser();
-  const isLoading = useIsLoading();
-  const authToken = useAuhToken();
   const { params } = useRoute();
   const tab = params?.tab; 
 
@@ -51,21 +49,6 @@ function SigninScreen() {
   // });
 
     
-  const submitForm = () => {
-    if(label==='Sign Up') {
-      navigate('VerifyPhone')
-    } else if(label==='Sign In'){
-      dispatch(setAuthToken('oifgoifdgoidug'))
-    }
-    // if(validateLoginForm(formValues)){
-    //   console.log({ formValues });
-    //   const payload = {
-    //     email: formValues.email.trim(),
-    //     password: formValues.password.trim(),
-    //   };
-    //   dispatch(signInAction(payload));
-    // }
-  }   
 
   // // useEffect(() => {
   // //   if (authToken) 
@@ -114,19 +97,17 @@ function SigninScreen() {
               <Tab.Screen name="SigninForm" component={SigninForm} options={{ tabBarLabel: 'Sign In' }}/>
             </Tab.Navigator>
 
-            <PrimaryButton
-              title={label}
-              buttonStyle={{ width: '100%', height: hp('5%'),  }}
-              onPress={submitForm}
-              loading={isLoading}
-              />
-
           </View>
         </View>
     )
 }
 
 const SignupForm = () => { 
+  const dispatch = useDispatch();
+  const authUser = useUser();
+  const isLoading = useIsLoading();
+  const isKeyboardVisible = useKeyboard();
+
   const inputRef = {
     name: React.createRef(),
     email: React.createRef(),
@@ -138,6 +119,7 @@ const SignupForm = () => {
     email: "",
     phone: '',
     password: "",
+    userType: 'Student'
   });
 
   const onSubmitValue = (key, value) => {
@@ -147,9 +129,28 @@ const SignupForm = () => {
     })
   }
 
+  console.log('formValues: ', formValues);
+  
+  const submitForm = (formValues) => {
+    if(validateSignup1(formValues))
+      dispatch(
+        signUpAction({
+          full_name: formValues.name,
+          phone_number: formValues.phone,
+          email: formValues.email,
+          is_property_owner: formValues.userType !== 'Student',
+          password: formValues.password,
+          is_student: formValues.userType === 'Student',
+      }));
+  }   
+
+  useEffect(() => {
+    if(authUser) 
+      navigate('VerifyPhone');
+  }, [authUser]);
+  
   return (
     <KeyboardAvoidingView
-      //keyboardVerticalOffset={keyboardVerticalOffset}
       behavior={Platform.OS == "ios" ? "padding" : null}
       style={styles.container}
     >
@@ -158,67 +159,86 @@ const SignupForm = () => {
           width: wp("100%"),
           alignItems: "center",
           justifyContent: "center",
-          paddingBottom: hp("4%"),
+          paddingBottom: 0,
         }}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.formContainer2} >
           <StyledInput
+            required
             ref={inputRef["name"]}
             containerStyle={CommonStyles.input}
             label='Enter full name'
             placeholder={"Full Name"}
             keyboardType="default"
             returnKeyType="next"
-            onEndEditing={(text) => onSubmitValue("name", text)}
+            onChangeText={(text) => onSubmitValue("name", text)}
             onSubmitEditing={() => inputRef.email.current.focus()}
           />
           <StyledInput
+            required
             ref={inputRef["email"]}
             containerStyle={CommonStyles.input}
             label='Enter your email'
             placeholder={"Your email"}
             keyboardType="email-address"
             returnKeyType="next"
-            onEndEditing={(text) => onSubmitValue("email", text)}
+            onChangeText={(text) => onSubmitValue("email", text)}
             onSubmitEditing={() => inputRef.phone.current.focus()}
           />
-          <StyledInput
+          <PhoneInput
+            required
             ref={inputRef["phone"]}
-            containerStyle={CommonStyles.input}
+            defaultCountry='PK'
             label='Enter your phone number'
-            placeholder={"Phone number"}
-            keyboardType="phone-pad"
-            returnKeyType="next"
-            maxLength={11}
-            onEndEditing={(text) => onSubmitValue("phone", text)}
+            onChangeText={({ dialCode, unmaskedPhoneNumber, phoneNumber, isVerified }) => {
+              isVerified && onSubmitValue("phone", dialCode+unmaskedPhoneNumber);
+            }}
+            containerStyle={CommonStyles.input}
             onSubmitEditing={() => inputRef.password.current.focus()}
-          />
+            />
           <StyledInput
+            required
             ref={inputRef["password"]}
             containerStyle={CommonStyles.input}
             label='Enter your password'
             placeholder={"Your password"}
             keyboardType="default"
             returnKeyType="done"
-            onEndEditing={(text) => onSubmitValue("password", text)}
+            onChangeText={(text) => onSubmitValue("password", text)}
           />
           <View style={{ width: '100%'}}>
-          <LatoText fontSize={rf(1.6)} >I’m signing up as:</LatoText>
-          <RadioButtons 
-            data={[
-              { label: 'Student' , value: 'Student', selected: true },
-              { label: 'Property Owner' , value: 'Owner' },
-            ]}
-            onSelect={(item) => onSubmitValue("userType", item.value)}
-          />
+            <LatoText fontSize={rf(1.6)} >I'm signing up as:</LatoText>
+            <RadioButtons 
+              data={[
+                { label: 'Student' , value: 'Student', selected: true },
+                { label: 'Property Owner' , value: 'Owner' },
+              ]}
+              onSelect={(item) => onSubmitValue("userType", item.value)}
+            />
           </View>
         </View>
+
       </ScrollView>
+        { !isKeyboardVisible &&
+        <PrimaryButton
+          title={'Sign Up'}
+          onPress={() => submitForm(formValues)}
+          loading={isLoading}
+          buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
+          containerStyle={{ position: "absolute" , bottom: 0, marginTop: hp('4%') }}
+          />
+        }
     </KeyboardAvoidingView>
   )
  }
 const SigninForm = () => { 
+  const dispatch = useDispatch();
+  const authUser = useUser();
+  const isLoading = useIsLoading();
+  const authToken = useAuhToken();
+  const isKeyboardVisible = useKeyboard();
+
   const inputRef = {
     password: React.createRef(),
   };  
@@ -233,12 +253,23 @@ const SigninForm = () => {
       [key]: value
     })
   }
+  const submitForm = (formValues) => {
+    if(validateLoginForm(formValues)){
+      console.log({ formValues });
+      const payload = {
+        email: formValues.email.trim(),
+        password: formValues.password.trim(),
+      };
+      dispatch(signInAction(payload));
+    }
+  }   
 
   return (
     <KeyboardAvoidingView
       //keyboardVerticalOffset={keyboardVerticalOffset}
       behavior={Platform.OS == "ios" ? "padding" : null}
       style={styles.container}
+      
     >
       <ScrollView
         contentContainerStyle={{
@@ -249,8 +280,9 @@ const SigninForm = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.formContainer2, { height: 300 }]} >
+        <View style={[styles.formContainer2, { height: 220 }]} >
           <StyledInput
+            required
             containerStyle={CommonStyles.input}
             label='Enter your email'
             placeholder={"Your email"}
@@ -260,6 +292,7 @@ const SigninForm = () => {
             onSubmitEditing={() => inputRef.password.current.focus()}
           />
           <PasswordInput
+            required
             ref={inputRef['password']}
             label={'Enter your password'}
             placeholder={'Your password'}
@@ -274,9 +307,18 @@ const SigninForm = () => {
             containerStyle={{  alignSelf: 'flex-start' }}
             TouchableComponent={TouchableOpacity}
             />  
-
         </View>
       </ScrollView>
+      { !isKeyboardVisible &&
+        <PrimaryButton
+          title={'Sign In'}
+          onPress={() => submitForm(formValues)}
+          loading={isLoading}
+          buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
+          containerStyle={{ position: "absolute" , bottom: 0, marginTop: hp('4%') }}
+          />
+      }
+
     </KeyboardAvoidingView>
   )
 
@@ -346,7 +388,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: wp('100%'),
-    backgroundColor: '#FFF',
+    backgroundColor: 'transparent',
     paddingVertical: hp('4%'),
     paddingHorizontal: wp('5%')
 
@@ -355,10 +397,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: wp('100%'),
-    height: 500,
+    height: 420,
     backgroundColor: '#FFF',
-    paddingVertical: hp('4%'),
-    paddingHorizontal: wp('5%')
+    marginTop: hp('4%'),
+    paddingHorizontal: wp('5%'),
+    marginBottom: hp('10%')
 
   },
   heading:{

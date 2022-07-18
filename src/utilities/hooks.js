@@ -173,7 +173,7 @@ export function useBackHandler(handler) {
     useEffect(() => {
       AppState.addEventListener('change', onChange)
       return () => {
-        AppState.removeEventListener('change', onChange)
+        removeEventListener('change', onChange)
       }
     }, [])
     return appState

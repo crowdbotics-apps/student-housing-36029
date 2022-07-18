@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'https://short-game-guru-28855.herokuapp.com';
+axios.defaults.baseURL = 'https://student-housing-app-23717.botics.co';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers['Accept'] = 'application/json';
 axios.defaults.timeout = 10000;
@@ -21,14 +21,13 @@ const ApiService = {
     delete axios.defaults.headers.common["Authorization"];
   },
 
-  login: (params) => post(`/rest-auth/login/`, params),  
-  signup: (params) => post(`/rest-auth/registration/`, params),
-  verifyEmail: (params) => post(`/rest-auth/registration/verify-email/`, params),
+  login: (params) => post(`/api/v1/login/`, params),  
+  signup: (params) => post(`/api/v1/signup/`, params),
+  verifyOtp: (params) => post(`/api/v1/verify-user/`, params),
+  resendOtp: (params) => post(`/api/v1/resend-otp/`, params),
   forgetPassSend: (params) => post(`/rest-auth/password/reset/`, params),
-  forgetPassResend: (params) => post(`/users/reset-password/resend/`, params),
-  forgetPassVerify: (params) => post(`/rest-auth/password/reset/confirm/`, params),
   changePassword: (params) => post(`/rest-auth/password/change/`, params),
-  getUser: () => get(`/rest-auth/user/`),
+  getUser: () => get(`/me/`),
   
   getProfile: () => get(`/users/profile/`),
   updateProfile: (id, params) => patch(`/api/v1/profile/${id}/`, params),

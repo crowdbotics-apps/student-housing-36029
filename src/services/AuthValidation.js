@@ -10,8 +10,8 @@ export const isMinLength = (param="",minLength) => (param.trim().length >= minLe
 
 export const validateSignup1 = (formValues) => {
     for (const key in formValues) {
-        if(key === 'firstName') {
-            if(isEmpty(formValues[key])) { alert('First Name field is required'); return false; }
+        if(key === 'name') {
+            if(isEmpty(formValues[key])) { alert('Full Name field is required'); return false; }
             if(!isNameValid(formValues[key])){ alert('Please enter a valid name (alphabets only)'); return false; }
         }
         if((key === 'phone') && isEmpty(formValues[key])){

@@ -6,7 +6,6 @@ import CommonStyles from '../constants/CommonStyles';
 import { rf } from '../constants/Constants';
 import Icon from '../constants/Icon';
 import LatoText from './LatoText';
-import StyledInput from './StyledInput';
 
 const  PasswordInput = React.forwardRef((props, ref) => {
     const [showPassowrd, setShowPassowrd] = useState(true);
@@ -15,6 +14,7 @@ const  PasswordInput = React.forwardRef((props, ref) => {
     const [text, setText] = useState(props.value);
     // console.log('MyInput ',props.placeholder, ' re-rendered');
     const [touched, setTouched] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if(props.reset) setText('')
@@ -25,9 +25,6 @@ const  PasswordInput = React.forwardRef((props, ref) => {
     }
     if(props.clearTextOnFocus && Focused && text.length)
         setText('')
-        // const handleInput = (e) => { 
-    //    console.log(e.nativeEvent.key);
-    // }
 
     const updateText = (text) => {
             setText(text); 
@@ -36,7 +33,9 @@ const  PasswordInput = React.forwardRef((props, ref) => {
         }
         
     const _onEndEditting = (event) => {
-        props.onEndEditing && props.onEndEditing(event.nativeEvent.text);
+        const text = event.nativeEvent.text || '';
+        text.length===0 && props.required && setError('This field is required')
+        props.onEndEditing && props.onEndEditing(text);
     }
 
     return (
@@ -62,6 +61,8 @@ const  PasswordInput = React.forwardRef((props, ref) => {
             rightIcon={<ToggleEye onToggle={() => {setShowPassowrd(!showPassowrd)}} />}
             onEndEditing={_onEndEditting}
             />
+        <Error error={error} />
+
     </View>
 )
 });
@@ -71,7 +72,15 @@ const ToggleEye = ({ onToggle }) => {
     if(!open) return <Icon.Ionicon name='eye-outline' onPress={() => { setOpen(false); onToggle() }} size={20} style={{ marginRight: 18}} color={Colors.primaryColor} />
     else return <Icon.Ionicon name='eye-off-outline' onPress={() => { setOpen(true);  onToggle() }} size={20} style={{ marginRight: 18}} color={Colors.primaryColor} />
   }
+  const Error = ({ error='' }) => { 
+    if(error.length===0) return null;
+    else 
+      return <LatoText color={'#FF3B30'} fontSize={rf(1.4)} style={{ marginTop: 5, marginBottom: 10}}>
+        {error}
+      </LatoText>
+   }
   
+
 const styles = StyleSheet.create({
     inputContainer: {
         backgroundColor: Colors.white,

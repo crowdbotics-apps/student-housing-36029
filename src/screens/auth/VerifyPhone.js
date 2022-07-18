@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button, CheckBox, Image } from 'react-native-elements';
 import { withSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,8 +14,10 @@ import { hp, rf, wp } from '../../constants/Constants';
 import { goBack, navigate } from '../../navigations/NavigationService';
 import Icon from '../../constants/Icon';
 import { forgetPassAction } from '../../redux/sagas/auth/forgetPassSaga';
-import { setAuthToken, useIsLoading } from '../../redux/reducers/AuthReducer';
+import { setAuthToken, setCounter, useCounter, useError, useIsLoading, useSuccess, useUser } from '../../redux/reducers/AuthReducer';
 import NavigationHeader from '../../components/NavigationHeader';
+import { resendOtpAction, verifyOtpAction } from '../../redux/sagas/auth/AuthSagas';
+import Row from '../../components/Row';
 
 
 
@@ -23,8 +25,12 @@ import NavigationHeader from '../../components/NavigationHeader';
 function VerifyPhone() {
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
+  const verifySuccess = useSuccess();
+  const user = useUser();
+  const counter = useCounter();
+  const apiError = useError();
   const [formValues, setFormValues] = useState({
-    phone: "", 
+    otp: "", 
   });
 
   const onSubmitValue = (key, value) => {
@@ -34,10 +40,33 @@ function VerifyPhone() {
     })
   }
   
-    const submitForm = () => {
-      // dispatch(forgetPassAction(formValues));
-      dispatch(setAuthToken('87987987987987'))
+    const submitForm = (formValues) => {
+      const payload = {
+        email: user?.email || 'e3saim@gmail.com',
+        otp: formValues.otp,
+      };
+      dispatch(verifyOtpAction(payload));
     }   
+
+    useEffect(() => {
+      if(verifySuccess) 
+        navigate('Signin', { tab: 1 });
+    }, [verifySuccess]);
+
+    const resendOtp = (counter, isLoading) => { 
+      if(counter || isLoading) 
+        return;
+      const payload = {
+        email: user?.email,
+      };
+      dispatch(resendOtpAction(payload));
+     }
+
+     useEffect(() => {
+      counter > 0 &&
+        setTimeout(() => dispatch(setCounter(counter - 1)), 1000);
+    }, [counter]);
+
 
     return (
       <View style={styles.container} >
@@ -53,9 +82,9 @@ function VerifyPhone() {
         <View style={styles.formContainer2}>
 
           <Button
-            title={'Phone Verification'}
+            title={'Confirm OTP'}
             type='clear'
-            onPress={() => goBack()}
+            onPress={() => { goBack() }}
             icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
             titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
             buttonStyle={{ backgroundColor: "transparent", }}
@@ -65,18 +94,33 @@ function VerifyPhone() {
 
           <StyledInput
             containerStyle={CommonStyles.input}
-            label='Please enter your phone to complete verification'
-            placeholder={"Phone"}
+            label={`A one time passcode has been send to ${user?.phone_number || ''}`}
+            placeholder={"Enter OTP"}
             keyboardType="default"
             returnKeyType="done"
-            onEndEditing={(text) => onSubmitValue("email", text)}
+            onChangeText={(text) => onSubmitValue("otp", text)}
+            error={apiError}
+            required
           />
+
+          <Row>
+            <LatoText fontSize={rf(1.4)}>Dont receive the OTP ? {!!counter && `  Wait for ${counter}s to `}</LatoText>
+             <Button
+                title='RESEND OTP'
+                type='clear'
+                onPress={() => resendOtp(counter, isLoading)}
+                disabled={counter>0}
+                titleStyle={{ fontSize: rf(1.4)}}
+                buttonStyle={{ }}
+                containerStyle={{ marginRight: 2 }}
+                />
+          </Row>
         </View>
 
         <PrimaryButton
           title={'Verify'}
           buttonStyle={{ width: '100%', height: hp('5%'),  }}
-          onPress={submitForm}
+          onPress={() => submitForm(formValues)}
           loading={isLoading}
           />
 

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, Touchable, TouchableWithoutFeedback, TouchableOpacity, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, Touchable, TouchableWithoutFeedback, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { Button, Header , Tooltip } from 'react-native-elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Logo from '../assets/svg/Logo';
@@ -8,19 +8,16 @@ import Colors from '../constants/Colors';
 import MenuIcon from '../assets/svg/MenuIcon';
 import StyledSearchBar from './StyledSearchBar';
 import Row from './Row';
-import {Picker} from '@react-native-picker/picker';
 import Popover, { PopoverMode, PopoverPlacement } from 'react-native-popover-view';
 import LatoText from './LatoText';
 import Icon from '../constants/Icon';
+import { navigate } from '../navigations/NavigationService';
+import { useDispatch } from 'react-redux';
+import { signOutAction } from '../redux/sagas/auth/AuthSagas';
 
 export default function NavigationHeader2({  showRightMenu=true, rightComponent }) {
   
-    const navigation = useNavigation();
     const insets= useSafeAreaInsets()
-
-    const onMenuItemSelected = (id) => { 
-      
-     }
 
     let leftComponent = <Logo />;
 
@@ -50,12 +47,30 @@ export default function NavigationHeader2({  showRightMenu=true, rightComponent 
 }
 
 const RightMenu = () => {
+  const dispatch = useDispatch();
+
   const [showPopover, setShowPopover] = useState(false);
 
+  const onLogout = () => { 
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure want to logout?',
+      [
+        {
+          text: 'NO',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => { dispatch(signOutAction()) }},
+      ],
+      {cancelable: true},
+    );
+   }
+   
   const menuitems = [
-    { id: 1, label: 'Profile', onPress:() => { setShowPopover(false)}  },
-    { id: 2, label: 'Settings', onPress:() => {setShowPopover(false)}  },
-    { id: 3, label: 'Log Out', onPress:() => {setShowPopover(false)}  },
+    { id: 1, label: 'Profile', onPress:() => { setShowPopover(false); navigate('Profile') }},
+    { id: 2, label: 'Settings', onPress:() => {setShowPopover(false); navigate('Settings') }},
+    { id: 3, label: 'Log Out', onPress:() => {setShowPopover(false); onLogout(); }},
   ]; 
   
   return (

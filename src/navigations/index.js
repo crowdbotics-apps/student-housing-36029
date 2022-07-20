@@ -6,7 +6,11 @@ import ForgetPassword from '../screens/auth/ForgetPassword';
 import SigninScreen from '../screens/auth/SigninScreen';
 import StartScreen from '../screens/auth/StartScreen';
 import VerifyPhone from '../screens/auth/VerifyPhone';
+import FaqScreen from '../screens/main/FaqScreen';
 import HomeScreen from '../screens/main/HomeScreen';
+import PaymentScreen from '../screens/main/PaymentScreen';
+import ProfileScreen from '../screens/main/ProfileScreen';
+import SettingScreen from '../screens/main/SettingScreen';
 import { useTokenCheck } from '../utilities/hooks';
 import { isReadyRef, navigationRef } from './NavigationService';
 
@@ -40,7 +44,13 @@ const Navigation = () => {
         <Stack.Screen name="VerifyPhone" component={VerifyPhone} />
         </>
         :
+        <>
         <Stack.Screen name="Main" component={HomeScreen} />
+        <Stack.Screen name="Settings" component={SettingScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="FAQ" component={FaqScreen} />
+        <Stack.Screen name="Payment" component={PaymentScreen} />
+      </>
       }
       </Stack.Navigator>
     </NavigationContainer>

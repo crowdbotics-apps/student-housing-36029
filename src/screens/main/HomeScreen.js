@@ -1,15 +1,13 @@
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button, Divider } from 'react-native-elements';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import Footer from '../../components/Footer';
+import ListEmpty from '../../components/ListEmpty';
 import NavigationHeader from '../../components/NavigationHeader2';
+import PropertyItem from '../../components/PropertyItem';
 import Colors from '../../constants/Colors';
 import { rf, wp } from '../../constants/Constants';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Animated from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import ListEmpty from '../../components/ListEmpty';
-import PropertyItem from '../../components/PropertyItem';
 import { PROPERTIES } from '../../constants/Data';
 
 const Tab = createMaterialTopTabNavigator();

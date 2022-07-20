@@ -8,10 +8,10 @@ import Colors from '../constants/Colors';
 import MenuIcon from '../assets/svg/MenuIcon';
 import StyledSearchBar from './StyledSearchBar';
 import Row from './Row';
-import {Picker} from '@react-native-picker/picker';
 import Popover, { PopoverMode, PopoverPlacement } from 'react-native-popover-view';
 import LatoText from './LatoText';
 import Icon from '../constants/Icon';
+import { navigate } from '../navigations/NavigationService';
 
 export default function NavigationHeader({ title, backArrow, showRightMenu=true, rightComponent }) {
   
@@ -53,11 +53,10 @@ const RightMenu = () => {
   const [showPopover, setShowPopover] = useState(false);
 
   const menuitems = [
-    { id: 1, label: 'How to book', onPress:() => {setShowPopover(false)} },
-    { id: 2, label: 'About Us', onPress:() => {setShowPopover(false)}  },
-    { id: 3, label: 'Profile', onPress:() => {setShowPopover(false)}  },
-    { id: 4, label: 'Sign In', onPress:() => {setShowPopover(false)}  },
-    { id: 5, label: 'Sign Out', onPress:() => {setShowPopover(false)}  },
+    { id: 1, label: 'How to book', onPress:() => {setShowPopover(false); }},
+    { id: 2, label: 'About Us', onPress:() => {setShowPopover(false); }},
+    { id: 4, label: 'Sign Up', onPress:() => {setShowPopover(false); navigate('Signin', { tab: 0 }); }},
+    { id: 5, label: 'Sign In', onPress:() => {setShowPopover(false); navigate('Signin', { tab: 1 }); }},
   ]; 
   
   return (

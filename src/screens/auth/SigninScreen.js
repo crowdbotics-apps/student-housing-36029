@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 
@@ -17,10 +17,11 @@ import {
   setAuthToken,
   setSuccess,
   useAuhToken,
+  useError,
   useIsLoading,
   useUser,
 } from "../../redux/reducers/AuthReducer";
-import { signInAction, signUpAction } from "../../redux/sagas/auth/AuthSagas";
+import { resendOtpAction, signInAction, signUpAction } from "../../redux/sagas/auth/AuthSagas";
 import { validateLoginForm, validateSignup1 } from '../../services/AuthValidation';
 import NavigationHeader from '../../components/NavigationHeader';
 import images from '../../assets/images';
@@ -142,13 +143,7 @@ const SignupForm = () => {
           password: formValues.password,
           is_student: formValues.userType === 'Student',
       }));
-  }   
-
-  useEffect(() => {
-    if(authUser) 
-      navigate('VerifyPhone');
-  }, [authUser]);
-  
+  }     
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : null}
@@ -237,6 +232,7 @@ const SigninForm = () => {
   const authUser = useUser();
   const isLoading = useIsLoading();
   const authToken = useAuhToken();
+  const authError = useError()
   const isKeyboardVisible = useKeyboard();
 
   const inputRef = {
@@ -264,6 +260,26 @@ const SigninForm = () => {
     }
   }   
 
+  useEffect(() => {
+    if(authError === "User account is not active please activate via otp .")
+    Alert.alert(
+      'Signin Error',
+      "Your account is not activated. Please activate via OTP.",
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Activate', onPress: () => {
+          dispatch(resendOtpAction({ email: formValues.email.trim() }));
+          navigate('VerifyPhone')
+        }},
+      ],
+      {cancelable: false},
+    );
+  }, [authError]);
+
   return (
     <KeyboardAvoidingView
       //keyboardVerticalOffset={keyboardVerticalOffset}
@@ -288,7 +304,7 @@ const SigninForm = () => {
             placeholder={"Your email"}
             keyboardType="default"
             returnKeyType="next"
-            onEndEditing={(text) => onSubmitValue("email", text)}
+            onChangeText={(text) => onSubmitValue("email", text)}
             onSubmitEditing={() => inputRef.password.current.focus()}
           />
           <PasswordInput
@@ -296,7 +312,7 @@ const SigninForm = () => {
             ref={inputRef['password']}
             label={'Enter your password'}
             placeholder={'Your password'}
-            onEndEditing={(text) => onSubmitValue('password', text)}
+            onChangeText={(text) => onSubmitValue('password', text)}
             returnKeyType='done'
             />
           <Button

@@ -25,7 +25,6 @@ import Row from '../../components/Row';
 function VerifyPhone() {
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
-  const verifySuccess = useSuccess();
   const user = useUser();
   const counter = useCounter();
   const apiError = useError();
@@ -48,10 +47,6 @@ function VerifyPhone() {
       dispatch(verifyOtpAction(payload));
     }   
 
-    useEffect(() => {
-      if(verifySuccess) 
-        navigate('Signin', { tab: 1 });
-    }, [verifySuccess]);
 
     const resendOtp = (counter, isLoading) => { 
       if(counter || isLoading) 

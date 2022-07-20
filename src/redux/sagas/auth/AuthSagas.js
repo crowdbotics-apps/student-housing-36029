@@ -6,6 +6,8 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { logoutUser, setAuthToken, setCounter, setError, setSuccess, setUser, startLogin } from "../../reducers/AuthReducer";
 import RNToast from "../../../components/RNToast";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
+import { navigate } from "../../../navigations/NavigationService";
+import { Alert } from "react-native";
 
 
 export const signInAction = createAction("auth/signIn");
@@ -23,15 +25,12 @@ function* login({ payload }) {
     }
     if (res.data.token) {
       const token = res.data.token;
+      const user = res.data.user;
       ApiService.setAuthHeader(token);
       LocalStorage.storeData(AUTH_TOKEN, token);
       yield put(setAuthToken(token))
-      let res2 = yield call(ApiService.getUser);
-      if(res2.data.user){
-        const user = res2.data.user; 
-        LocalStorage.storeData(USER_DATA, user);
-        yield put(setUser(user));  
-      }
+      LocalStorage.storeData(USER_DATA, user);
+      yield put(setUser(user));  
       RNToast.showShort('Login Successfully');
     }
     else if(res.data.detail) {
@@ -62,10 +61,13 @@ function* signup ({ payload }) {
       LocalStorage.storeData(USER_DATA, user);
       yield put(setUser(user));  
       RNToast.showShort('Signup Successfully');
+      navigate('VerifyPhone')
     }
     else if(res.data.detail) {
       alert(res.data.detail);
       yield put(setError(res.data.detail))
+    } else if(res.data.non_field_errors) {
+      yield put(setError(res.data.non_field_errors[0]));
     } else {
       let errors = Object.entries(res.data) || [];
       errors = errors.map(err => (`${err[0]}: ${err[1]}`));
@@ -99,6 +101,7 @@ function* verifyOtp ({ payload }) {
     else if(res.data.message === 'Succesfully User activated.'){
       yield put(setSuccess(true))
       RNToast.showShort('Succesfully User activated')
+      navigate('Signin', { tab: 1 });
     }
   } catch (err) {
     let error = getSimplifiedError(err)

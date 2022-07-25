@@ -45,9 +45,9 @@ const Navigation = () => {
         </>
         :
         <>
+        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Main" component={HomeScreen} />
         <Stack.Screen name="Settings" component={SettingScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="FAQ" component={FaqScreen} />
         <Stack.Screen name="Payment" component={PaymentScreen} />
       </>

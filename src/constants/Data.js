@@ -276,7 +276,16 @@ export const PROPERTIES = [
   { id: 2, image: images.dummy1, name: 'Property name', description: 'Some short descriptive text about the property.',  rating: 5},
   { id: 3, image: images.dummy1, name: 'Property name', description: 'Some short descriptive text about the property.',  rating: 5},
 ]; 
-
+export const BOOKINGS = [
+  { id: 1, name: 'Property name', rating: { owner: 0, property: 2 }, date: '09/26/2021', amount: '122 usd (4 nights, 30.5 usd per night)' },
+  { id: 2, name: 'Property name', rating: { owner: 3, property: 5 }, date: '09/26/2021', amount: '122 usd (4 nights, 30.5 usd per night)' },
+  { id: 3, name: 'Property name', rating: { owner: 4, property: 1 }, date: '09/26/2021', amount: '122 usd (4 nights, 30.5 usd per night)' },
+]; 
+export const REVIEWS_DUMMY = [
+  { id: 1, text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.', name: 'Name surname' },
+  { id: 2, text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in repreh in voluptate velit esse cillum dolore eu fugiat nulla.', name: 'Name surname' },
+  { id: 3, text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in repreheit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  Duis aute ir dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat null pariatur.', name: 'Name surname' },
+]; 
 export const COUNTRY_CODES = [
   { ru:"Афганистан",lt:"Afganistanas",tr:"Afganistan", en: 'Afghanistan', flag: '🇦🇫', code: 'AF', dialCode: '+93', mask: '999 999 9999' },
   { ru:"Аландские острова",lt:"Alandų salos",tr:"Aland adaları", en: 'Åland Islands', flag: '🇦🇽', code: 'AX', dialCode: '+358', mask: '999 9999999' },

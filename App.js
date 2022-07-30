@@ -8,6 +8,7 @@ import {
   Button,
   BackHandler,
 } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {ThemeProvider} from 'react-native-elements';
 import {ErrorBoundary} from 'react-error-boundary';
 import {enableScreens} from 'react-native-screens';
@@ -23,16 +24,18 @@ export default function App() {
   return (
     <ThemeProvider theme={AppTheme}>
       <Provider store={store}>
-        <View style={styles.container}>
-          <StatusBar barStyle="default" translucent backgroundColor={'transparent'} />
-          <ErrorBoundary
-            FallbackComponent={ErrorFallbackScreen}
-            onReset={() => {
-              BackHandler.exitApp();
-            }}>
-            <Navigation />
-          </ErrorBoundary>
-        </View>
+        <SafeAreaProvider>
+          <View style={styles.container}>
+            <StatusBar barStyle="default" translucent backgroundColor={'transparent'} />
+            <ErrorBoundary
+              FallbackComponent={ErrorFallbackScreen}
+              onReset={() => {
+                BackHandler.exitApp();
+              }}>
+              <Navigation />
+            </ErrorBoundary>
+          </View>
+        </SafeAreaProvider>
       </Provider>
     </ThemeProvider>
   );

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView, FlatList, TouchableHighlight } from 'react-native';
 import { Avatar, Button, Divider, Image, ListItem } from 'react-native-elements';
-import images from '../../assets/images';
-import NavigationHeader from '../../components/NavigationHeader';
+import NavigationHeader from '../../components/NavigationHeader2';
 import Colors from '../../constants/Colors';
-import { hp, rf, wp } from '../../constants/Constants';
+import { AUTH_TOKEN, hp, rf, wp } from '../../constants/Constants';
 import Icon from '../../constants/Icon';
-import { goBack, navigate } from '../../navigations/NavigationService';
 import Row from '../../components/Row';
 import LatoText from '../../components/LatoText';
 import StyledInput from '../../components/StyledInput';
@@ -14,21 +12,36 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { useIsLoading, useProfile } from '../../redux/reducers/ProfileReducer';
-import { TextButton } from '../../components/TextButton';
-import { useKeyboard } from '../../utilities/hooks';
+import { setProfileImage, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
+import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
+import { isEmpty } from '../../services/AuthValidation';
+import ImageUpload from '../../components/ImageUpload';
+import { updateProfile } from '../../redux/sagas/profile/updateSaga';
+import TextInputBottomSheet from '../../components/TextInputBottomSheet';
+import LocalStorage from '../../services/LocalStorage';
+import { getSimplifiedError } from '../../services/ApiErrorhandler';
+import UploadingModal from '../../components/UploadingModal';
+import { fetchReviews } from '../../redux/sagas/profile/fetchReviewsSaga';
+import ListEmpty from '../../components/ListEmpty';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
+  const user = useUser();
   const profile = useProfile();
+  const reviews = useReviews();
   const isLoading = useIsLoading();
   const isKeyboardVisible = useKeyboard();
 
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [imgFile, setImgFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const [formValues, setFormValues] = useState({
-    city: '',
-    country: '',
-    college: "",
+    city: profile.city || '',
+    country: profile.country || '',
+    college: profile.college || '',
+    full_name: user?.full_name || '',
   });
 
   const onSubmitValue = (key, value) => {
@@ -40,22 +53,60 @@ export default function ProfileScreen() {
 
   console.log('formValues: ', formValues);
   
-  const submitForm = (formValues) => {
-    // if(validateSignup1(formValues))
-    //   dispatch(
-    //     signUpAction({
-    //       full_name: formValues.name,
-    //       phone_number: formValues.phone,
-    //       email: formValues.email,
-    //       is_property_owner: formValues.userType !== 'Student',
-    //       password: formValues.password,
-    //       is_student: formValues.userType === 'Student',
-    //   }));
-  }     
-
-  const onDeactivate = () => { 
-    
-   }
+  const submitForm = (formValues, imgFile) => {
+    if(isEmpty(formValues['city'])) { alert('City field is required'); return }
+    if(isEmpty(formValues['country'])) { alert('Country field is required'); return }
+    if(isEmpty(formValues['college'])) { alert('College field is required'); return }
+    const updateProfileData = {
+      id: user.id,
+      profile: formValues,
+    };
+    dispatch(updateProfile(updateProfileData));
+    if(imgFile) 
+      uploadImage(imgFile)
+  }
+  
+  const onPickImage = (imageObj) => {
+    setImgFile(imageObj);
+    dispatch(setProfileImage(imageObj.uri))
+  }
+  const uploadImage = async (image) => { 
+      const formData = new FormData();
+      formData.append('profile_image',image);
+      const token = await LocalStorage.getData(AUTH_TOKEN); 
+      try {
+        setUploading(true)
+        let response = await fetch(
+          `https://student-housing-app-23717.botics.co/api/v1/profile/${user.id}/`,
+          {
+              method: 'PATCH',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'multipart/form-data',
+                  'Authorization': `token ${token}`
+              },
+              body: formData
+          }
+        );
+          const result = await response.json();
+          console.log('data: ', result);
+          if(result && result.user_profile){
+            dispatch(setProfileImage(result.user_profile.profile_image_url))
+          }
+          else if(result.error){
+            alert(getSimplifiedError(result.error))    
+            dispatch(setProfileImage(''));
+          }
+      } catch (error) {
+        console.error({error});
+        alert(getSimplifiedError(error))
+        dispatch(setProfileImage(''));
+      } finally {
+        setUploading(false)
+      }
+    }
+  
+    useDispatchEffect(fetchReviews, null, true);
 
     return (
         <View style={styles.container}>
@@ -79,18 +130,27 @@ export default function ProfileScreen() {
               <LatoText bold color={Colors.text} fontSize={rf(2.2)} style={{ alignSelf: 'flex-start', marginBottom: 20 }}>Profile</LatoText>
 
               {
-                profile.image ?
-                <Avatar source={{ uri: profile.image.split('?')[0] }} containerStyle={styles.avatar} avatarStyle={{ borderRadius: 2 }} />
+                profile.profile_image_url && !isEmpty(profile.profile_image_url) ?
+                <Avatar source={{ uri: profile.profile_image_url }} containerStyle={styles.avatar} avatarStyle={{ borderRadius: 2 }} />
                 :
-                <TouchableOpacity style={styles.imageBtn}>
+                <>
+                <TouchableOpacity style={styles.imageBtn} onPress={() => setShowImagePicker(true)}>
                   <Icon.Feather name='camera' color={'#CCDBE0'} size={36} style={{ marginBottom: 10}} />
                   <LatoText color={Colors.primaryColor} fontSize={rf(1.7)}>Upload picture</LatoText>
                 </TouchableOpacity>
+                <ImageUpload
+                  showPicker={showImagePicker}
+                  closePicker={() => setShowImagePicker(false)}
+                  onPickImage={onPickImage}
+                />
+                <UploadingModal uploading={uploading} />
+                </>
               }
-              <Row style={{ marginTop: 16 }}>
-                <LatoText black color={Colors.text} fontSize={rf(2)}>Daniel Thompson</LatoText>
-                <Icon.Community name='pencil-outline' color={Colors.text} size={20} style={{ marginLeft: 10}} />
-              </Row>
+
+              <UserName 
+                value={formValues.full_name} 
+                onEdit={value => onSubmitValue('full_name', value)}
+                />
 
               <View style={[styles.formContainer2, { height: 270 }]} >
                 <StyledInput
@@ -99,6 +159,7 @@ export default function ProfileScreen() {
                   placeholder={"Start typing city name"}
                   keyboardType="default"
                   returnKeyType="done"
+                  value={formValues.city}
                   onChangeText={(text) => onSubmitValue("city", text)}
                 />
                 <StyledInput
@@ -107,6 +168,7 @@ export default function ProfileScreen() {
                   placeholder={"Start typing country name"}
                   keyboardType="default"
                   returnKeyType="done"
+                  value={formValues.country}
                   onChangeText={(text) => onSubmitValue("country", text)}
                 />
                 <StyledInput
@@ -115,18 +177,19 @@ export default function ProfileScreen() {
                   placeholder={"Start typing college name"}
                   keyboardType="default"
                   returnKeyType="done"
+                  value={formValues.college}
                   onChangeText={(text) => onSubmitValue("college", text)}
                 />
               </View>
 
               <Reviews 
                 title={'Reviews given'} 
-                data={REVIEWS_DUMMY}
+                data={reviews}
               />
-              <Reviews 
+              {/* <Reviews 
                 title={'Reviews received'} 
                 data={REVIEWS_DUMMY}
-              />
+              /> */}
               <CreditCardPayment />
               <BookingHistory data={BOOKINGS}/>
             </View>
@@ -136,18 +199,34 @@ export default function ProfileScreen() {
             { !isKeyboardVisible &&
             <PrimaryButton
               title={'Save Profile Updates'}
-              onPress={() => submitForm(formValues)}
+              onPress={() => submitForm(formValues, imgFile)}
               loading={isLoading}
               buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
               containerStyle={{ position: "absolute" , bottom: 20, marginTop: hp('4%') }}
               />
           }
-
           </KeyboardAvoidingView>
         </View>
       )
 }
+const UserName = ({ value, onEdit }) => { 
+  const [name, setName] = useState(value);
+  const [editName, setEditName] = useState(false);
+  return (
+    <>
+    <Row style={{ marginTop: 16 }}>
+      <LatoText black color={Colors.text} fontSize={rf(2)}>{name}</LatoText>
+      <Icon.Community name='pencil-outline' color={Colors.text} size={20} style={{ marginLeft: 10}} onPress={() => {setEditName(true)}}/>
+    </Row>
+    <TextInputBottomSheet 
+      isVisible={editName}
+      value={name}
+      onSubmitValue={(text) => {setName(text); setEditName(false); onEdit(text)}}
+    />
+    </>
+  )
 
+ }
 const Reviews = ({ title, data }) => { 
   const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => { 
@@ -170,7 +249,7 @@ const Reviews = ({ title, data }) => {
             <ListItem containerStyle={{ paddingVertical: 16 }}>
                <ListItem.Content>
                 <ListItem.Title>
-                  <LatoText fontSize={rf(1.5)}>{item.text} <LatoText bold>{`-`} {item.name}</LatoText></LatoText>  
+                  <LatoText fontSize={rf(1.5)}>{item.comment} <LatoText bold>{`-`} {item.from_user.name}</LatoText></LatoText>  
                 </ListItem.Title>
                </ListItem.Content>
                <Icon.Ionicon name='close' color={Colors.primaryColor} size={20} /> 
@@ -179,7 +258,7 @@ const Reviews = ({ title, data }) => {
           keyExtractor={(item, i) => item.id}
           style={{ width: '100%', height: 'auto' }}
           ItemSeparatorComponent={() => <Divider style={{ width: '100%', height: 1, backgroundColor: Colors.primaryColor }} />}
-          // ListEmptyComponent={() => <ListEmpty text='No reviews' />}
+          ListEmptyComponent={() => <ListEmpty text='No reviews' />}
           />  
       </View>
     }
@@ -249,10 +328,10 @@ const Reviews = ({ title, data }) => {
               <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 25}}>{item.name} </LatoText>  
               <Row style={{ width: "100%", flexWrap: "wrap" }}>
                 <LatoText style={{ width: '50%', lineHeight: 25 }}>Rate property: <Stars ratings={item.rating.property} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22}}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22}}>Date: {item.date}</LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22}}>Location: </LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22}}>Amopunt paid: {item.amount}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.date}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: </LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.amount}</LatoText>
               </Row>
             </View>
           )}

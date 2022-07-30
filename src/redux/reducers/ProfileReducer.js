@@ -9,7 +9,8 @@ export const profileSlice = createSlice({
     isLoading: false,
     error: null,
     profile: {},
-    success: null
+    success: null,
+    reviews: []
   },
   reducers: {
     startLoading: (state, action) => {
@@ -24,7 +25,12 @@ export const profileSlice = createSlice({
       state.isLoading = false
     },
     setProfileImage: (state, action) => {
-      state.profile.image = action.payload;
+      state.profile.profile_image_url = action.payload;
+      state.error = null;
+      state.isLoading = false
+    },
+    setReviews: (state, action) => {
+      state.reviews = action.payload;
       state.error = null;
       state.isLoading = false
     },
@@ -37,10 +43,17 @@ export const profileSlice = createSlice({
   extraReducers: {}
 })
 
-  export const { startLoading, setProfile, setProfileImage, setError } = profileSlice.actions;
+export const {
+  startLoading,
+  setProfile,
+  setProfileImage,
+  setReviews,
+  setError
+} = profileSlice.actions;
 
 export const useSuccess =  () => useSelector(state => state.Profile.success)
 export const useProfile =  () => useSelector(state => state.Profile.profile)
+export const useReviews =  () => useSelector(state => state.Profile.reviews)
 export const useIsLoading =  () => useSelector(state => state.Profile.isLoading)
 
 export default profileSlice.reducer

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AUTH_TOKEN, IS_TRAINER, USER_DATA } from '../constants/Constants';
 import { setAuthData, setAuthToken, setUser } from '../redux/reducers/AuthReducer';
 import { setProfile } from '../redux/reducers/ProfileReducer';
+import { fetchProfile } from '../redux/sagas/profile/fetchSaga';
 import ApiService from '../services/ApiService';
 import LocalStorage from '../services/LocalStorage';
 
@@ -33,7 +34,8 @@ export function useTokenCheck() {
         }
         if(token) {
           ApiService.setAuthHeader(token);
-        } 
+        }
+        dispatch(fetchProfile());
         await new Promise((resolve) => {
           setTimeout(() => {
             setChecking(false)

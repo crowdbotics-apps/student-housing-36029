@@ -13,6 +13,7 @@ export default function ListEmpty({ text}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 60,
     alignItems: 'center',
     justifyContent: 'center',
   },

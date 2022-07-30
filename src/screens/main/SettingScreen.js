@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Button, Image } from 'react-native-elements';
 import images from '../../assets/images';
 import NavigationHeader from '../../components/NavigationHeader';
@@ -14,40 +14,36 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { useIsLoading } from '../../redux/reducers/ProfileReducer';
+import { useIsLoading } from '../../redux/reducers/AuthReducer';
 import { TextButton } from '../../components/TextButton';
+import { isEmailValid, isEmpty, isPasswordValid, isPhoneNumberValid } from '../../services/AuthValidation';
+import { changePassAction } from '../../redux/sagas/auth/changePassSaga';
+import { changeEmailAction } from '../../redux/sagas/auth/changeEmailSaga';
+import { changePhoneAction } from '../../redux/sagas/auth/changePhoneSaga';
 
 export default function SettingScreen() {
   const dispatch = useDispatch();
   const authUser = useUser();
   const isLoading = useIsLoading();
 
-  const [formValues, setFormValues] = useState({
-    email: authUser?.email || '',
-    phone: authUser?.phone_number || '',
-    password: "",
-  });
-
-  const onSubmitValue = (key, value) => {
-    setFormValues({
-      ...formValues,
-      [key]: value
-    })
-  }
-
-  console.log('formValues: ', formValues);
+  const [password, setPassword] = useState('•••••••');
+  const [email, setEmail] = useState(authUser?.email || '');
+  const [phone, setPhone] = useState(authUser?.phone_number || '');
   
-  const submitForm = (formValues) => {
-    // if(validateSignup1(formValues))
-    //   dispatch(
-    //     signUpAction({
-    //       full_name: formValues.name,
-    //       phone_number: formValues.phone,
-    //       email: formValues.email,
-    //       is_property_owner: formValues.userType !== 'Student',
-    //       password: formValues.password,
-    //       is_student: formValues.userType === 'Student',
-    //   }));
+  const submitForm = () => {
+    if(isEmpty(password)) { alert('Password field is required'); return }
+    else if(password !== '•••••••'){
+      dispatch(changePassAction({ password }))
+    }
+    if(isEmpty(email)) { alert('Email field is required'); return }
+    else if(!isEmailValid(email)) { alert('Please enter a valid email address'); return false; }
+    else if(email !== authUser?.email) {
+      dispatch(changeEmailAction({ email }))
+    }
+    if(isEmpty(phone)) { alert('Phone number is required'); return }
+    else if(phone !== authUser?.phone_number) {
+      dispatch(changePhoneAction({ phone_number: phone }))
+    }
   }     
 
   const onDeactivate = () => { 
@@ -62,50 +58,64 @@ export default function SettingScreen() {
             source={images.background2}
             style={styles.background}
           />
+        <KeyboardAvoidingView
+          //keyboardVerticalOffset={keyboardVerticalOffset}
+          behavior={Platform.OS == "ios" ? "padding" : null}
+          style={styles.container}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              width: wp("100%"),
+              alignItems: "center",
+              justifyContent: "center",
+              paddingBottom: 20,
+            }}
+            showsVerticalScrollIndicator={false}
+          >
 
-        <View style={styles.formContainer} >
-            <Button
-              title={'Student Housing App'}
-              type='clear'
-              onPress={() => goBack()}
-              icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
-              titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
-              buttonStyle={{ backgroundColor: "transparent", }}
-              containerStyle={{ marginBottom: 30, alignSelf: 'flex-start' }}
-              TouchableComponent={TouchableOpacity}
-              />  
+            <View style={styles.formContainer} >
+                <Button
+                  title={'Student Housing App'}
+                  type='clear'
+                  onPress={() => goBack()}
+                  icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
+                  titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
+                  buttonStyle={{ backgroundColor: "transparent", }}
+                  containerStyle={{ marginBottom: 30, alignSelf: 'flex-start' }}
+                  TouchableComponent={TouchableOpacity}
+                  />  
 
-          <SettingItem 
-            title={'Change account password'} 
-            value={'•••••••'}
-            onChangeText={(text) => onSubmitValue('password', text)}
-          />
-          <SettingItem 
-            title={'Change account email'} 
-            value={formValues.email}
-            onChangeText={(text) => onSubmitValue('email', text)}
-          />
-          <SettingItem 
-            title={'Change your phone number'} 
-            value={formValues.phone}
-            onChangeText={(text) => onSubmitValue('phone', text)}
-          />
-          <PrimaryButton
-            title={'Save Changes'}
-            onPress={() => submitForm(formValues)}
-            loading={isLoading}
-            buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
-            containerStyle={{ marginTop: hp('4%') }}
-            />
-          <View style={styles.formContainer2}>
-            <TextButton title='FAQ' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('FAQ')}/>
-            <TextButton title='Payment' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('Payment')}/>
-            <TextButton title='Deactivate your account' titleStyle={{ color: Colors.text }} onPress={onDeactivate}/>
-          </View>
-        </View>
+              <SettingItem 
+                title={'Change account password'} 
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              />
+              <SettingItem 
+                title={'Change account email'} 
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+              <SettingItem 
+                title={'Change your phone number'} 
+                value={phone}
+                onChangeText={(text) => setPhone(text)}
+              />
+              <PrimaryButton
+                title={'Save Changes'}
+                onPress={submitForm}
+                loading={isLoading}
+                buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
+                containerStyle={{ marginTop: hp('4%') }}
+                />
+              <View style={styles.formContainer2}>
+                <TextButton title='FAQ' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('FAQ')}/>
+                <TextButton title='Payment' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('Payment')}/>
+                <TextButton title='Deactivate your account' titleStyle={{ color: Colors.text }} onPress={onDeactivate}/>
+              </View>
+            </View>
 
-
-
+        </ScrollView>
+        </KeyboardAvoidingView>
       </View>
       )
 }
@@ -158,6 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: wp('100%'),
+    height: hp('100%')-225,
     backgroundColor: 'transparent',
     paddingVertical: hp('4%'),
     paddingHorizontal: wp('5%')

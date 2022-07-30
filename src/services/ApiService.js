@@ -26,11 +26,15 @@ const ApiService = {
   verifyOtp: (params) => post(`/api/v1/verify-user/`, params),
   resendOtp: (params) => post(`/api/v1/resend-otp/`, params),
   forgetPassSend: (params) => post(`/rest-auth/password/reset/`, params),
-  changePassword: (params) => post(`/rest-auth/password/change/`, params),
+  changePassword: (params) => post(`/api/v1/user/change-password/`, params),
+  updateEmail: (params) => post(`/api/v1/user/change-email/`, params),
+  updatePhoneNUMber: (params) => post(`/api/v1/user/update-phone-number/`, params),
   getUser: () => get(`/me/`),
   
-  getProfile: () => get(`/users/profile/`),
+  getProfile: () => get(`/api/v1/profile/`),
+  insertProfile: (params) => post(`/api/v1/profile/`, params),
   updateProfile: (id, params) => patch(`/api/v1/profile/${id}/`, params),
+  getReviews: () => get(`/api/v1/user-rating/`),
 
   postFeedback: (params) => post(`/feedback/`, params),
 };

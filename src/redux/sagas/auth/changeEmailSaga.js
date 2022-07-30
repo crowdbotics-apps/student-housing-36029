@@ -5,19 +5,19 @@ import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
 import { setSuccess, startLogin } from "../../reducers/AuthReducer";
 
-export const changePassAction = createAction("auth/changePassword");
+export const changeEmailAction = createAction("auth/changeEmailword");
 
-function* changePassword({ payload }) {
+function* changeEmail({ payload }) {
   console.log("payload: ", payload);
   yield put(startLogin(null))
   try {
-    let res = yield call(ApiService.changePassword, payload);
-    console.log('changePass res: ', res.data);
-    if(res.data.success === 'Password changed successfully.') {
+    let res = yield call(ApiService.updateEmail, payload);
+    console.log('changeEmail res: ', res.data);
+    if(res.data.code === 200) {
       RNToast.showShort('Successfully Updated');
       yield put(setSuccess(true))
     } else if(res.data.error){
-        alert(res.data.error[0].join(' '));
+        alert(res.data.error);
         yield put(setSuccess(false))
     }
   } catch (error) {
@@ -26,6 +26,6 @@ function* changePassword({ payload }) {
     yield put(setSuccess(false))
   }
 }
-export function* changePassSaga() {
-  yield takeLatest(changePassAction, changePassword)
+export function* changeEmailSaga() {
+  yield takeLatest(changeEmailAction, changeEmail)
 }

@@ -286,6 +286,30 @@ export const REVIEWS_DUMMY = [
   { id: 2, text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in repreh in voluptate velit esse cillum dolore eu fugiat nulla.', name: 'Name surname' },
   { id: 3, text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in repreheit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  Duis aute ir dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat null pariatur.', name: 'Name surname' },
 ]; 
+export const IMAGES = [
+  'https://i.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68',
+  'https://i.picsum.photos/id/1011/5472/3648.jpg?hmac=Koo9845x2akkVzVFX3xxAc9BCkeGYA9VRVfLE4f0Zzk',
+  'https://i.picsum.photos/id/1015/6000/4000.jpg?hmac=aHjb0fRa1t14DTIEBcoC12c5rAXOSwnVlaA5ujxPQ0I',
+  'https://i.picsum.photos/id/1018/3914/2935.jpg?hmac=3N43cQcvTE8NItexePvXvYBrAoGbRssNMpuvuWlwMKg'
+]
+export const CHECKS = [
+  "No parties or events allowed",
+  "No smoking allowed",
+  "No pets allowed",
+  "Suitable for toddlers und children under 12",
+  "Please don’t eat or drink in the bedrooms",
+  "No unregistered guests allowed",
+  "Please respect the noise curfew",
+  "Please turn off the AC when you go out",
+  "Please respect check-in and check-out times",
+  "Please take extra care of your keys. You have to pay for damages",
+  "that exceed the security deposit",
+  "Please don’t rearrange furniture",
+  "Please do your dishes",
+  "Please take the trash out before you leave",
+  "No illegal substances allowed on the premises"
+];
+
 export const COUNTRY_CODES = [
   { ru:"Афганистан",lt:"Afganistanas",tr:"Afganistan", en: 'Afghanistan', flag: '🇦🇫', code: 'AF', dialCode: '+93', mask: '999 999 9999' },
   { ru:"Аландские острова",lt:"Alandų salos",tr:"Aland adaları", en: 'Åland Islands', flag: '🇦🇽', code: 'AX', dialCode: '+358', mask: '999 9999999' },

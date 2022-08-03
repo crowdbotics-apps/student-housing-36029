@@ -9,14 +9,14 @@ export const changePassAction = createAction("auth/changePassword");
 
 function* changePassword({ payload }) {
   console.log("payload: ", payload);
-  yield put(startLogin(null))
+  yield put(startLogin(null))                             
   try {
     let res = yield call(ApiService.changePassword, payload);
     console.log('changePass res: ', res.data);
     if(res.data.success === 'Password changed successfully.') {
       RNToast.showShort('Successfully Updated');
       yield put(setSuccess(true))
-    } else if(res.data.error){
+    } else if(res.data.error){ 
         alert(res.data.error[0].join(' '));
         yield put(setSuccess(false))
     }

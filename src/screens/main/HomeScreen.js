@@ -43,12 +43,19 @@ export default function HomeScreen() {
 const Nearby = () => { 
 
   const [data, setData] = useState(PROPERTIES);
+  const [favourite, setFavourite] = useState(new Map());
+
+  const onFavourite = (id, val) => { 
+    const newMap = new Map(favourite);
+    newMap.set(id, val);
+    setFavourite(newMap); 
+   }
 
   return(
     <FlatList
       data={data}
       renderItem={({item, index}) => (
-        <PropertyItem {...item} />
+        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
       )}
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
@@ -61,12 +68,18 @@ const Nearby = () => {
 const Wishlisted = () => { 
 
   const [data, setData] = useState(PROPERTIES);
+  const [favourite, setFavourite] = useState(new Map());
 
+  const onFavourite = (id, val) => { 
+    const newMap = new Map(favourite);
+    newMap.set(id, val);
+    setFavourite(newMap); 
+   }
   return(
     <FlatList
       data={data}
       renderItem={({item, index}) => (
-        <PropertyItem {...item} />
+        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
       )}
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
@@ -79,12 +92,19 @@ const Wishlisted = () => {
 const Recomendations = () => { 
 
   const [data, setData] = useState(PROPERTIES);
+  const [favourite, setFavourite] = useState(new Map());
+
+  const onFavourite = (id, val) => { 
+    const newMap = new Map(favourite);
+    newMap.set(id, val);
+    setFavourite(newMap); 
+   }
 
   return(
     <FlatList
       data={data}
       renderItem={({item, index}) => (
-        <PropertyItem {...item} />
+        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
       )}
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}

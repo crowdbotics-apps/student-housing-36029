@@ -5,5 +5,5 @@ export default {
   background: '#FFFFFF',
   background2: '#FAFAFA',
   white: "#fff",
-  text: "#232F39"
+  text: "#232F39",
 };

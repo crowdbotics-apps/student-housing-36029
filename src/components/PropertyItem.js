@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar, Button, Image, ListItem, Rating } from 'react-native-elements';
-import images from '../assets/images';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, Image, ListItem, Rating } from 'react-native-elements';
+import { useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { rf, wp } from '../constants/Constants';
-import { IMAGES } from '../constants/Data';
 import Icon from '../constants/Icon';
-import { navigate } from '../navigations/NavigationService';
+import { isImage } from '../utilities/utils';
 import HeartButton from './HeartButton';
 import LatoText from './LatoText';
 import Row from './Row';
 import { TextButton } from './TextButton';
 
-export default function PropertyItem({ id, name, image, rating,  description, toggleFavourite   }) {
-  
-    return (
+export default function PropertyItem({ id, title, media=[],  rating,  description, is_wish_listed, toggleFavourite, onViewProperty   }) {
+  const dispatch = useDispatch();
+  const mediaFiles = media.map(file => file.property_media.split('?')[0]); 
+    
+  return (
           <ListItem containerStyle={styles.container}>
-             <ImageCarousel images={IMAGES}/>
+             <ImageCarousel images={mediaFiles}/>
              <ListItem.Content style={styles.content}>
               <ListItem.Title>
                 <View style={{ width: wp('40%') }}>
-                    <LatoText black fontSize={rf(1.8)}>{name}</LatoText>
+                    <LatoText black fontSize={rf(2)}>{title}</LatoText>
                     <Row style={{ width: 180 }}>
                       <Rating 
                         ratingCount={5}
@@ -31,18 +32,20 @@ export default function PropertyItem({ id, name, image, rating,  description, to
                         />
                       <TextButton 
                         title='View Reviews' 
-                        titleStyle={{ color: Colors.primaryColor, fontSize: 15 }} 
+                        titleStyle={{ color: Colors.primaryColor, fontSize: rf(1.5) }} 
                         onPress={() => {}}
                         />
                     </Row>
-                    <LatoText fontSize={rf(1.5)}>{description}</LatoText>
+                    <LatoText fontSize={rf(1.5)} ellipsizeMode='tail' numberOfLines={3}>
+                      {description}
+                    </LatoText>
                 </View>
               </ListItem.Title>
               <ListItem.Subtitle>
                 <Button
                     title={'View Property'}
                     type='solid'
-                    onPress={() => { navigate('PropertyDetails') }}
+                    onPress={() => { onViewProperty(id) }}
                     titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
                     buttonStyle={{ backgroundColor: Colors.primaryColor, width: 140,height: 35, borderRadius: 6, padding: 0 }}
                     containerStyle={{ width: 140, height: 35,borderRadius: 6, marginBottom: 20,  }}
@@ -51,6 +54,7 @@ export default function PropertyItem({ id, name, image, rating,  description, to
               </ListItem.Subtitle>
              </ListItem.Content>
              <HeartButton 
+                isSelected={is_wish_listed}
                 onToggle={toggleFavourite}
                 containerStyle={{ position: 'absolute', top: 20, right: 14 }}
              />
@@ -70,7 +74,12 @@ const ImageCarousel = ({ images }) => {
 
   return(
     <View style={styles.image}>
-      <Image source={{ uri: images[index] }} style={styles.image}/>
+      {
+        isImage(images[index]) ? 
+        <Image source={{ uri: images[index] }} style={styles.image}/>
+        :
+        <View style={styles.image} ><LatoText>Video File</LatoText></View>
+      }
       <Icon.Material name={'keyboard-arrow-left'} color={'#FFF'} size={15} style={styles.arrowLeft} onPress={onLeftPress}/>
       <Icon.Material name={'keyboard-arrow-right'} color={'#FFF'} size={15} style={styles.arrowRight} onPress={onRightPress}/>
     </View>

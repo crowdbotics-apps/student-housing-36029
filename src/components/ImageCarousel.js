@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: wp('20%'),
     height: wp('70%'),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   bigimg: {
     width: wp('70%')-1,

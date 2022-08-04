@@ -48,7 +48,7 @@ export function useTokenCheck() {
     return checking
 }
 
-export const useDispatchEffect = (thunk, params, condition) => {
+export const useDispatchEffect = (thunk, params=null, condition=true) => {
   const dispatch = useDispatch()
   useEffect(() => {
     if(condition)

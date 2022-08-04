@@ -1,14 +1,22 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useIsFocused } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
 import ListEmpty from '../../components/ListEmpty';
 import NavigationHeader from '../../components/NavigationHeader2';
 import PropertyItem from '../../components/PropertyItem';
+import PropertyLoader from '../../components/PropertyLoader';
 import Colors from '../../constants/Colors';
 import { rf, wp } from '../../constants/Constants';
 import { PROPERTIES } from '../../constants/Data';
+import { navigate } from '../../navigations/NavigationService';
+import { setPropertyDetails, useIsLoading, useProperty, useWishlist } from '../../redux/reducers/PropertyReducer';
+import { fetchProperty, fetchWishlist } from '../../redux/sagas/property/fetchSaga';
+import { updateWishlist } from '../../redux/sagas/property/updateSaga';
+import { useDispatchEffect } from '../../utilities/hooks';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -26,7 +34,8 @@ export default function HomeScreen() {
         style={{ width: wp('100%'), backgroundColor: '#FFF', }}
         backBehavior='none'
         screenOptions={{
-          swipeEnabled: false
+          swipeEnabled: false,
+          lazy: true
         }}
       >
         <Tab.Screen name="Nearby" component={Nearby} options={{ tabBarLabel: 'Nearby' }}/>
@@ -41,77 +50,102 @@ export default function HomeScreen() {
 }
 
 const Nearby = () => { 
+  const properties = useProperty();
+  const dispatch = useDispatch();
+  const isLoading = useIsLoading();
 
-  const [data, setData] = useState(PROPERTIES);
-  const [favourite, setFavourite] = useState(new Map());
+  useDispatchEffect(fetchProperty);
 
   const onFavourite = (id, val) => { 
-    const newMap = new Map(favourite);
-    newMap.set(id, val);
-    setFavourite(newMap); 
+    console.log(id, val);
+    dispatch(
+      updateWishlist({
+        property_id: id,
+        is_wish_listed: val,
+      }),
+    );
    }
+  const onViewProperty = (id) => { 
+    dispatch(setPropertyDetails(properties.find(p => p.id === id)));
+    navigate('PropertyDetails')
+   }
+   
+  if(isLoading) 
+   return <PropertyLoader />
 
   return(
     <FlatList
-      data={data}
+      data={properties}
       renderItem={({item, index}) => (
-        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
+        <PropertyItem 
+          {...item} 
+          onViewProperty={onViewProperty}
+          toggleFavourite={(val) => onFavourite(item.id, val)} 
+          />
       )}
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
       contentContainerStyle={{ alignItems:'center'}}
       ListEmptyComponent={() => <ListEmpty text='No items to display' />}
+      ListFooterComponent={() => <View style={{height: 100}}/>}
       />  
   )
  }
 
 const Wishlisted = () => { 
+  const properties = useWishlist();
+  const dispatch = useDispatch();
+  const isLoading = useIsLoading();
+  const isFocused = useIsFocused()
 
-  const [data, setData] = useState(PROPERTIES);
+  useDispatchEffect(fetchWishlist, null, isFocused);
+
   const [favourite, setFavourite] = useState(new Map());
 
   const onFavourite = (id, val) => { 
+    console.log(id, val);
     const newMap = new Map(favourite);
     newMap.set(id, val);
     setFavourite(newMap); 
+    dispatch(
+      updateWishlist({
+        property_id: id,
+        is_wish_listed: val,
+      }),
+    );
    }
+  const onViewProperty = (id) => { 
+    dispatch(setPropertyDetails(properties.find(p => p.id === id)));
+    navigate('PropertyDetails')
+   }
+   
+  if(isLoading) 
+   return <PropertyLoader />
+
   return(
     <FlatList
-      data={data}
+      data={properties}
       renderItem={({item, index}) => (
-        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
+        <PropertyItem 
+          {...item} 
+          onViewProperty={onViewProperty}
+          toggleFavourite={(val) => onFavourite(item.id, val)} 
+          />
       )}
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
       contentContainerStyle={{ alignItems:'center'}}
       ListEmptyComponent={() => <ListEmpty text='No items to display' />}
+      ListFooterComponent={() => <View style={{height: 100}}/>}
       />  
   )
  }
 
 const Recomendations = () => { 
 
-  const [data, setData] = useState(PROPERTIES);
-  const [favourite, setFavourite] = useState(new Map());
-
-  const onFavourite = (id, val) => { 
-    const newMap = new Map(favourite);
-    newMap.set(id, val);
-    setFavourite(newMap); 
-   }
 
   return(
-    <FlatList
-      data={data}
-      renderItem={({item, index}) => (
-        <PropertyItem {...item} toggleFavourite={(val) => onFavourite(item.id, val)} />
-      )}
-      keyExtractor={(item, i) => item.id}
-      style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
-      contentContainerStyle={{ alignItems:'center'}}
-      ListEmptyComponent={() => <ListEmpty text='No items to display' />}
-      />  
-  )
+    <ListEmpty text='No items to display' />  )
  }
 
 const MyTabBar = ({ state, descriptors, navigation, position, onChangeTab }) => (

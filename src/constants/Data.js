@@ -1,4 +1,19 @@
 import images from "../assets/images";
+import Patio from "../assets/svg/Patio";
+import Terrace from "../assets/svg/Terrace";
+import Colors from "./Colors";
+import Icon from "./Icon";
+import React from 'react';
+import PrivateBathroom from "../assets/svg/PrivateBathroom";
+import ChildCare from "../assets/svg/ChildCare";
+import Balcony from "../assets/svg/Balcony";
+import Sofa from "../assets/svg/Sofa";
+import WalkinShower from "../assets/svg/WalkinShower";
+import RollinShower from "../assets/svg/RollinShower";
+import GroundFloor from "../assets/svg/GroundFloor";
+import Elevator from "../assets/svg/Elevator";
+import LowerSink from "../assets/svg/LowerSink.js";
+import EmergencyCord from "../assets/svg/EmegencyCord";
 
 export const COUNTRIES = [
   { id: 7, name: "Afghanistan" },
@@ -309,6 +324,37 @@ export const CHECKS = [
   "Please take the trash out before you leave",
   "No illegal substances allowed on the premises"
 ];
+export const FACILITY_ICONS = {
+  'Terrace': <Terrace />,
+  'Private Bathroom': <PrivateBathroom />,
+  'Flat-screen TV': <Icon.Material name='tv' size={20} color={Colors.primaryColor} />,
+  'Child care': <ChildCare />,
+  'Soundproof': <Icon.Community name='music-note-off-outline' size={20} color={Colors.primaryColor} />,
+  'Balcony': <Balcony />,
+  'Kitchen/Kitchenette': <Icon.Material name='restaurant' size={20} color={Colors.primaryColor} />,
+  'Desk': <Icon.Community name='desk' size={20} color={Colors.primaryColor} />,
+  'Patio': <Patio />,
+  'Electric kettle': <Icon.Community name='kettle' size={20} color={Colors.primaryColor} />,
+  'Coffee/Tea maker': <Icon.Community name='coffee-maker' size={20} color={Colors.primaryColor} />,
+  'Washing machine': <Icon.Community name='washing-machine' size={20} color={Colors.primaryColor} />,
+  'Parking': <Icon.Ionicon name='car-outline' size={20} color={Colors.secondaryColor} />,
+  'Bike racks': <Icon.Community name='bike' size={20} color={Colors.secondaryColor} />,
+  'Dining options': <Icon.Material name='restaurant' size={20} color={Colors.secondaryColor} />, 
+  'Conference room': <Sofa />,
+  'Common area Wi-Fi': <Icon.Material name='wifi' size={20} color={Colors.secondaryColor} />,
+  'Entire unit located on ground floor': <GroundFloor />,
+  'Upper floors accessible by elevator': <Elevator />,
+  'Entire unit wheelchair accessible': <Icon.FontAwesome name='wheelchair' size={20} color={Colors.primaryColor} />,
+  'Toilet with grab rails': <Icon.Community name='toilet' size={20} color={Colors.primaryColor} />,
+  'Adapted bath': <Icon.Community name='shower' size={20} color={Colors.primaryColor} />,
+  'Roll-in shower': <RollinShower />,
+  'Walk-in shower': <WalkinShower />,
+  'Raised toilet': <Icon.Community name='toilet' size={20} color={Colors.primaryColor} />,
+  'Lower sink': <LowerSink />,
+  'Emergency cord in bathroom': <EmergencyCord />,
+  'Shower chair': <Icon.FontAwesome name='wheelchair' size={20} color={Colors.primaryColor} />,
+
+}
 
 export const COUNTRY_CODES = [
   { ru:"Афганистан",lt:"Afganistanas",tr:"Afganistan", en: 'Afghanistan', flag: '🇦🇫', code: 'AF', dialCode: '+93', mask: '999 999 9999' },
@@ -546,4 +592,48 @@ export const COUNTRY_CODES = [
   { ru:"Йемен",lt:"Jemenas",tr:"Yemen", en: 'Yemen',flag: '🇾🇪',code: 'YE', dialCode: '+967', mask: '999 999 999' },
   { ru:"Замбия",lt:"Zambija",tr:"Zambiya", en: 'Zambia',flag: '🇿🇲',code: 'ZM', dialCode: '+260', mask: '999 9999999' },
   { ru:"Zimbabve",lt:"Zimbabvė",tr:"Zimbabve", en: 'Zimbabwe',flag: '🇿🇼',code: 'ZW', dialCode: '+263', mask: '999 999 9999' }
+];
+
+export const COLLEGE_OPTIONS = [
+  { value: 'Harvard University', label: 'Harvard University' },
+  { value: 'Stanford University', label: 'Stanford University' },
+  {
+    value: 'Massachusetts Institute of Technology (MIT)',
+    label: 'Massachusetts Institute of Technology (MIT)',
+  },
+  {
+    value: 'University of California Berkeley (UCB)',
+    label: 'University of California Berkeley (UCB)',
+  },
+  {
+    value: 'University of California, Los Angeles (UCLA)',
+    label: 'University of California, Los Angeles (UCLA)',
+  },
+  { value: 'Yale University', label: 'Yale University' },
+  { value: 'Columbia University', label: 'Columbia University' },
+  { value: 'Princeton University', label: 'Princeton University' },
+  { value: 'New York University (NYU)', label: 'New York University (NYU)' },
+  {
+    value: 'University of Pennsylvania',
+    label: 'University of Pennsylvania',
+  },
+  { value: 'University of Chicago', label: 'University of Chicago' },
+  { value: 'Cornell University', label: 'Cornell University' },
+  { value: 'Duke University', label: 'Duke University' },
+  { value: 'Johns Hopkins University', label: 'Johns Hopkins University' },
+  {
+    value: 'University of Southern California',
+    label: 'University of Southern California',
+  },
+  { value: 'Northwestern University', label: 'Northwestern University' },
+  {
+    value: 'Carnegie Mellon University',
+    label: 'Carnegie Mellon University',
+  },
+  { value: 'University of Michigan ', label: 'University of Michigan ' },
+  { value: 'Boston University', label: 'Boston University' },
+  {
+    value: 'California Institute of Technology (Caltech)',
+    label: 'California Institute of Technology (Caltech)',
+  },
 ];

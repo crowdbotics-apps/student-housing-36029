@@ -37,6 +37,11 @@ const ApiService = {
   getReviews: () => get(`/api/v1/user-rating/`),
 
   postFeedback: (params) => post(`/feedback/`, params),
+  
+  getProperty: () => get(`/api/v1/property/`),
+  getWishlist: () => get(`/api/v1/property/?is_wish_listed=True`),
+  updateWishlist: (params) => post(`/api/v1/property-wishlist/`, params),
+
 };
 
 export default ApiService;

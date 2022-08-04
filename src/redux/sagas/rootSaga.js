@@ -8,6 +8,8 @@ import { fetchReviewsSaga } from './profile/fetchReviewsSaga';
 import { fetchProfileSaga } from './profile/fetchSaga';
 import { insertProfileSaga } from './profile/insertSaga';
 import { updateProfileSaga } from './profile/updateSaga';
+import { fetchPropertySaga, fetchWishlistSaga } from './property/fetchSaga';
+import { updateWishlistSaga } from './property/updateSaga';
 
 export default function* rootSaga() {
     yield all([
@@ -23,6 +25,9 @@ export default function* rootSaga() {
         changePassSaga(),
         changeEmailSaga(),
         changePhoneSaga(),
-        fetchReviewsSaga()
+        fetchReviewsSaga(),
+        fetchPropertySaga(),
+        fetchWishlistSaga(),
+        updateWishlistSaga()
     ])
 }

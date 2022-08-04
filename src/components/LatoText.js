@@ -18,7 +18,8 @@ const LatoText = (props) => {
                     color: color || Colors.text,
                     fontSize,
                     flexWrap: 'wrap',
-                    ...style
+                    ...style,
+                
                 }
             } {...textProps}>
                 {children}

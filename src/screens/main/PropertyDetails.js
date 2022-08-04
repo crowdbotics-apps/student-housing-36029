@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Pressable, ScrollView } from 'react-native';
+import moment from 'moment';
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Image } from 'react-native-elements';
+import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
-import Balcony from '../../assets/svg/Balcony';
-import ChildCare from '../../assets/svg/ChildCare';
-import PrivateBathroom from '../../assets/svg/PrivateBathroom';
-import Sofa from '../../assets/svg/Sofa';
-import Terrace from '../../assets/svg/Terrace';
 import Footer from '../../components/Footer';
 import HeartButton from '../../components/HeartButton';
 import ImageCarousel from '../../components/ImageCarousel';
@@ -18,16 +15,77 @@ import StyledDatepicker from '../../components/StyledDatepicker';
 import { TextButton } from '../../components/TextButton';
 import Colors from '../../constants/Colors';
 import { hp, rf, wp } from '../../constants/Constants';
-import { CHECKS, IMAGES } from '../../constants/Data';
+import { FACILITY_ICONS } from '../../constants/Data';
 import Icon from '../../constants/Icon';
 import { goBack } from '../../navigations/NavigationService';
+import { usePropertyDetails } from '../../redux/reducers/PropertyReducer';
+import { updateWishlist } from '../../redux/sagas/property/updateSaga';
+import { totalPrice } from '../../utilities/utils';
 
 export default function PropertyDetails() {
-  const [favourite, setFavourite] = useState(false);
+  const dispatch = useDispatch();
+  const details = usePropertyDetails();
+  const {
+    id,
+    title,
+    media = [],
+    rating,
+    description,
+    city,
+    country,
+    per_night_price,
+    time_type,
+    minimum_renting_duration,
+    room_facilities,
+    property_amenities,
+    room_accessibilities,
+    housing_rules,
+    type,
+    is_wish_listed
+  } = details;
 
-  const onFavourite = (val) => { 
-    setFavourite(val); 
+  const mediaFiles = media.map(file => file.property_media.split('?')[0]); 
+  
+  const [selectedDays, setSelectedDays] = useState({
+    from: new Date(),
+    to: new Date(new Date().getTime() + 24 * (minimum_renting_duration || 3) * 60 * 60 * 1000),
+  });
+  const startDate = moment(selectedDays.from);
+  const endDate = moment(selectedDays.to);
+  const totalDays = Math.ceil(endDate.diff(startDate, 'days', true));
+
+  const handleFromChange = (from=new Date()) => {
+    const startDate = moment(from);
+    const endDate = moment(selectedDays.to);
+    const totalDays = Math.ceil(endDate.diff(startDate, 'days', true));
+    if (totalDays <= 0) {
+      setSelectedDays((prev) => ({
+        ...prev,
+        from,
+        to: new Date(
+          from.getTime() +
+            24 * (minimum_renting_duration || 3) * 60 * 60 * 1000,
+        ),
+      }));
+    } else {
+      setSelectedDays((prev) => ({ ...prev, from }));
+    }
+  };
+
+  const handleToChange = (to) => {
+    setSelectedDays((prev) => ({ ...prev, to }));
+  };
+
+  const onFavourite = (id, val) => { 
+    console.log(id, val);
+    dispatch(
+      updateWishlist({
+        property_id: id,
+        is_wish_listed: val,
+      }),
+    );
    }
+
 
     return (
       <View style={styles.container}>
@@ -54,16 +112,16 @@ export default function PropertyDetails() {
             />  
 
           <Row style={{ justifyContent: 'center', width: '100%', marginBottom: hp('2%') }}>
-            <LatoText black fontSize={rf(2.2)}>{`Property Name`}</LatoText>
+            <LatoText black fontSize={rf(2.2)}>{title}</LatoText>
             <HeartButton 
-              onToggle={(val) => onFavourite()}
-              isSelected={favourite}
+              onToggle={(val) => onFavourite(id, val)}
+              isSelected={is_wish_listed}
               size={rf(2.2)}
               containerStyle={{ position: 'absolute', right: wp('5%'), width: rf(2.4), }}
               />
           </Row>
 
-          <ImageCarousel images={IMAGES} />
+          <ImageCarousel images={mediaFiles} />
 
           <View style={styles.details}>
              <LatoText bold style={styles.heading} >{`Booking Details:`}</LatoText>
@@ -71,20 +129,24 @@ export default function PropertyDetails() {
                 <View style={{ width: '50%' }}>
                   <StyledDatepicker 
                   label={'From'}
+                  value={selectedDays.from}
+                  onDateChange={handleFromChange}
                   datepickerStyle={{ width: 160 }}  
                   containerStyle={{ width: '100%', justifyContent: 'flex-start', }}
                   />
-                  <Detail label={'Price Per Night:'} value={"$54 per night"}/>
-                  <Detail label={'Check-In Date:'} value={"09/22/2021 (2 PM)"}/>
+                  <Detail label={'Price Per Night:'} value={`$${totalPrice(time_type, per_night_price, 1)} per night`}/>
+                  <Detail label={'Check-In Date:'} value={`${moment(new Date(selectedDays.from)).format('DD/MM/YYYY')} (2 PM)`}/>
                 </View>
                 <View style={{ width: '50%' }}>
                   <StyledDatepicker 
                     label={'To'}
+                    value={selectedDays.to}
+                    onDateChange={handleToChange}
                     datepickerStyle={{ width: 160 }}  
                     containerStyle={{ width: '100%', justifyContent: 'flex-start', }}
                     />
-                  <Detail label={'Total Per Chosen Period:'} value={"$108"}/>
-                  <Detail label={'Check-Out Date:'} value={"09/24/2021 (11 AM)"}/>
+                  <Detail label={'Total Per Chosen Period:'} value={`$${totalPrice(time_type, per_night_price, totalDays)}`}/>
+                  <Detail label={'Check-Out Date:'} value={`${moment(new Date(selectedDays.to)).format('DD/MM/YYYY')} (Until 11 AM)`}/>
                 </View>
              </Row>
              <PrimaryButton
@@ -99,47 +161,56 @@ export default function PropertyDetails() {
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Location:`}</LatoText>
-            <LatoText style={styles.text} >{`624 Snyder Avenue, Charlotte, NC, North Carolina. The location is located at the north of...`}</LatoText>
+            <LatoText style={styles.text} >{`${city}, ${country}`}</LatoText>
             <Image source={images.map} style={{ width: '100%', height: 250, resizeMode: 'contain', marginTop: 16}}/>
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Facilities:`}</LatoText>
-            <Row style={{ width: wp('90%'), }}>
-              <Facility text='Terrace' icon={<Terrace />} />
-              <Facility text='Flat-screen TV' icon={<Icon.Material name='tv' size={20} color={Colors.primaryColor} />} />
-              <Facility text='Soundproof' icon={<Icon.Community name='music-note-off-outline' size={20} color={Colors.primaryColor} />} />
-            </Row>
-            <Row style={{ width: wp('90%'), }}>
-              <Facility text='Childcare' icon={<ChildCare />} />
-              <Facility text='PrivateBathroom' icon={<PrivateBathroom />} />
-              <Facility text='Balcony' icon={<Balcony />} />
-            </Row>
+            {
+              room_facilities?.length !== 0 && 
+              <Row style={{ width: wp('90%'), flexWrap: 'wrap', justifyContent: 'flex-start', }}>
+                {
+                  room_facilities?.map(({ name }) => <Facility name={name} key={name} />)
+                }
+              </Row>
+            }
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Amenities:`}</LatoText>
-            <Row style={{ width: wp('90%'), }}>
-              <Facility text='Parking' icon={<Icon.Ionicon name='car-outline' size={20} color={Colors.secondaryColor} />} />
-              <Facility text='Wi-Fi' icon={<Icon.Material name='wifi' size={20} color={Colors.secondaryColor} />} />
-              <Facility text='Dining options' icon={<Icon.Material name='restaurant' size={20} color={Colors.secondaryColor} />} />
-            </Row>
-            <Row style={{ width: wp('90%'), justifyContent: 'flex-start',}}>
-              <Facility text='Bike racks' icon={<Icon.Community name='bike' size={20} color={Colors.secondaryColor} />} />
-              <Facility text='Conference room' icon={<Sofa />} />
-            </Row>
+            {
+              property_amenities?.length !== 0 && 
+              <Row style={{ width: wp('90%'), flexWrap: 'wrap', justifyContent: 'flex-start', }}>
+                {
+                  property_amenities?.map(({ name }) => <Facility name={name} key={name} />)
+                }
+              </Row>
+            }
+          </View>
+
+          <View style={{ width: wp('90%'), marginTop: 24, }}>
+            <LatoText bold style={styles.heading} >{`Accessibilities:`}</LatoText>
+            {
+              room_accessibilities?.length !== 0 && 
+              <View style={{ width: wp('90%'), justifyContent: 'flex-start', }}>
+                {
+                  room_accessibilities?.map(({ name }) => <Accessibility name={name} key={name} />)
+                }
+              </View>
+            }
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`House Rules:`}</LatoText>
             {
-              CHECKS.map(text => <Check text={text} checked={false} key={text} />)
+              housing_rules.map(({ id, name }) => <Check text={name} checked={false} key={id} />)
             }
           </View>
 
           <Row style={{ width: wp('90%'), marginTop: 24, justifyContent: 'flex-start',}}>
             <LatoText bold fontSize={rf(1.8)}>{`Property Type:`}</LatoText>
-            <LatoText style={{ marginLeft: 10 }} >{`Lorem Ipsum Type`}</LatoText>
+            <LatoText style={{ marginLeft: 10 }} >{type}</LatoText>
           </Row>
           
           <Row style={{ width: wp('85%'), height: 50, marginVertical: 30, alignItems: 'center', }}>
@@ -176,11 +247,19 @@ const Detail = ({ label, value }) => {
     </View>
   )
  }
- const Facility = ({ icon, text }) => { 
+ const Facility = ({ name }) => { 
   return (
-    <Row style={{ justifyContent: 'flex-start', width: '34%', height: 30 }}>
-      {icon}
-      <LatoText style={{ marginLeft: 10 }}>{text}</LatoText>
+    <Row style={{ justifyContent: 'flex-start', width: '33%', height: 30 }}>
+      {FACILITY_ICONS[name]}
+      <LatoText style={{ marginLeft: 10 }}>{name}</LatoText>
+    </Row>
+  )
+}
+ const Accessibility = ({ name }) => { 
+  return (
+    <Row style={{ justifyContent: 'flex-start', width: '100%', height: 30 }}>
+      {FACILITY_ICONS[name]}
+      <LatoText style={{ marginLeft: 10 }}>{name}</LatoText>
     </Row>
   )
 }

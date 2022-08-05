@@ -1338,6 +1338,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@timwangdev/react-native-geocoder@^1.0.0-alpha.7":
+  version "1.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@timwangdev/react-native-geocoder/-/react-native-geocoder-1.0.0-alpha.7.tgz#f79f5cd4ee37f50296fcd77251bef3582ffe1d65"
+  integrity sha512-Iba6/DICfCoeSbCkdvIhBveSS/03MgCoP+HDQHwaCottyhGYHEsp8DEADkJxCvm0QOVNQtpQq4ATPJMY3QCd4Q==
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -1380,6 +1385,11 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
+
+"@types/geojson@^7946.0.8":
+  version "7946.0.10"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.10.tgz#6dfbf5ea17142f7f9a043809f1cd4c448cb68249"
+  integrity sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -6053,6 +6063,13 @@ react-native-linear-gradient@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz#56598a76832724b2afa7889747635b5c80948f38"
   integrity sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ==
+
+react-native-maps@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.1.0.tgz#374dd1bcae1ef6702ff262e9f6f1967a65df00a2"
+  integrity sha512-PmdEVCisYkbvS5qKn/N5jiAP/zoUau0PBOc4CAil3lSMzLLwIqiLUzK1VNKQnbxwOaJalTZFxBoRUyPGgVAvmQ==
+  dependencies:
+    "@types/geojson" "^7946.0.8"
 
 react-native-modal@^13.0.1:
   version "13.0.1"

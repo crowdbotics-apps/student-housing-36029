@@ -1,9 +1,8 @@
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Image } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
-import images from '../../assets/images';
 import Footer from '../../components/Footer';
 import HeartButton from '../../components/HeartButton';
 import ImageCarousel from '../../components/ImageCarousel';
@@ -14,17 +13,25 @@ import Row from '../../components/Row';
 import StyledDatepicker from '../../components/StyledDatepicker';
 import { TextButton } from '../../components/TextButton';
 import Colors from '../../constants/Colors';
-import { hp, rf, wp } from '../../constants/Constants';
+import { hp, MAPS_API_KEY, rf, wp } from '../../constants/Constants';
 import { FACILITY_ICONS } from '../../constants/Data';
 import Icon from '../../constants/Icon';
 import { goBack } from '../../navigations/NavigationService';
-import { usePropertyDetails } from '../../redux/reducers/PropertyReducer';
+import { useIsLoading, usePropertyDetails } from '../../redux/reducers/PropertyReducer';
 import { updateWishlist } from '../../redux/sagas/property/updateSaga';
 import { totalPrice } from '../../utilities/utils';
+import { GeocodeAddress } from '../../services/Geocoding';
+import GoogleMaps from '../../components/GoogleMaps';
+import InfoBox from '../../components/InfoBox';
+import { bookProperty } from '../../redux/sagas/property/bookPropertySaga';
+import { checkIsBooked } from '../../utilities/checkIsBooked';
+
 
 export default function PropertyDetails() {
   const dispatch = useDispatch();
   const details = usePropertyDetails();
+  const isLoading = useIsLoading();
+
   const {
     id,
     title,
@@ -33,6 +40,7 @@ export default function PropertyDetails() {
     description,
     city,
     country,
+    latitude, longitude,
     per_night_price,
     time_type,
     minimum_renting_duration,
@@ -41,7 +49,8 @@ export default function PropertyDetails() {
     room_accessibilities,
     housing_rules,
     type,
-    is_wish_listed
+    is_wish_listed,
+    bookings
   } = details;
 
   const mediaFiles = media.map(file => file.property_media.split('?')[0]); 
@@ -86,6 +95,39 @@ export default function PropertyDetails() {
     );
    }
 
+   const [coords, setCoords] = useState({ latitude, longitude });
+   
+   useEffect(() => {
+    if(coords.latitude === null) {
+      GeocodeAddress(city, ({lat,lng}) => setCoords({ latitude: lat, longitude: lng }))
+    }
+   }, []);
+
+   const [propertyBooked, setPropertyBooked] = useState(false);
+
+   useEffect(() => {
+    if (bookings) {
+      const existingBookings = bookings.map((booking) => {
+        return {
+          from: booking.book_from,
+          to: booking.book_to,
+        };
+      });
+      const returnVal = checkIsBooked(existingBookings, selectedDays);
+      setPropertyBooked(returnVal);
+    }
+  }, [selectedDays, bookings]);
+
+
+   const handleBookProperty = () => {
+    dispatch(
+      bookProperty({
+        property_id: id,
+        book_from: moment(selectedDays.from).format('MM-DD-YYYY'),
+        book_to: moment(selectedDays.to).format('MM-DD-YYYY'),
+      }),
+    );
+  };
 
     return (
       <View style={styles.container}>
@@ -111,7 +153,7 @@ export default function PropertyDetails() {
             TouchableComponent={Pressable}
             />  
 
-          <Row style={{ justifyContent: 'center', width: '100%', marginBottom: hp('2%') }}>
+          <Row style={{ justifyContent: 'center', width: '100%', marginBottom: 5 }}>
             <LatoText black fontSize={rf(2.2)}>{title}</LatoText>
             <HeartButton 
               onToggle={(val) => onFavourite(id, val)}
@@ -121,6 +163,19 @@ export default function PropertyDetails() {
               />
           </Row>
 
+          <InfoBox style={{ width: wp('90%'), marginBottom: hp('1%') }}>
+            <Row style={{ justifyContent: 'center', width: '100%' }}>
+              <Icon.Material name='check-circle-outline' color={Colors.primaryColor} size={20} style={{ marginRight: 5}} />
+              <LatoText fontSize={rf(1.5)}>
+                Book property for a month and receive 20% off.
+              </LatoText>
+              <TextButton 
+                title={'Book Now'} 
+                titleStyle={{ color: "#000", fontSize: rf(1.5), fontFamily: "Lato-Bold", height: 20 }}
+                containerStyle={{ marginLeft: 5,  }}
+              />
+            </Row>
+          </InfoBox>
           <ImageCarousel images={mediaFiles} />
 
           <View style={styles.details}>
@@ -149,20 +204,35 @@ export default function PropertyDetails() {
                   <Detail label={'Check-Out Date:'} value={`${moment(new Date(selectedDays.to)).format('DD/MM/YYYY')} (Until 11 AM)`}/>
                 </View>
              </Row>
+             {propertyBooked && (
+                <LatoText color='#FF0000' fontSize={rf(1.6)} style={{ alignSelf: 'center', marginTop: 24 }}>Currently unavailable</LatoText>
+              )}
              <PrimaryButton
               title={'Book Property'}
-              // onPress={() => submitForm(formValues, imgFile)}
-              // loading={isLoading}
+              onPress={handleBookProperty}
+              loading={isLoading}
               titleStyle={{ fontSize: rf(1.8)}}
               buttonStyle={{ width: 300, height: hp('5%'),  }}
               containerStyle={{ marginTop: 24, alignSelf: 'center', }}
+              disabled={propertyBooked}
               />
+
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Location:`}</LatoText>
             <LatoText style={styles.text} >{`${city}, ${country}`}</LatoText>
-            <Image source={images.map} style={{ width: '100%', height: 250, resizeMode: 'contain', marginTop: 16}}/>
+            <GoogleMaps 
+              center={coords || { latitude: 0, longitude: 0 }}
+              markers={[{
+                key: city, 
+                id: city, 
+                markerCoords: coords || { latitude: 0, longitude: 0 }, 
+                title: title, 
+                description: `${city}, ${country}`
+              }]}
+              mapContainer={{ height: 185, marginTop: 16 }}
+            />
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
@@ -204,7 +274,7 @@ export default function PropertyDetails() {
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`House Rules:`}</LatoText>
             {
-              housing_rules.map(({ id, name }) => <Check text={name} checked={false} key={id} />)
+              housing_rules?.map(({ id, name }) => <Check text={name} checked={false} key={id} />)
             }
           </View>
 
@@ -290,7 +360,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor:Colors.primaryColor,
     borderRadius: 12,
-    marginTop: hp('2%')
+    marginTop: hp('2%'),
+    backgroundColor: "#F7FAFC"
   },
   heading: {
     fontSize: rf(1.8),

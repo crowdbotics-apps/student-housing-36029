@@ -18,3 +18,5 @@ export const MEDIUM_FONT_SIZE = 'medium';
 export const SMALL_FONT_SIZE = 'small';
 
 export const WEEDAYNAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 
+
+export const MAPS_API_KEY = 'AIzaSyA_vQE6I6hiba78JTQFEXM65wtNMQXNsJM';; 

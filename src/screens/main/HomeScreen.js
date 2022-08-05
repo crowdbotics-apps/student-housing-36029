@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useIsFocused } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useDispatch } from 'react-redux';
@@ -13,7 +13,7 @@ import Colors from '../../constants/Colors';
 import { rf, wp } from '../../constants/Constants';
 import { PROPERTIES } from '../../constants/Data';
 import { navigate } from '../../navigations/NavigationService';
-import { setPropertyDetails, useIsLoading, useProperty, useWishlist } from '../../redux/reducers/PropertyReducer';
+import { setPropertyDetails, useIsLoading, useProperty, useWishlist, useWishlistUpdated } from '../../redux/reducers/PropertyReducer';
 import { fetchProperty, fetchWishlist } from '../../redux/sagas/property/fetchSaga';
 import { updateWishlist } from '../../redux/sagas/property/updateSaga';
 import { useDispatchEffect } from '../../utilities/hooks';
@@ -26,7 +26,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
 
       <NavigationHeader />
-
 
       <Tab.Navigator
         tabBar={props => <MyTabBar {...props} onChangeTab={() => {}}/>}
@@ -96,9 +95,15 @@ const Wishlisted = () => {
   const properties = useWishlist();
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
-  const isFocused = useIsFocused()
+  const isWishlistUpdated = useWishlistUpdated()
+  const isFocused = useIsFocused();
 
   useDispatchEffect(fetchWishlist, null, isFocused);
+
+  useEffect(() => {
+    if(isWishlistUpdated) 
+      dispatch(fetchWishlist())
+  }, [isWishlistUpdated]);
 
   const [favourite, setFavourite] = useState(new Map());
 

@@ -33,3 +33,16 @@ export const getSimplifiedError = (error, field) => {
     return errors;
   };
   
+  export const getStringError = (error) => {
+    if (!Object.keys(error).length || typeof error === 'string') return error;
+    let errors = [];
+    if (Array.isArray(error) && error.length) {
+      errors = [error[0].message, ...error];
+    } else {
+      Object.keys(error).forEach((e) => {
+        return (errors = [...errors, error[e]]);
+      });
+    }
+  
+    return errors.filter((e) => e).join('\n');
+  };

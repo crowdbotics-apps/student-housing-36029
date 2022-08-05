@@ -12,13 +12,14 @@ export const propertySlice = createSlice({
     wishlist: [],
     propertyDetails: {},
     success: null,
+    wishlistUpdated: false,
     reviews: []
   },
   reducers: {
     startLoading: (state, action) => {
       state.isLoading = true;
       state.success = false
-      state.error = null
+      state.error = null;
     },
     setProperty: (state, action) => {
       state.property = action.payload;
@@ -36,7 +37,11 @@ export const propertySlice = createSlice({
       state.wishlist = action.payload;
       state.success = true;
       state.error = null;
-      state.isLoading = false
+      state.isLoading = false;
+      state.wishlistUpdated = false;
+    },
+    setWishlistUpdated: (state, action) => {
+      state.wishlistUpdated = action.payload;
     },
     setPropertyDetails: (state, action) => {
       state.propertyDetails = action.payload;
@@ -60,6 +65,7 @@ export const {
   setProperty,
   updateProperty,
   setWishlist,
+  setWishlistUpdated,
   setPropertyDetails,
   setReviews,
   setError
@@ -68,6 +74,7 @@ export const {
 export const useSuccess =  () => useSelector(state => state.Property.success)
 export const useProperty =  () => useSelector(state => state.Property.property)
 export const useWishlist =  () => useSelector(state => state.Property.wishlist)
+export const useWishlistUpdated =  () => useSelector(state => state.Property.wishlistUpdated)
 export const usePropertyDetails =  () => useSelector(state => state.Property.propertyDetails)
 export const useReviews =  () => useSelector(state => state.Property.reviews)
 export const useIsLoading =  () => useSelector(state => state.Property.isLoading)

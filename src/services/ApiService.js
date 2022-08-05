@@ -41,6 +41,7 @@ const ApiService = {
   getProperty: () => get(`/api/v1/property/`),
   getWishlist: () => get(`/api/v1/property/?is_wish_listed=True`),
   updateWishlist: (params) => post(`/api/v1/property-wishlist/`, params),
+  bookProperty: (params) => post(`/api/v1/book-property/`, params),
 
 };
 

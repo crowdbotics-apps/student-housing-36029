@@ -8,6 +8,7 @@ import { fetchReviewsSaga } from './profile/fetchReviewsSaga';
 import { fetchProfileSaga } from './profile/fetchSaga';
 import { insertProfileSaga } from './profile/insertSaga';
 import { updateProfileSaga } from './profile/updateSaga';
+import { bookPropertySaga } from './property/bookPropertySaga';
 import { fetchPropertySaga, fetchWishlistSaga } from './property/fetchSaga';
 import { updateWishlistSaga } from './property/updateSaga';
 
@@ -28,6 +29,7 @@ export default function* rootSaga() {
         fetchReviewsSaga(),
         fetchPropertySaga(),
         fetchWishlistSaga(),
-        updateWishlistSaga()
+        updateWishlistSaga(),
+        bookPropertySaga()
     ])
 }

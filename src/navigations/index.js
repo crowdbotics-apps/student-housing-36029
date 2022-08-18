@@ -11,6 +11,7 @@ import HomeScreen from '../screens/main/HomeScreen';
 import PaymentScreen from '../screens/main/PaymentScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 import PropertyDetails from '../screens/main/PropertyDetails';
+import SearchScreen from '../screens/main/SearchScreen';
 import SettingScreen from '../screens/main/SettingScreen';
 import { useTokenCheck } from '../utilities/hooks';
 import { isReadyRef, navigationRef } from './NavigationService';
@@ -47,6 +48,7 @@ const Navigation = () => {
         :
         <>
         <Stack.Screen name="Main" component={HomeScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
         <Stack.Screen name="Settings" component={SettingScreen} />
         <Stack.Screen name="FAQ" component={FaqScreen} />

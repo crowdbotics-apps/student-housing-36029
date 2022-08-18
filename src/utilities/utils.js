@@ -50,3 +50,13 @@ export const checkIsBooked = (bookingPeriod, selectedDate) => {
   });
   return isBooked;
 };
+
+
+
+export function escapeRegexCharacters(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function toQueryString(arr=[]) {
+  return arr.length>0 ? arr.join(',') : null;
+}

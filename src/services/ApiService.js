@@ -3,7 +3,7 @@ import axios from "axios";
 axios.defaults.baseURL = 'https://student-housing-app-23717.botics.co';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers['Accept'] = 'application/json';
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 5000;
 axios.defaults.validateStatus = (status) => status >= 200 && status < 500;
 
 const post = (url, body = {}) => axios.post(url, body);
@@ -42,6 +42,10 @@ const ApiService = {
   getWishlist: () => get(`/api/v1/property/?is_wish_listed=True`),
   updateWishlist: (params) => post(`/api/v1/property-wishlist/`, params),
   bookProperty: (params) => post(`/api/v1/book-property/`, params),
+
+  getFilters: () => get(`/api/v1/property-config/`),
+
+  getSearch: (param) => get(`/api/v1/property-search/?${param}/`),
 
 };
 

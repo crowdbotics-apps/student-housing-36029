@@ -9,12 +9,6 @@ import Icon from '../../constants/Icon';
 import { goBack } from '../../navigations/NavigationService';
 import Row from '../../components/Row';
 import LatoText from '../../components/LatoText';
-import StyledInput from '../../components/StyledInput';
-import CommonStyles from '../../constants/CommonStyles';
-import PrimaryButton from '../../components/PrimaryButton';
-import VisaIcon from '../../assets/svg/Visa';
-import { TextButton } from '../../components/TextButton';
-import StyledDropdown from '../../components/StyledDropdown';
 import { useKeyboard } from '../../utilities/hooks';
 
 const DUMMYTEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`; 

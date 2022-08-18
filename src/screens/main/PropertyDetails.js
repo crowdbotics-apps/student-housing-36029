@@ -25,13 +25,14 @@ import GoogleMaps from '../../components/GoogleMaps';
 import InfoBox from '../../components/InfoBox';
 import { bookProperty } from '../../redux/sagas/property/bookPropertySaga';
 import { checkIsBooked } from '../../utilities/checkIsBooked';
+import BookingSuccessModal from '../../components/BookingSuccessModal';
 
 
 export default function PropertyDetails() {
   const dispatch = useDispatch();
   const details = usePropertyDetails();
   const isLoading = useIsLoading();
-
+  const [showSuccess, setShowSuccess] = useState(false);
   const {
     id,
     title,
@@ -119,7 +120,7 @@ export default function PropertyDetails() {
   }, [selectedDays, bookings]);
 
 
-   const handleBookProperty = () => {
+  const handleBookProperty = () => {
     dispatch(
       bookProperty({
         property_id: id,
@@ -304,7 +305,13 @@ export default function PropertyDetails() {
              
         </ScrollView>
 
+        <BookingSuccessModal 
+          isModalVisible={showSuccess} 
+          closeModal={() => { setShowSuccess(false) }} 
+          data={details}
+          />
         <Footer />
+
       </View>
     )
 }

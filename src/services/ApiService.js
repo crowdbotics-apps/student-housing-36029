@@ -47,6 +47,13 @@ const ApiService = {
 
   getSearch: (param) => get(`/api/v1/property-search/?${param}/`),
 
+  // Owner side APIs
+
+  getOwnerProperty: () => get(`/api/v1/user/owned-properties/`),
+  addHouseRule: (params) => post(`/api/v1/housing-rules/`, params),
+  updateHouseRule: (id, params) => patch(`/api/v1/housing-rules/${id}/`, params),
+  deleteHouseRule: (id) => del(`/api/v1/housing-rules/${id}/`),
+
 };
 
 export default ApiService;

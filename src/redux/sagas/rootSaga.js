@@ -9,7 +9,7 @@ import { fetchProfileSaga } from './profile/fetchSaga';
 import { insertProfileSaga } from './profile/insertSaga';
 import { updateProfileSaga } from './profile/updateSaga';
 import { bookPropertySaga } from './property/bookPropertySaga';
-import { fetchConfigSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
+import { fetchConfigSaga, fetchOwnerPropertySaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
 import { updateWishlistSaga } from './property/updateSaga';
 
 export default function* rootSaga() {
@@ -32,6 +32,7 @@ export default function* rootSaga() {
         updateWishlistSaga(),
         bookPropertySaga(),
         fetchConfigSaga(),
-        searchPropertySaga()
+        searchPropertySaga(),
+        fetchOwnerPropertySaga()
     ])
 }

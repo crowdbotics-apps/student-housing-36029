@@ -16,7 +16,7 @@ export default class GoogleMaps extends Component {
     
         this.state = {
           camera: {
-            center: props.center,
+            center: props.center || { latitude: 0.0, longitude: 0.0 },
             pitch: props.pitch || 90,
             heading: props.heading || 0,
           
@@ -30,15 +30,15 @@ export default class GoogleMaps extends Component {
       }
 
     static getDerivedStateFromProps(props, state) {
-        // console.log('getDerivedStateFromProps ----->', props, state);
-        // console.log('location changed >>>>>>>', props.center);  
+        console.log('getDerivedStateFromProps ----->', props, state);
+        console.log('location changed >>>>>>>', props.center);  
         return {
           camera: {
-            center: props.center,
+            center: props.center || { latitude: 0.0, longitude: 0.0 },
             pitch: 90,
             heading: 0,
             altitude: 100,
-            zoom: props.zoom
+            zoom: props.zoom || 15
           }
         };
         // Return null to indicate no change to state.

@@ -15,7 +15,8 @@ export const propertySlice = createSlice({
     wishlistUpdated: false,
     reviews: [],
     propertyConfig: {},
-    propertyFilters: {}
+    propertyFilters: {},
+    houseRules: []
   },
   reducers: {
     startLoading: (state, action) => {
@@ -59,6 +60,22 @@ export const propertySlice = createSlice({
       state.error = null;
       state.isLoading = false
     },
+    setHouseRules: (state, action) => {
+      state.houseRules.push(action.payload);
+      state.error = null;
+      state.isLoading = false
+    },
+    editHouseRules: (state, action) => {
+      const updatedRule = action.payload;
+      const index = state.houseRules.findIndex(r => r.id === updatedRule.id); 
+      if (updatedRule.rule) {
+        state.houseRules[index].name = updatedRule.rule.name;
+      } else {
+        state.houseRules.splice(index, 1);
+      }
+      state.error = null;
+      state.isLoading = false
+    },
     setError: (state, action) => {
       state.error = action.payload;
       state.success =false;
@@ -79,6 +96,8 @@ export const {
   setReviews,
   setConfig,
   setFilters,
+  setHouseRules,
+  editHouseRules,
   setError
 } = propertySlice.actions;
 
@@ -90,6 +109,7 @@ export const useWishlist =  () => useSelector(state => state.Property.wishlist)
 export const useWishlistUpdated =  () => useSelector(state => state.Property.wishlistUpdated)
 export const usePropertyDetails =  () => useSelector(state => state.Property.propertyDetails)
 export const useReviews =  () => useSelector(state => state.Property.reviews)
+export const useHouseRules =  () => useSelector(state => state.Property.houseRules)
 export const useIsLoading =  () => useSelector(state => state.Property.isLoading)
 
 export default propertySlice.reducer

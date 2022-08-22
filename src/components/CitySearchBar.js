@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, FlatList, Pressable, TouchableOpacity } from 'r
 import { Input } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
+import CommonStyles from '../constants/CommonStyles';
 import { rf, wp } from '../constants/Constants';
 import { CITIES } from '../constants/Data';
 import Icon from '../constants/Icon';
@@ -11,28 +12,27 @@ import { escapeRegexCharacters } from '../utilities/utils';
 import LatoText from './LatoText';
 import PrimaryButton from './PrimaryButton';
 import Row from './Row';
+import StyledInput from './StyledInput';
 
 const SEARCHBAR_WIDTH = wp('50%'); 
 
-export default function StyledSearchBar(props) {
-  const dispatch = useDispatch();
-  const filters = useFilters();
-  const isLoading = useIsLoading();
+export default function CitySearchBar({ value, onSelect }) {
 
   const updateText = (text) => {
-    props.onChangeText && props.onChangeText(text);
+    // onChangeText && onChangeText(text);
     onSearch(text);
 }
 
-  const _onEndEditting = (event) => {
-    setShowSuggestions(false)
-    const value = event.nativeEvent.text; 
-    if (!value || value.length === 0) return;
-  }
+const _onEndEditting = (event) => {
+  setShowSuggestions(false)
+  const value = event.nativeEvent.text; 
+  if (!value || value.length === 0) return;
+  onSelect(value);
+}
 
 
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestion, setSuggestion] = useState(filters.city);
+  const [suggestion, setSuggestion] = useState(value || '');
   const [searchSuggestions, setSearchSuggestions] = useState([]);
 
   function getSuggestions(value) {
@@ -54,47 +54,27 @@ export default function StyledSearchBar(props) {
     console.log('suggestion: ', value)
     setSuggestion(value)
     setShowSuggestions(false);
-    props.onSelectSuggestion && props.onSelectSuggestion(value)
-  }
-  const handleSearch = () => { 
-    setShowSuggestions(false)
-    dispatch(setFilters({ 
-      ...filters, 
-      city: suggestion.trim().length>0 ? suggestion : null 
-    }));
+    onSelect(value);
   }
 
     return (
     <>
-      <View style={{ position: 'absolute', top: 40, left:0, zIndex :10099 }}>
-        <Row style={{ width: wp('90%'), }}>
-            <View style={styles.container}>
-              <Row style={styles.row} >
-                <Icon.FontAwesome name='search' size={rf(2.2)} color={Colors.text}/>
-                <Input 
-                  containerStyle={{ width: SEARCHBAR_WIDTH-20, height: 50}}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={[styles.inputText, props.inputStyle]}
-                  rightIcon={<Icon.Material name='arrow-drop-down' size={25} onPress={() => onSearch(suggestion)}/>}
-                  onChangeText={updateText}
-                  value={suggestion}
-                  onEndEditing={_onEndEditting}
-                  placeholder={'Search by city name'}
-                  placeholderTextColor={Colors.text}
-                  onFocus={() => onSearch(suggestion)}
-                  onBlur={() => setShowSuggestions(false)}
-                />
-              </Row>
-            </View>
-            <PrimaryButton
-              title={'Search'}
-              onPress={handleSearch}
-              loading={isLoading}
-              titleStyle={{ fontSize: rf(1.8) }}
-              buttonStyle={{ width: wp('40%')-16, height: 50,  }}
-              containerStyle={{  }}
-              />
-        </Row>
+      <View style={{width: '100%',  }}>
+        <Input
+          containerStyle={CommonStyles.input}
+          inputContainerStyle={styles.inputContainer}
+          inputStyle={styles.inputText}  
+          placeholder={'Start typing country'}
+          keyboardType="default"
+          returnKeyType="done"
+          onChangeText={updateText}
+          value={suggestion}
+          onEndEditing={_onEndEditting}
+          onFocus={() => onSearch(suggestion)}
+          onBlur={() => setShowSuggestions(false)}
+          rightIcon={<Icon.Material name='arrow-drop-down' size={25} onPress={() => onSearch(suggestion)}/>}
+          />
+
         {showSuggestions && 
         <View style={styles.flatlist}>
           <FlatList
@@ -106,12 +86,12 @@ export default function StyledSearchBar(props) {
           )}
           keyExtractor={(item, i) => `${i}`}
           style={{ width: "100%", height: '100%' }}
-          keyboardShouldPersistTaps='always'
+          keyboardShouldPersistTaps='handled'
           />  
         </View>
         }
-        </View>
-      <View style={{ height: 90 }}/>
+      </View>
+      {/* <View style={{ height: 120 }}/> */}
     </>
     )
 }
@@ -136,8 +116,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   flatlist: {
-    height: 200,
-    width: SEARCHBAR_WIDTH,
+    height: 150,
+    width: '100%',
     paddingHorizontal: 20,
     backgroundColor: '#FFF',
     elevation: 6,
@@ -145,17 +125,22 @@ const styles = StyleSheet.create({
     zIndex: 1000000
   },
   inputContainer: {
-    height: 50,
-    borderBottomWidth: 0
+    backgroundColor: Colors.white,
+    width: '100%',
+    height: 45,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#4797AF',
 },
-inputText: {
-    fontFamily: 'Lato-Regular',
-    color: Colors.text,
-    fontSize: rf(1.8)
-},
-suggestion: {
-  lineHeight: 25
-}
+  inputText: {
+      fontFamily: 'Lato-Regular',
+      color: '#828282',
+      fontSize: rf(1.5)
+  },
+  suggestion: {
+    lineHeight: 25
+  }
 
 
 })

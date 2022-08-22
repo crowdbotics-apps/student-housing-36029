@@ -63,9 +63,24 @@ function SigninScreen() {
 
   return (
 
-        <View style={styles.container} >
+    <View style={styles.container} >
 
-          <NavigationHeader />
+      <NavigationHeader />
+        
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : null}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={{
+            width: wp("100%"),
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: 0,
+            backgroundColor: Colors.background
+          }}
+          showsVerticalScrollIndicator={false}
+        >
 
           <Image  
             source={images.background2}
@@ -80,14 +95,14 @@ function SigninScreen() {
               icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
               titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
               buttonStyle={{ backgroundColor: "transparent", }}
-              containerStyle={{ marginBottom: 30, alignSelf: 'flex-start' }}
+              containerStyle={{ alignSelf: 'flex-start' }}
               TouchableComponent={TouchableOpacity}
               />  
 
             <Tab.Navigator
               initialRouteName={tab===0 ? 'SignupForm' : 'SigninForm'}
               tabBar={props => <MyTabBar {...props} onChangeTab={label => setLabel(label)}/>}
-              initialLayout={{ width: wp('100%'), height: 400 }}
+              initialLayout={{ width: wp('100%'), height: 500 }}
               style={{ width: wp('100%'), backgroundColor: '#FFF', }}
               backBehavior='none'
               screenOptions={{
@@ -99,6 +114,8 @@ function SigninScreen() {
             </Tab.Navigator>
 
           </View>
+        </ScrollView>
+        </KeyboardAvoidingView>
         </View>
     )
 }
@@ -145,19 +162,6 @@ const SignupForm = () => {
       }));
   }     
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : null}
-      style={styles.container}
-    >
-      <ScrollView
-        contentContainerStyle={{
-          width: wp("100%"),
-          alignItems: "center",
-          justifyContent: "center",
-          paddingBottom: 0,
-        }}
-        showsVerticalScrollIndicator={false}
-      >
         <View style={styles.formContainer2} >
           <StyledInput
             required
@@ -212,19 +216,16 @@ const SignupForm = () => {
               onSelect={(item) => onSubmitValue("userType", item.value)}
             />
           </View>
-        </View>
-
-      </ScrollView>
-        { !isKeyboardVisible &&
+        
         <PrimaryButton
           title={'Sign Up'}
           onPress={() => submitForm(formValues)}
           loading={isLoading}
           buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
-          containerStyle={{ position: "absolute" , bottom: 0, marginTop: hp('4%') }}
+          containerStyle={{ marginTop: hp('4%') }}
           />
-        }
-    </KeyboardAvoidingView>
+
+        </View>
   )
  }
 const SigninForm = () => { 
@@ -281,22 +282,8 @@ const SigninForm = () => {
   }, [authError]);
 
   return (
-    <KeyboardAvoidingView
-      //keyboardVerticalOffset={keyboardVerticalOffset}
-      behavior={Platform.OS == "ios" ? "padding" : null}
-      style={styles.container}
-      
-    >
-      <ScrollView
-        contentContainerStyle={{
-          width: wp("100%"),
-          alignItems: "center",
-          justifyContent: "center",
-          paddingBottom: hp("4%"),
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={[styles.formContainer2, { height: 220 }]} >
+      <View style={{ alignItems: 'center', backgroundColor: Colors.background }}>
+        <View style={[styles.formContainer2, { justifyContent: 'flex-start', height: 450 }]} >
           <StyledInput
             required
             containerStyle={CommonStyles.input}
@@ -320,22 +307,19 @@ const SigninForm = () => {
             type='clear'
             onPress={() => navigate('ForgetPassword')}
             titleStyle={{ color: Colors.primaryColor, fontSize: rf(1.8), fontFamily: 'Lato-Bold', textDecorationLine: 'underline' }}
-            containerStyle={{  alignSelf: 'flex-start' }}
+            containerStyle={{ alignSelf: 'flex-start' }}
             TouchableComponent={TouchableOpacity}
             />  
         </View>
-      </ScrollView>
-      { !isKeyboardVisible &&
         <PrimaryButton
           title={'Sign In'}
           onPress={() => submitForm(formValues)}
           loading={isLoading}
           buttonStyle={{ width: wp('90%'), height: hp('5%'),  }}
-          containerStyle={{ position: "absolute" , bottom: 0, marginTop: hp('4%') }}
+          containerStyle={{ }}
           />
-      }
-
-    </KeyboardAvoidingView>
+      </View>
+      
   )
 
  }
@@ -404,21 +388,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: wp('100%'),
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFF',
     paddingVertical: hp('4%'),
-    paddingHorizontal: wp('5%')
-
+    paddingHorizontal: wp('5%'),
   },
   formContainer2: {
     alignItems: 'center',
     justifyContent: 'space-between',
     width: wp('100%'),
-    height: 420,
+    height: 480,
     backgroundColor: '#FFF',
-    marginTop: hp('4%'),
+    paddingTop: hp('4%'),
     paddingHorizontal: wp('5%'),
-    marginBottom: hp('10%')
-
   },
   heading:{
     color: '#3D374F',

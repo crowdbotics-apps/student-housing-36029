@@ -64,6 +64,7 @@ const SearchFilters = () => {
    
   useEffect(() => {
    if(city?.length) {
+    setCoords(null);
      GeocodeAddress(city, ({lat,lng}) => setCoords({ latitude: lat, longitude: lng }))
    }
   }, [city]);
@@ -98,9 +99,9 @@ const SearchFilters = () => {
 
   return (
     <>
-    <View style={{ marginTop: 30}}>
+    <View style={{ marginTop: 20}}>
        <Row style={{ width: wp('50%'),}} >
-        <Pressable onPress={() => setShowFilters(true)}><LatoText fontSize={rf(1.8)}>Filter Properties   <Icon.Ionicon name='filter' size={20} color={Colors.text} /></LatoText></Pressable>
+        <Pressable onPress={() => setShowFilters(true)}><LatoText fontSize={rf(1.8)}>Filter Properties   <Icon.Ionicon name='filter' size={rf(2)} color={Colors.text} /></LatoText></Pressable>
         <SortPopup />
        </Row>
 
@@ -159,7 +160,7 @@ const SortPopup = () => {
           onRequestClose={() => setShowPopover(false)}
           from={(
             <Pressable onPress={() => setShowPopover(true)}>
-              <LatoText fontSize={rf(1.8)}>Sort  <Icon.Ionicon name='filter' size={20} color={Colors.text} /></LatoText>
+              <LatoText fontSize={rf(1.8)}>Sort  <Icon.Ionicon name='filter' size={rf(2)} color={Colors.text} /></LatoText>
             </Pressable>
           )}
           arrowShift={0.5}
@@ -169,13 +170,13 @@ const SortPopup = () => {
           >
             <View style={styles.sortPopup}>
               <Row style={{ width: '100%', height: 40, marginBottom: 5 }}>
-                <LatoText black fontSize={rf(1.7)}>Sort by: </LatoText>
+                <LatoText black fontSize={rf(1.8)}>Sort by: </LatoText>
                 <Icon.Ionicon name='close' size={24} color={Colors.text} onPress={() => setShowPopover(false)} />
               </Row>
               <Check text={'The most relevant'} checked={false} />
               <Check text={'The nearest'} checked={false} />
               <Check text={'Recent'} checked={false} />
-              <LatoText black fontSize={rf(1.7)} style={{ marginVertical: 16 }}> 
+              <LatoText black fontSize={rf(1.8)} style={{ marginVertical: 16 }}> 
                 Price: 
               </LatoText>
               <Check text={'From low to high'} checked={false} />
@@ -185,7 +186,7 @@ const SortPopup = () => {
                 // onPress={handleSearch}
                 // loading={isLoading}
                 titleStyle={{ fontSize: rf(1.8) }}
-                buttonStyle={{ width: '100%', height: 50,  }}
+                buttonStyle={{ width: '100%', height: hp('5%'),  }}
                 containerStyle={{ marginTop: 20 }}
                 />
               <Button
@@ -194,7 +195,7 @@ const SortPopup = () => {
                 onPress={() => { setShowPopover(false) }}
                 titleStyle={{ color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Bold', height: 22, textDecorationStyle: 'solid' }}
                 buttonStyle={{ width: 'auto', backgroundColor: "transparent", padding: 0 }}
-                containerStyle={{ marginTop: 20 }}
+                containerStyle={{ marginTop: hp('2%') }}
                 TouchableComponent={TouchableOpacity} />
             </View>
         </Popover>

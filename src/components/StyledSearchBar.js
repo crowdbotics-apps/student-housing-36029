@@ -9,7 +9,7 @@ import { navigate } from '../navigations/NavigationService';
 import LatoText from './LatoText';
 import Row from './Row';
 
-const SEARCHBAR_WIDTH = wp('100%')-250; 
+const SEARCHBAR_WIDTH = wp('100%')-180; 
 
 export default function StyledSearchBar(props) {
   
@@ -29,10 +29,10 @@ export default function StyledSearchBar(props) {
         <Row style={styles.row} >
           <Icon.FontAwesome name='search' size={16} color={Colors.text}/>
           <Input 
-            containerStyle={{ width: SEARCHBAR_WIDTH-70, height: 20, borderRightWidth: 1, borderRightColor: '#828282CC' }}
+            containerStyle={{ width: SEARCHBAR_WIDTH-60, height: 20, borderRightWidth: 1, borderRightColor: '#828282CC', paddingHorizontal: 0 }}
             inputContainerStyle={styles.inputContainer}
             inputStyle={[styles.inputText, props.inputStyle]}
-            rightIcon={<Icon.Material name='arrow-drop-down' size={18} />}
+            rightIcon={<Icon.Material name='arrow-drop-down' size={16} />}
             onChangeText={updateText}
             value={props.value}
             onEndEditing={_onEndEditting}
@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     height: 20,
-    borderBottomWidth: 0
+    borderBottomWidth: 0,
+    
 },
 inputText: {
     fontFamily: 'Lato-Regular',

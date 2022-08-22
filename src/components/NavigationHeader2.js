@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import Logo from '../assets/svg/Logo';
 import MenuIcon from '../assets/svg/MenuIcon';
 import Colors from '../constants/Colors';
-import { wp } from '../constants/Constants';
+import { rf, wp } from '../constants/Constants';
 import { CITIES } from '../constants/Data';
 import Icon from '../constants/Icon';
 import { navigate } from '../navigations/NavigationService';
@@ -68,9 +68,9 @@ export default function NavigationHeader2({  showRightMenu=true, rightComponent 
             leftComponent={leftComponent} 
             centerComponent={<StyledSearchBar value={suggestion} onChangeText={onSearch} />} 
             rightComponent={_rightComponent}
-            leftContainerStyle={{ justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 16, width: 70 }}
+            leftContainerStyle={{ justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 5, width: 70 }}
             centerContainerStyle={{ justifyContent: 'center', }}
-            rightContainerStyle={{ width: 70, paddingRight: 16 }}
+            rightContainerStyle={{ width: 70, paddingRight: 5 }}
             containerStyle={{ height: 60 + insets.top, backgroundColor: Colors.tertiaryColor, alignItems: 'center', borderBottomWidth: 5, borderBottomColor: Colors.primaryColor }}
             statusBarProps={{ backgroundColor: Colors.primaryColor, barStyle: 'dark-content' }}
         />
@@ -164,9 +164,9 @@ const LanguagePicker = () => {
       onRequestClose={() => setShowPopover(false)}
       from={(
         <TouchableOpacity onPress={() => setShowPopover(true)}>
-          <Row style={{ width: 40 }}>
-            <LatoText >{selectedLanguage}</LatoText>
-            <Icon.Material name='arrow-drop-down' size={18} color={Colors.text} />
+          <Row style={{ width: 30 }}>
+            <LatoText fontSize={rf(1.6)}>{selectedLanguage}</LatoText>
+            <Icon.Material name='arrow-drop-down' size={15} color={Colors.text} />
           </Row>
         </TouchableOpacity>
       )}
@@ -209,7 +209,7 @@ const SuggestionList = ({ visible, data, onSelect }) => {
   }
 const styles = StyleSheet.create({
   rightComp: {
-    width: 80,
+    width: 65,
     height: 40,
   },
   menuItem: {
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     height: 200,
-    width: wp('100%')-280,
+    width: wp('100%')-220,
     paddingHorizontal: 20,
     backgroundColor: '#FFF',
     marginTop: -16,

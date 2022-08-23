@@ -4,7 +4,7 @@ import RadioGroup from 'react-native-radio-buttons-group';
 import Colors from '../constants/Colors';
 import { rf } from '../constants/Constants';
 
-export default function RadioButtons({ data, onSelect }) {
+export default function RadioButtons({ data, onSelect, layout='row',containerStyle }) {
     const [radioButtons, setRadioButtons] = useState(null)
 
     function onPressRadioButton(radioButtonsArray) {
@@ -41,8 +41,8 @@ export default function RadioButtons({ data, onSelect }) {
         <RadioGroup 
             radioButtons={radioButtons} 
             onPress={onPressRadioButton} 
-            layout='row'
-            containerStyle={{ marginVertical: 6 }}
+            layout={layout}
+            containerStyle={{ marginVertical: 6, ...containerStyle }}
         />
 
     )

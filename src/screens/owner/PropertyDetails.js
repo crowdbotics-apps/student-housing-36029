@@ -28,7 +28,7 @@ import { checkIsBooked } from '../../utilities/checkIsBooked';
 import BookingSuccessModal from '../../components/BookingSuccessModal';
 
 
-export default function PropertyDetails() {
+export default function OwnerPropertyDetails() {
   const dispatch = useDispatch();
   const details = usePropertyDetails();
   const isLoading = useIsLoading();
@@ -96,7 +96,7 @@ export default function PropertyDetails() {
     );
    }
 
-   const [coords, setCoords] = useState({ latitude: latitude || 0, longitude: longitude || 0 });
+   const [coords, setCoords] = useState({ latitude, longitude });
    
    useEffect(() => {
     if(coords.latitude === null) {
@@ -181,37 +181,30 @@ export default function PropertyDetails() {
 
           <View style={styles.details}>
              <LatoText bold style={styles.heading} >{`Booking Details:`}</LatoText>
-             <Row style={{ alignItems: 'center', }}>
-                <View style={{ width: wp('42%') }}>
+             <Row style={{ }}>
+                <View style={{ width: '50%' }}>
                   <StyledDatepicker 
                   label={'From'}
                   value={selectedDays.from}
                   onDateChange={handleFromChange}
-                  datepickerStyle={{ width: wp('40%')-30 }}  
-                  containerStyle={{ justifyContent: 'flex-start', }}
+                  datepickerStyle={{ width: 160 }}  
+                  containerStyle={{ width: '100%', justifyContent: 'flex-start', }}
                   />
+                  <Detail label={'Price Per Night:'} value={`$${totalPrice(time_type, per_night_price, 1)} per night`}/>
+                  <Detail label={'Check-In Date:'} value={`${moment(new Date(selectedDays.from)).format('DD/MM/YYYY')} (2 PM)`}/>
                 </View>
-                <View style={{ width: wp('42%') }}>
+                <View style={{ width: '50%' }}>
                   <StyledDatepicker 
                     label={'To'}
                     value={selectedDays.to}
                     onDateChange={handleToChange}
-                    datepickerStyle={{ width: wp('40%')-30 }}  
-                    containerStyle={{  justifyContent: 'flex-start', }}
+                    datepickerStyle={{ width: 160 }}  
+                    containerStyle={{ width: '100%', justifyContent: 'flex-start', }}
                     />
-                </View>
-             </Row>
-             <Row style={{ alignItems: 'center', }}>
-                <View style={{ width: wp('42%') }}>
-                  <Detail label={'Price Per Night:'} value={`$${totalPrice(time_type, per_night_price, 1)} per night`}/>
-                  <Detail label={'Check-In Date:'} value={`${moment(new Date(selectedDays.from)).format('DD/MM/YYYY')} (2 PM)`}/>
-                </View>
-                <View style={{ width: wp('42%') }}>
                   <Detail label={'Total Per Chosen Period:'} value={`$${totalPrice(time_type, per_night_price, totalDays)}`}/>
                   <Detail label={'Check-Out Date:'} value={`${moment(new Date(selectedDays.to)).format('DD/MM/YYYY')} (Until 11 AM)`}/>
                 </View>
              </Row>
-             
              {propertyBooked && (
                 <LatoText color='#FF0000' fontSize={rf(1.6)} style={{ alignSelf: 'center', marginTop: 24 }}>Currently unavailable</LatoText>
               )}
@@ -230,7 +223,7 @@ export default function PropertyDetails() {
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Location:`}</LatoText>
             <LatoText style={styles.text} >{`${city}, ${country}`}</LatoText>
-            {/* <GoogleMaps 
+            <GoogleMaps 
               center={coords || { latitude: 0, longitude: 0 }}
               markers={[{
                 key: city, 
@@ -240,7 +233,7 @@ export default function PropertyDetails() {
                 description: `${city}, ${country}`
               }]}
               mapContainer={{ height: 185, marginTop: 16 }}
-            /> */}
+            />
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>

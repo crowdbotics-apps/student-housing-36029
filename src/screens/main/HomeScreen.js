@@ -10,8 +10,7 @@ import NavigationHeader from '../../components/NavigationHeader2';
 import PropertyItem from '../../components/PropertyItem';
 import PropertyLoader from '../../components/PropertyLoader';
 import Colors from '../../constants/Colors';
-import { rf, wp } from '../../constants/Constants';
-import { PROPERTIES } from '../../constants/Data';
+import { hp, rf, wp } from '../../constants/Constants';
 import { navigate } from '../../navigations/NavigationService';
 import { setPropertyDetails, useIsLoading, useProperty, useWishlist, useWishlistUpdated } from '../../redux/reducers/PropertyReducer';
 import { fetchProperty, fetchWishlist } from '../../redux/sagas/property/fetchSaga';
@@ -85,7 +84,7 @@ const Nearby = () => {
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
       contentContainerStyle={{ alignItems:'center'}}
-      ListEmptyComponent={() => <ListEmpty text='No items to display' />}
+      ListEmptyComponent={() => <ListEmpty text='No items to display' height={hp('80%')}/>}
       ListFooterComponent={() => <View style={{height: 100}}/>}
       />  
   )
@@ -140,7 +139,7 @@ const Wishlisted = () => {
       keyExtractor={(item, i) => item.id}
       style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
       contentContainerStyle={{ alignItems:'center'}}
-      ListEmptyComponent={() => <ListEmpty text='No items to display' />}
+      ListEmptyComponent={() => <ListEmpty text='No items to display' height={hp('80%')} />}
       ListFooterComponent={() => <View style={{height: 100}}/>}
       />  
   )

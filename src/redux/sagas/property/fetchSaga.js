@@ -2,7 +2,8 @@ import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
-import { startLoading, setProperty, setWishlist, setError } from "../../reducers/PropertyReducer";
+import { startLoading, setProperty, setWishlist, setConfig, setError } from "../../reducers/PropertyReducer";
+import queryString from 'query-string';
 
 
 export const fetchProperty = createAction("property/fetchProperty");
@@ -42,4 +43,65 @@ function* fetchWishlistData() {
 
 export function* fetchWishlistSaga() {
   yield takeLatest(fetchWishlist, fetchWishlistData);
+}
+
+
+export const fetchConfig = createAction("property/fetchConfig");
+
+function* fetchConfigData() {
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.getFilters);
+    console.log('fetchConfig res.data: ', res.data)
+    if(res.data)
+        yield put(setConfig(res.data));
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
+
+export function* fetchConfigSaga() {
+  yield takeLatest(fetchConfig, fetchConfigData);
+}
+
+export const searchProperty = createAction("property/searchProperty");
+
+function* fetchSearchData({ payload }) {
+  console.log('payload: ', payload);
+  const query = queryString.stringify(payload, { skipEmptyString: true, skipNull: true });
+  console.log('query: ', query);
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.getSearch, query);
+    console.log('searchProperty res.data: ', res.data)
+    if(res.data.properties)
+        yield put(setProperty(res.data.properties));
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
+
+export function* searchPropertySaga() {
+  yield takeLatest(searchProperty, fetchSearchData);
+}
+
+export const fetchOwnerProperty = createAction("property/fetchOwnerProperty");
+
+function* fetchOwnerPropertyData() {
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.getOwnerProperty);
+    console.log('fetchOwnerProperty res.data: ', res.data)
+    if(res.data.properties)
+        yield put(setProperty(res.data.properties));
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
+
+export function* fetchOwnerPropertySaga() {
+  yield takeLatest(fetchOwnerProperty, fetchOwnerPropertyData);
 }

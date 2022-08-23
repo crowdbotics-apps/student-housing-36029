@@ -22,17 +22,17 @@ export default function PropertyItem({ id, title, media=[],  rating,  descriptio
               <ListItem.Title>
                 <View style={{ width: wp('40%') }}>
                     <LatoText black fontSize={rf(2)}>{title}</LatoText>
-                    <Row style={{ width: 180 }}>
+                    <Row style={{ width: wp('38%') }}>
                       <Rating 
                         ratingCount={5}
                         readonly
                         startingValue={rating}
-                        imageSize={15}
+                        imageSize={wp('3%')}
                         style={styles.rating} 
                         />
                       <TextButton 
                         title='View Reviews' 
-                        titleStyle={{ color: Colors.primaryColor, fontSize: rf(1.5) }} 
+                        titleStyle={{ color: Colors.primaryColor, fontSize: rf(1.5), height: 18 }} 
                         onPress={() => {}}
                         />
                     </Row>
@@ -53,11 +53,15 @@ export default function PropertyItem({ id, title, media=[],  rating,  descriptio
                     />   
               </ListItem.Subtitle>
              </ListItem.Content>
-             <HeartButton 
-                isSelected={is_wish_listed}
-                onToggle={toggleFavourite}
-                containerStyle={{ position: 'absolute', top: 20, right: 14 }}
-             />
+             {
+              toggleFavourite &&
+              <HeartButton 
+                  isSelected={is_wish_listed}
+                  onToggle={toggleFavourite}
+                  containerStyle={{ position: 'absolute', top: 20, right: 14 }}
+              />
+              }
+
           </ListItem>
           
     )
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
   rating:{
     alignItems: "flex-start",
     justifyContent:"center",
-    width: 75,
+    width: wp('15%'),
     height: 30
   },
   arrowLeft: {

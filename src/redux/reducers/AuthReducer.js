@@ -68,6 +68,7 @@ export const {
 
 export const useAuhToken = () => useSelector((state) => state.Auth.authToken);
 export const useUser = () => useSelector((state) => state.Auth.user);
+export const useIsOwner = () => useSelector((state) => state.Auth.user?.is_property_owner);
 export const useCounter = () => useSelector((state) => state.Auth.counter);
 export const useIsLoading = () => useSelector((state) => state.Auth.isLoading);
 export const useSuccess = () => useSelector((state) => state.Auth.success);

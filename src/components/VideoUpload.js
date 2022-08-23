@@ -11,13 +11,13 @@ import { WIDTH} from '../constants/Constants';
 import {Icon, LinearProgress, ListItem} from 'react-native-elements';
 import LatoText from './LatoText';
 
-const PICTURE_OPTIONS = ['Take Picture', 'Open Image Gallery'];
+const PICTURE_OPTIONS = ['Take Picture', 'Open Gallery'];
 
-export default function ImageUpload({
+export default function VideoUpload({
   showPicker,
   closePicker,
   onUpload,
-  onPickImage,
+  onPickVideo,
   multipleSelection=false
 }) {
 
@@ -39,7 +39,7 @@ export default function ImageUpload({
         {
           noData: true,
           cameraType: 'front',
-          mediaType: 'photo',
+          mediaType: 'video',
           tintColor: Colors.primaryColor,
           maxWidth     : 500,
           maxHeight    : 500,
@@ -50,15 +50,15 @@ export default function ImageUpload({
           },
         },
         (response) => {
-          console.log('Image Response = ', response);
+          console.log('Video Response = ', response);
           if (response.didCancel) {
             console.log('User cancelled CAMERA');
           } else if (response.errorMessage) {
             console.log('LAUNCH CAMERA Error: ', response.errorMessage);
             alert(response.errorMessage);
           } else if(response.assets){
-            const images = response.assets.map(asset => getImageObj(asset)); 
-            onPickImage(multipleSelection ? images : images[0]);
+            const images = response.assets.map(asset => getVideoObj(asset)); 
+            onPickVideo(multipleSelection ? images : images[0]);
             }
         },
       );
@@ -68,7 +68,7 @@ export default function ImageUpload({
           {
             noData: true,
             cameraType: 'front',
-            mediaType: 'photo',
+            mediaType: 'video',
             tintColor: Colors.primaryColor,
             maxWidth     : 500,
             maxHeight    : 500,
@@ -79,15 +79,15 @@ export default function ImageUpload({
             },
           },
           (response) => {
-            console.log('Image Response = ', response);
+            console.log('Video Response = ', response);
             if (response.didCancel) {
               console.log('User cancelled CAMERA');
             } else if (response.errorMessage) {
               console.log('LAUNCH CAMERA Error: ', response.errorMessage);
               alert(response.errorMessage);
             } else if(response.assets){
-              const images = response.assets.map(asset => getImageObj(asset)); 
-              onPickImage(multipleSelection ? images : images[0]);
+              const images = response.assets.map(asset => getVideoObj(asset)); 
+              onPickVideo(multipleSelection ? images : images[0]);
             }
           },
         );
@@ -100,7 +100,7 @@ export default function ImageUpload({
       {
         noData: true,
         cameraType: 'front',
-        mediaType: 'photo',
+        mediaType: 'video',
         tintColor: Colors.primaryColor,
         maxWidth     : 500,
         maxHeight    : 500,
@@ -111,27 +111,27 @@ export default function ImageUpload({
         },
       },
       (response) => {
-        console.log('Image Response = ', response);
+        console.log('Video Response = ', response);
         if (response.didCancel) {
           console.log('User cancelled GALLERY');
         } else if (response.errorMessage) {
           console.log('OPEN GALLERY Error: ', response.errorMessage);
           alert(response.errorMessage);
         } else if(response.assets){
-          const images = response.assets.map(asset => getImageObj(asset)); 
-          onPickImage(multipleSelection ? images : images[0]);
+          const images = response.assets.map(asset => getVideoObj(asset)); 
+          onPickVideo(multipleSelection ? images : images[0]);
         }
       },
     );
   };
 
-  const getImageObj = (image) => { 
-    const uriParts = image.uri.split('.');
+  const getVideoObj = (video) => { 
+    const uriParts = video.uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
     return {
-      uri: Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-      name: image.fileName,
-      type: `image/${fileType}` // or your mime type what you want
+      uri: Platform.OS === 'android' ? video.uri : video.uri.replace('file://', ''),
+      name: video.fileName,
+      type: `video/${fileType}` // or your mime type what you want
     }; 
   }
   // const onPickImage = async (image) => {
@@ -218,7 +218,7 @@ export default function ImageUpload({
       >
         <View style={styles.modal}>
           <Text style={styles.headingText}>
-            {`Photo Upload`}{' '}
+            {`Video Upload`}{' '}
           </Text>
           <LinearProgress
             variant="indeterminate"
@@ -233,7 +233,7 @@ export default function ImageUpload({
         onBackButtonPress={closePicker}
         onBackdropPress={closePicker}>
         <View style={styles.modal2}>
-          <Text style={styles.headingText2}>{`Select Image`} </Text>
+          <Text style={styles.headingText2}>{`Select Video`} </Text>
           <ListItem style={{ width: WIDTH - 60, height: 40 }}
             onPress={() => {
               closePicker();

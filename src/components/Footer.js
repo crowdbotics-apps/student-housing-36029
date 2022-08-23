@@ -4,11 +4,13 @@ import { Button } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import { rf, wp } from '../constants/Constants';
 import Icon from '../constants/Icon';
+import { useKeyboard } from '../utilities/hooks';
 import LatoText from './LatoText';
 import Row from './Row';
 
 export default function Footer() {
-  
+  const isKeyboard = useKeyboard()
+  if(!isKeyboard)
     return (
         <View style={styles.container}>
           
@@ -48,6 +50,7 @@ export default function Footer() {
 
         </View>
     )
+  else return null
 }
 const styles = StyleSheet.create({
   container: {

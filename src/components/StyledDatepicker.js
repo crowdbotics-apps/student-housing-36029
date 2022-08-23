@@ -42,11 +42,11 @@ export default function StyledDatepicker({ onDateChange, value, label, container
           {label && <LatoText fontSize={rf(1.6)} color={Colors.text} style={styles.text}>{label}</LatoText>}
         <TouchableWithoutFeedback onPress={() => showDatepicker()}>
         <View style={[styles.container, datepickerStyle]}>
-          <Icon.Community name='calendar-range-outline' size={18} color={Colors.text}/>
+          <Icon.Community name='calendar-range-outline' size={13} color={Colors.text}/>
           <LatoText fontSize={rf(1.6)} color={!date ? '#C4C4C4' : Colors.text} style={styles.text}>
             { !date ? 'mm/dd/yyyy' : moment(date).format('MM/DD/YYYY') }
           </LatoText>
-          <Icon.FontAwesome name='caret-down' size={22} color={Colors.text}/>
+          <Icon.FontAwesome name='caret-down' size={14} color={Colors.text}/>
 
           {show && (
             <DateTimePicker
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: Colors.secondaryColor,
         borderRadius: 32,
-        paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row'

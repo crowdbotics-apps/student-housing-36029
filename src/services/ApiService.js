@@ -54,6 +54,9 @@ const ApiService = {
   updateHouseRule: (id, params) => patch(`/api/v1/housing-rules/${id}/`, params),
   deleteHouseRule: (id) => del(`/api/v1/housing-rules/${id}/`),
 
+  postProperty: (params) => post(`/api/v1/property/`, params),
+  updateProperty: (id, params) => put(`/api/v1/property/${id}/`, params),
+  deleteMedia: (id) => del(`/api/v1/delete-property-media/${id}/`),
 };
 
 export default ApiService;

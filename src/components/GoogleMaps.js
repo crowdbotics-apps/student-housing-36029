@@ -17,7 +17,7 @@ export default class GoogleMaps extends Component {
         this.state = {
           camera: {
             center: props.center || { latitude: 0.0, longitude: 0.0 },
-            pitch: props.pitch || 90,
+            pitch: props.pitch || 0 ,
             heading: props.heading || 0,
           
             // Only on iOS MapKit, in meters. The property is ignored by Google Maps.

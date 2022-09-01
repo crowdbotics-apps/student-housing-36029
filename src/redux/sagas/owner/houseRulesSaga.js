@@ -2,9 +2,9 @@ import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
-import { startLoading, setHouseRules, setError, editHouseRules } from "../../reducers/PropertyReducer";
+import { startLoading, setHouseRules, setError, editHouseRules } from "../../reducers/OwnerReducer";
 
-export const addHouseRule = createAction("property/addHouseRule");
+export const addHouseRule = createAction("owner/addHouseRule");
 
 function* insertData({ payload }) {
   console.log('payload: ', payload);
@@ -24,7 +24,7 @@ function* insertData({ payload }) {
   }
 }
 
-export const updateHouseRule = createAction("property/updateHouseRule");
+export const updateHouseRule = createAction("owner/updateHouseRule");
 
 function* updateData({ payload }) {
   console.log('payload: ', payload);
@@ -33,7 +33,7 @@ function* updateData({ payload }) {
   try {
     let res = yield call(ApiService.updateHouseRule, id, rule);
     console.log('updateHouseRule res.data: ', res.data)
-    if(res.data && res.data === '')
+    if(res.data && res.data.id)
         yield put(editHouseRules(payload));
     else if(res.data.error) {
       alert(getSimplifiedError(res.data.error));
@@ -45,7 +45,7 @@ function* updateData({ payload }) {
   }
 }
 
-export const deleteHouseRule = createAction("property/deleteHouseRule");
+export const deleteHouseRule = createAction("owner/deleteHouseRule");
 
 function* deleteData({ payload }) {
   console.log('payload: ', payload);
@@ -54,11 +54,11 @@ function* deleteData({ payload }) {
   try {
     let res = yield call(ApiService.deleteHouseRule, id);
     console.log('deleteHouseRule res.data: ', res.data)
-    if(res.data && res.data === '')
-        yield put(editHouseRules(payload));
-    else if(res.data.error) {
-      alert(getSimplifiedError(res.data.error));
-      yield put(setError(getSimplifiedError(res.data.error)))
+    if(res.data.detail) {
+      alert(getSimplifiedError(res.data.detail));
+      yield put(setError(getSimplifiedError(res.data.detail)))
+    } else {
+      yield put(editHouseRules(payload));
     }
   } catch (error) {
     console.log({ error });

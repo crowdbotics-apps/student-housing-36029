@@ -4,12 +4,17 @@ import { changeEmailSaga } from './auth/changeEmailSaga';
 import { changePassSaga } from './auth/changePassSaga';
 import { changePhoneSaga } from './auth/changePhoneSaga';
 import { forgetPassSaga } from './auth/forgetPassSaga';
+import { deleteMediaSaga } from './owner/deleteMediaSaga';
+import { fetchOwnerPropertySaga } from './owner/fetchSaga';
+import { houseRulesSaga } from './owner/houseRulesSaga';
+import { postPropertySaga } from './owner/postPropertySaga';
+import { updatePropertySaga } from './owner/updateSaga';
 import { fetchReviewsSaga } from './profile/fetchReviewsSaga';
 import { fetchProfileSaga } from './profile/fetchSaga';
 import { insertProfileSaga } from './profile/insertSaga';
 import { updateProfileSaga } from './profile/updateSaga';
 import { bookPropertySaga } from './property/bookPropertySaga';
-import { fetchConfigSaga, fetchOwnerPropertySaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
+import { fetchConfigSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
 import { updateWishlistSaga } from './property/updateSaga';
 
 export default function* rootSaga() {
@@ -33,6 +38,10 @@ export default function* rootSaga() {
         bookPropertySaga(),
         fetchConfigSaga(),
         searchPropertySaga(),
-        fetchOwnerPropertySaga()
+        fetchOwnerPropertySaga(),
+        houseRulesSaga(),
+        postPropertySaga(),
+        updatePropertySaga(),
+        deleteMediaSaga()
     ])
 }

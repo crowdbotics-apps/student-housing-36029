@@ -8,7 +8,10 @@ import { setProfile } from '../redux/reducers/ProfileReducer';
 import { fetchProfile } from '../redux/sagas/profile/fetchSaga';
 import { fetchConfig } from '../redux/sagas/property/fetchSaga';
 import ApiService from '../services/ApiService';
+import { isLocationPermissionGranted } from '../services/AppPermissions';
 import LocalStorage from '../services/LocalStorage';
+import Geolocation from 'react-native-geolocation-service';
+import { GeocodePosition } from '../services/Geocoding';
 
 
 export const usePrevious = (value) => { 
@@ -220,14 +223,34 @@ export function useBackHandler(handler) {
   }
   
   
-  // export const useCurrentLocation = (loc=null) => { 
-  //   const [location, setLocation] = useState(loc);
-  //   useEffect(() => {
-  //     checkForLocationPermission
-  //     UserLocation.fetch((location) => setLocation(location))
-  //   }, []);
-  //   return location;
-  // }
+  export const useCurrentLocation = (loc=null) => { 
+    const [location, setLocation] = useState(loc);
+    useEffect(() => {
+      const checkLocation = async () => {
+        if(await isLocationPermissionGranted()){
+          Geolocation.getCurrentPosition(
+              (position) => {
+                  console.log(position);
+                  if(position && position.coords) {
+                    const { latitude, longitude } = position.coords;
+                    GeocodePosition({ lat: latitude, lng: longitude }, (city) => {
+                      setLocation({ latitude, longitude, city });
+                    })
+                  }
+                  else setLocation(null)        
+              },
+              (error) => {
+                  console.log(error.code, error.message);
+                  
+              },
+              { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          );
+        }
+      }                                                                                               
+      checkLocation();
+}, []);
+    return location;
+  }
 
   // export const useFetchContacts = () => { 
   //   const [contacts, setContacts] = useState([]);  

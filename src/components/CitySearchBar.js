@@ -41,14 +41,17 @@ const _onEndEditting = (event) => {
       setSearchSuggestions([]);
       return;
     }
-    setSearchSuggestions(CITIES.filter((city) =>
-      city.name.toLowerCase().includes(value.toLowerCase())),
-    );
+    const newSuggestions = CITIES.filter((city) => city.name.toLowerCase().includes(value.toLowerCase())); 
+    if(newSuggestions.length) {
+      setSearchSuggestions(newSuggestions);
+      setShowSuggestions(true)
+    }
   }
-  const onSearch = (value) => { 
-    setSuggestion(value);
+  const onSearch = (value='') => { 
+    setSuggestion(value)
+    if(value.length===0) return;
     getSuggestions(value);
-    setShowSuggestions(true)
+    onSelect(value)
   }
   const onSelectSuggestion = (value) => { 
     console.log('suggestion: ', value)

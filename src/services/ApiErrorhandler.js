@@ -39,8 +39,8 @@ export const getSimplifiedError = (error, field) => {
     if (Array.isArray(error) && error.length) {
       errors = [error[0].message, ...error];
     } else {
-      Object.keys(error).forEach((e) => {
-        return (errors = [...errors, error[e]]);
+      Object.keys(error).forEach((key) => {
+        return (errors = [...errors, `[${key}]: ${error[key]}` ]);
       });
     }
   

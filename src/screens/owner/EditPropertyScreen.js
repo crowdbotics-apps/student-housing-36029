@@ -25,72 +25,97 @@ import Colors from '../../constants/Colors';
 import CommonStyles from '../../constants/CommonStyles';
 import { hp, rf, wp } from '../../constants/Constants';
 import Icon from '../../constants/Icon';
-import { goBack } from '../../navigations/NavigationService';
-import { resetForm, setFormError, setPhotos, setPropertyForm, setVideos, updatePropertyForm, useCreateSuccess, useFormErrors, useHouseRules, useIsLoading, useMedia, usePropertyDetails, usePropertyForm, useSuccess, useUpdateSuccess } from '../../redux/reducers/OwnerReducer';
-import { usePropertyConfig } from '../../redux/reducers/PropertyReducer';
+import { goBack, navigate } from '../../navigations/NavigationService';
+import {
+  resetForm,
+  setFormError,
+  setPropertyForm,
+  updatePropertyForm,
+  useFormErrors,
+  useHouseRules,
+  useIsLoading,
+  useMedia,
+  usePropertyForm,
+  useUpdateSuccess,
+  usePropertyDetails,
+  setPhotos
+} from '../../redux/reducers/OwnerReducer';
+import { usePropertyConfig,  } from '../../redux/reducers/PropertyReducer';
+import { deleteMedia } from '../../redux/sagas/owner/deleteMediaSaga';
 import { addHouseRule, deleteHouseRule, updateHouseRule } from '../../redux/sagas/owner/houseRulesSaga';
 import { postProperty } from '../../redux/sagas/owner/postPropertySaga';
+import { updateProperty } from '../../redux/sagas/owner/updateSaga';
+import { validatePropertyForm } from '../../services/AuthValidation';
 import { GeocodeAddress } from '../../services/Geocoding';
 import { useCurrentLocation } from '../../utilities/hooks';
 
-export default function NewPropertyScreen() {
+export default function EditPropertyScreen() {
 
   return (
     <View style={styles.container}>
       <NavigationHeader />
-      
-      <Button
-        title={'New Property'}
-        type='clear'
-        onPress={() => goBack()}
-        icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
-        titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Black', }}
-        buttonStyle={{ backgroundColor: "transparent", padding: 0}}
-        containerStyle={{ marginBottom: hp('3%'), alignSelf: 'flex-start', marginTop: hp('3%'), marginLeft: wp('5%'),  }}
-        TouchableComponent={TouchableOpacity}
-        />  
+      <Row style={{ width: wp('90%'), height: hp('5%'), marginTop: hp('3%'), }}>
+        <Button
+          title={'Edit Property'}
+          type='clear'
+          onPress={() => goBack()}
+          icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
+          titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Black', }}
+          buttonStyle={{ backgroundColor: "transparent", padding: 0}}
+          containerStyle={{  alignSelf: 'flex-start',   }}
+          TouchableComponent={TouchableOpacity}
+          /> 
+        <Button
+          title={'Preview Property'}
+          type='solid'
+          onPress={() => { navigate('PropertyDetails') }}
+          titleStyle={{ color: Colors.white, fontSize: rf(1.6), fontFamily: 'Lato-Bold', }}
+          buttonStyle={{ backgroundColor: Colors.primaryColor, width: 160,height: 35, borderRadius: 6, padding: 0 }}
+          containerStyle={{ width: 160, height: 35,borderRadius: 6, marginBottom: 20,  }}
+          TouchableComponent={TouchableOpacity}
+          />   
+      </Row>
 
-      <NewPropertyForm />
+      <EditPropertyForm />
 
       <Footer />
     </View>
   )
 }
 
-const NewPropertyForm = () => { 
+const EditPropertyForm = () => { 
   const dispatch = useDispatch();
   const formValues = usePropertyForm();
   const formErrors = useFormErrors();
   const isLoading = useIsLoading();
-  const createSucess = useCreateSuccess();
   const updateSucess = useUpdateSuccess();
-  const createdProperty = usePropertyDetails(); 
+  const propertyDetails = usePropertyDetails(); 
   const { photos, videos } = useMedia();
+  const rules = useHouseRules()
   const {
     room_facilities,
     property_amenities,
     room_accessibilities
   } = usePropertyConfig();
 
+  console.log('propertyDetails: ', propertyDetails);
+
   const initialState = {
-    title: '',
-    description: '',
-    minimum_renting_duration: '',
-    per_night_price: '',
-    type: '',
-    bath_room: '',
-    status: '',
-    no_of_rooms: 0,
-    no_of_beds: 0,
-    country: '',
-    city: '',
-    media: [],
-    available_from: moment(new Date()).format('YYYY-MM-DD'),
-    available_to: moment(new Date()).format('YYYY-MM-DD'),
-    facilities: [],
-    accessiblities: [],
-    amenities: [],
-    time_type: 'Day',
+    title: propertyDetails.title || '',
+    description: propertyDetails.description || '',
+    minimum_renting_duration: `${propertyDetails.minimum_renting_duration}` || '',
+    per_night_price: `${propertyDetails.per_night_price}` || '',
+    type: propertyDetails.type || '',
+    bath_room: propertyDetails.bath_room || '',
+    status: propertyDetails.status || '',
+    country: propertyDetails.country || '',
+    city: propertyDetails.city || '',
+    available_from: propertyDetails.available_from || moment(new Date()).format('YYYY-MM-DD'),
+    available_to: propertyDetails.available_to || moment(new Date()).format('YYYY-MM-DD'),
+    facilities: propertyDetails.room_facilities?.map(item => item.id) || [],
+    accessiblities: propertyDetails.room_accessibilities?.map(item => item.id) || [],
+    amenities: propertyDetails.property_amenities?.map(item => item.id) || [],
+    time_type: propertyDetails.time_type || 'Day',
   }
   const [uploading, setUploading] = useState(false);
 
@@ -129,16 +154,15 @@ const NewPropertyForm = () => {
   };
   const handleSubmit = () => { 
     const errorString = Object.values(formErrors).filter(val=>val!=null).join('\n');
-    console.log('errorString: ', errorString);
+    console.log('errorString: ', errorString)
     if(errorString.length>0)
       alert(errorString);
-    else {
-      dispatch(postProperty(null));
-    }
+    else if(validatePropertyForm(formValues, photos, rules))
+      dispatch(updateProperty(propertyDetails.id));
   }
 
   useEffect(() => {
-    if(createSucess) {
+    if(updateSucess) {
       const allMedia = [ ...photos, ...videos ]; 
       if(allMedia.length) {
         setUploading(true);
@@ -146,8 +170,7 @@ const NewPropertyForm = () => {
         goBack();
       }
     }
-    if(updateSucess) goBack();
-  }, [createSucess, updateSucess]);
+  }, [updateSucess]);
 
    console.log('formValues: ', formValues);
 
@@ -215,8 +238,7 @@ const NewPropertyForm = () => {
             title={'Price'}
             value={formValues.per_night_price}
             onEndEditing={(text, error) => onSubmitValue('per_night_price', text, error)}
-            inputProps={{ keyboardType: 'number-pad' }}
-            />
+            inputProps={{ keyboardType: 'number-pad' }}/>
           <LatoText fontSize={rf(1.7)} style={{marginTop: 15, marginBottom: 5}}>Time Type</LatoText>
           <StyledDropdown
             placeholder={'Choose Time Type'}
@@ -385,7 +407,7 @@ const NewPropertyForm = () => {
           </Row>
 
           <PrimaryButton
-            title={'Post New Property'}
+            title={'Edit Property'}
             onPress={handleSubmit}
             loading={isLoading}
             titleStyle={{ fontSize: rf(2) }}
@@ -400,8 +422,9 @@ const NewPropertyForm = () => {
         uploading={uploading}
         closeModal={() => setUploading(false)}
         data={[ ...photos, ...videos ]}
-        propertyId={createdProperty?.id}
+        propertyId={propertyDetails?.id}
       />
+
     </KeyboardAvoidingView>
   )
  }
@@ -432,160 +455,164 @@ const EditableInput = ({ label, value, title, placeholder, onEndEditing, inputPr
   )
  }
 
-  const VideoList = () => { 
-    const dispatch = useDispatch();
-    const { videos } = useMedia();
-    const [showVideoPicker, setShowVideoPicker] = useState(false);
-    
-    const onPickVideo = (vids) => {
-      dispatch(setVideos(videos.concat(vids)));
+ const VideoList = () => { 
+  const dispatch = useDispatch();
+  const { videos } = useMedia();
+  const [showVideoPicker, setShowVideoPicker] = useState(false);
+  
+  const onPickVideo = (vids) => {
+    dispatch(setVideos(videos.concat(vids)));
+  }
+  const removeVideo = (video) => {
+    const newData = [ ...videos ]; 
+    const index = videos.findIndex(item => item.name === video.name); 
+    newData.splice(index,1);
+    dispatch(setVideos(newData));
+  }
+
+return (
+  <View style={{ marginVertical: 20 }}>
+     <LatoText bold fontSize={rf(1.6)}>Videos</LatoText>
+     <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', marginTop: 10  }}>
+        {
+          videos.map((item,i) => {
+            <VideoFile 
+              key={item.property_media+''+i}
+              data={item} 
+              containerStyle={styles.thumbnail} 
+              onRemove={() => removeVideo(item)} />
+          })
+        }
+        <VideoFile  containerStyle={styles.thumbnail} onAdd={() => setShowVideoPicker(true)} />
+     </View>
+     <VideoPicker
+      showPicker={showVideoPicker}
+      closePicker={() => setShowVideoPicker(false)}
+      onPickVideo={onPickVideo}
+      multipleSelection={true}
+    />
+  </View>
+)
+}
+const ImageList = () => { 
+  const dispatch = useDispatch();
+  const { photos } = useMedia();
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  
+  const onPickImage = (images) => {
+    dispatch(setPhotos(photos.concat(images)));
+  }
+  const deleteHandler = (image, index) => {
+    const newData = [ ...photos ]
+    newData.splice(index, 1);
+    dispatch(setPhotos(newData));
+    if (image.id) {
+      dispatch(deleteMedia(image.id));
     }
-    const removeVideo = (video) => {
-      const newData = [ ...videos ]; 
-      const index = videos.findIndex(item => item.name === video.name); 
-      newData.splice(index,1);
-      dispatch(setVideos(newData));
-    }
+  };
 
   return (
     <View style={{ marginVertical: 20 }}>
-       <LatoText bold fontSize={rf(1.6)}>Videos</LatoText>
-       <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', marginTop: 10  }}>
-          {
-            videos.map((item,i) => {
-              <VideoFile 
-                key={item.uri+''+i}
-                data={item} 
-                containerStyle={styles.thumbnail} 
-                onRemove={() => removeVideo(item)} />
-            })
-          }
-          <VideoFile  containerStyle={styles.thumbnail} onAdd={() => setShowVideoPicker(true)} />
-       </View>
-       <VideoPicker
-        showPicker={showVideoPicker}
-        closePicker={() => setShowVideoPicker(false)}
-        onPickVideo={onPickVideo}
+       <LatoText bold fontSize={rf(1.6)}>Photos</LatoText>
+       <Row style={{ width: '100%', flexWrap: 'wrap', marginTop: 10  }}>
+        {
+          photos.map((item,i) => 
+            <ImageFile 
+              key={item.uri+''+i}
+              data={item} 
+              thumbnail={item.uri || item.property_media?.split('?')[0]} 
+              containerStyle={styles.thumbnail} 
+              onRemove={() => deleteHandler(item,i)}
+              />
+          )
+        }
+        <ImageFile  containerStyle={styles.thumbnail} onAdd={() => setShowImagePicker(true)} />
+       </Row>
+       <ImagePicker
+        showPicker={showImagePicker}
+        closePicker={() => setShowImagePicker(false)}
+        onPickImage={onPickImage}
         multipleSelection={true}
       />
     </View>
   )
   }
-  const ImageList = () => { 
+  const Location = () => { 
     const dispatch = useDispatch();
-    const { photos } = useMedia();
-    const [showImagePicker, setShowImagePicker] = useState(false);
+    const propertyDetails = usePropertyDetails(); 
+    const { city: propertyCity, latitude, longitude } = propertyDetails;
+    const [expanded, setExpanded] = useState(false);
+    const [city, setCity] = useState(propertyCity);
+    const [coords, setCoords] = useState({ latitude: latitude || 0.0, longitude: longitude || 0.0 });
+    const [isCurrentLocation, setIsCurrentLocation] = useState(false);
+    const userLocation = useCurrentLocation();
     
-    const onPickImage = (images) => {
-      dispatch(setPhotos(photos.concat(images)));
-    }
-    const removePhoto = (image) => {
-      const newData = [ ...photos ]; 
-      const index = photos.findIndex(item => item.name === image.name); 
-      newData.splice(index,1);
-      dispatch(setPhotos(newData));
-    }
-    return (
-      <View style={{ marginVertical: 20 }}>
-         <LatoText bold fontSize={rf(1.6)}>Photos</LatoText>
-         <Row style={{ width: '100%', flexWrap: 'wrap', marginTop: 10  }}>
-          {
-            photos.map((item,i) => 
-              <ImageFile 
-                key={item.uri+''+i}
-                data={item} 
-                thumbnail={item.uri} 
-                containerStyle={styles.thumbnail} 
-                onRemove={() => removePhoto(item)}
+    useEffect(() => {
+      if(city && city.length) {
+        GeocodeAddress(city, ({lat,lng}) => {
+          setCoords({ latitude: lat, longitude: lng });
+          dispatch(updatePropertyForm({ latitude: lat, longitude: lng }));
+        });
+      }
+     }, [city]);
+
+     useEffect(() => {
+      if(isCurrentLocation && userLocation) {
+        setCoords({ ...userLocation });
+        dispatch(updatePropertyForm({ ...userLocation }));
+      }
+     }, [isCurrentLocation]);
+     
+     const onSearch = (val) => { 
+      setCity(val); 
+      setIsCurrentLocation(false) 
+      dispatch(updatePropertyForm({ city: val }));
+     }
+    const onCurrentLocation = (val) => { 
+      setIsCurrentLocation(val);
+     }
+     return(
+      <View style={{ width: wp('90%') }}>
+        <Pressable onPress={() => {setExpanded(!expanded)}}>
+          <LatoText bold>Upload Location  <Icon.Ionicon name='chevron-down-sharp' size={16} color={Colors.text} style={{ marginTop: 10 }} /></LatoText>
+        </Pressable>
+        {
+          expanded && 
+          <View style={{ width: wp('90%') }}>
+             <CitySearchBar value={coords ? city : ''} onSelect={onSearch} />
+             {
+              (coords || userLocation) &&
+              <GoogleMaps 
+                  center={coords || { latitude: 0.0, longitude: 0.0 }}
+                  markers={[{
+                    key: city, 
+                    id: city, 
+                    markerCoords: coords || { latitude: 0.0, longitude: 0.0 }, 
+                    title: coords ? city : '', 
+                  }]}
+                  mapContainer={{ height: 185, marginTop: 16 }}
                 />
-            )
-          }
-          <ImageFile  containerStyle={styles.thumbnail} onAdd={() => setShowImagePicker(true)} />
-         </Row>
-         <ImagePicker
-          showPicker={showImagePicker}
-          closePicker={() => setShowImagePicker(false)}
-          onPickImage={onPickImage}
-          multipleSelection={true}
-        />
+              }
+              <Check text={'Choose my current location'} checked={isCurrentLocation} onChange={onCurrentLocation} />
+          </View>
+        }
       </View>
     )
   }
-  const Location = () => { 
-  const dispatch = useDispatch();
-  const [expanded, setExpanded] = useState(false);
-  const [city, setCity] = useState('');
-  const [coords, setCoords] = useState();
-  const [isCurrentLocation, setIsCurrentLocation] = useState(false);
-  const userLocation = useCurrentLocation();
-  
-  useEffect(() => {
-    if(city && city.length) {
-      GeocodeAddress(city, ({lat,lng}) => {
-        setCoords({ latitude: lat, longitude: lng });
-        dispatch(updatePropertyForm({ latitude: lat, longitude: lng }));
-      });
-    }
-   }, [city]);
-   useEffect(() => {
-    if(isCurrentLocation && userLocation) {
-      setCoords({ ...userLocation });
-      dispatch(updatePropertyForm({ ...userLocation }));
-    }
-   }, [isCurrentLocation]);
-   
-   const onSearch = (val) => { 
-    setCity(val); 
-    setIsCurrentLocation(false) 
-    dispatch(updatePropertyForm({ city: val }));
-   }
-  const onCurrentLocation = (val) => { 
-    setIsCurrentLocation(val);
-   }
-   return(
-    <View style={{ width: wp('90%') }}>
+  const Collapsible = ({ children, title }) => {
+    const [expanded, setExpanded] = useState(false);
+    return(
+      <View style={{ width: wp('90%'), marginVertical:5 }}>
       <Pressable onPress={() => {setExpanded(!expanded)}}>
-        <LatoText bold>Upload Location  <Icon.Ionicon name='chevron-down-sharp' size={16} color={Colors.text} style={{ marginTop: 10 }} /></LatoText>
+        <LatoText bold fontSize={rf(1.7)}>{title}  <Icon.Ionicon name='chevron-down-sharp' size={16} color={Colors.text} style={{ marginTop: 10 }} /></LatoText>
       </Pressable>
       {
         expanded && 
-        <View style={{ width: wp('90%') }}>
-           <CitySearchBar value={city} onSelect={onSearch} />
-           {
-            (coords || userLocation) &&
-            <GoogleMaps 
-                center={coords || userLocation}
-                markers={[{
-                  key: city, 
-                  id: city, 
-                  markerCoords: coords || userLocation, 
-                  title: coords ? city : 'My Location', 
-                }]}
-                mapContainer={{ height: 185, marginTop: 16 }}
-              />
-            }
-
-            <Check text={'Choose my current location'} checked={isCurrentLocation} onChange={onCurrentLocation} />
-        </View>
+        children
       }
     </View>
-
-  )
- }
- const Collapsible = ({ children, title }) => {
-  const [expanded, setExpanded] = useState(false);
-  return(
-    <View style={{ width: wp('90%'), marginVertical:5 }}>
-    <Pressable onPress={() => {setExpanded(!expanded)}}>
-      <LatoText bold fontSize={rf(1.7)}>{title}  <Icon.Ionicon name='chevron-down-sharp' size={16} color={Colors.text} style={{ marginTop: 10 }} /></LatoText>
-    </Pressable>
-    {
-      expanded && 
-      children
-    }
-  </View>
-  )
-}
+    )
+  }
 
 const input = React.createRef();
 

@@ -86,22 +86,3 @@ function* fetchSearchData({ payload }) {
 export function* searchPropertySaga() {
   yield takeLatest(searchProperty, fetchSearchData);
 }
-
-export const fetchOwnerProperty = createAction("property/fetchOwnerProperty");
-
-function* fetchOwnerPropertyData() {
-  yield put(startLoading(true))
-  try {
-    let res = yield call(ApiService.getOwnerProperty);
-    console.log('fetchOwnerProperty res.data: ', res.data)
-    if(res.data.properties)
-        yield put(setProperty(res.data.properties));
-  } catch (error) {
-    console.log({ error });
-    yield put(setError(getSimplifiedError(error)))
-  }
-}
-
-export function* fetchOwnerPropertySaga() {
-  yield takeLatest(fetchOwnerProperty, fetchOwnerPropertyData);
-}

@@ -21,6 +21,8 @@ import NewPropertyScreen from '../screens/owner/NewPropertyScreen';
 import OwnerSettingScreen from '../screens/owner/SettingScreen';
 import { useTokenCheck } from '../utilities/hooks';
 import { isReadyRef, navigationRef } from './NavigationService';
+import EditPropertyScreen from '../screens/owner/EditPropertyScreen';
+import VideoPlayerScreen from '../screens/VideoPlayerScreen';
 
 const Stack = createStackNavigator();
 
@@ -62,15 +64,18 @@ const Navigation = () => {
           <Stack.Screen name="FAQ" component={FaqScreen} />
           <Stack.Screen name="Payment" component={PaymentScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
         </>
         :
         <>
           <Stack.Screen name="Main" component={OwnerHomeScreen} />
           <Stack.Screen name="NewProperty" component={NewPropertyScreen} />
+          <Stack.Screen name="EditProperty" component={EditPropertyScreen} />
           <Stack.Screen name="PropertyDetails" component={OwnerPropertyDetails} />
           <Stack.Screen name="Settings" component={OwnerSettingScreen} />
           <Stack.Screen name="Payment" component={OwnerPaymentScreen} />
           <Stack.Screen name="Profile" component={OwnerProfileScreen} />
+          <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
         </>
       }
       </Stack.Navigator>

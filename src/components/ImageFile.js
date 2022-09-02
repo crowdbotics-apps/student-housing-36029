@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 import { rf } from '../constants/Constants';
 import LatoText from './LatoText';
 
-export default function ImageFile({ data, thumbnail, containerStyle, onAdd }) {
+export default function ImageFile({ data, thumbnail, containerStyle, onAdd, onRemove }) {
   if(thumbnail && thumbnail.length)
     return (
       <ImageBackground source={{ uri: thumbnail }} style={containerStyle} resizeMode='cover'>
@@ -13,6 +13,7 @@ export default function ImageFile({ data, thumbnail, containerStyle, onAdd }) {
           name='close' type='ionicon' 
           size={20} color={Colors.text} 
           containerStyle={{ width:24, height: 24, backgroundColor: '#FFFFFF50', borderRadius:2, position: 'absolute', top:10, right: 10 }} 
+          onPress={onRemove}
           />
       </ImageBackground>
     )

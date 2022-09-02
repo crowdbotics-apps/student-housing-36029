@@ -39,7 +39,7 @@ const  PasswordInput = React.forwardRef((props, ref) => {
     }
 
     return (
-    <View>
+    <View style={{ marginTop: 10 }}>
         {props.label && <LatoText fontSize={rf(1.6)}>{props.label}</LatoText>}
         <Input
             ref={ref}
@@ -60,6 +60,7 @@ const  PasswordInput = React.forwardRef((props, ref) => {
             secureTextEntry={!showPassowrd}
             rightIcon={<ToggleEye onToggle={() => {setShowPassowrd(!showPassowrd)}} />}
             onEndEditing={_onEndEditting}
+            onFocus={() => setError('')}
             />
         <Error error={error} />
 

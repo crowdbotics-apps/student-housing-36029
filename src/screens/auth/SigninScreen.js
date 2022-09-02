@@ -106,7 +106,7 @@ function SigninScreen() {
               style={{ width: wp('100%'), backgroundColor: '#FFF', }}
               backBehavior='none'
               screenOptions={{
-                swipeEnabled: false
+                swipeEnabled: false,
               }}
             >
               <Tab.Screen name="SignupForm" component={SignupForm} options={{ tabBarLabel: 'Sign Up' }}/>
@@ -206,7 +206,7 @@ const SignupForm = () => {
             returnKeyType="done"
             onChangeText={(text) => onSubmitValue("password", text)}
           />
-          <View style={{ width: '100%'}}>
+          <View style={{ width: '100%', marginTop: 10 }}>
             <LatoText fontSize={rf(1.6)} >I'm signing up as:</LatoText>
             <RadioButtons 
               data={[
@@ -282,7 +282,7 @@ const SigninForm = () => {
   }, [authError]);
 
   return (
-      <View style={{ alignItems: 'center', backgroundColor: Colors.background }}>
+      <View style={{ alignItems: 'center', backgroundColor: Colors.background, flex: 1 }}>
         <View style={[styles.formContainer2, { justifyContent: 'flex-start', height: 450 }]} >
           <StyledInput
             required
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: wp('100%'),
-    height: 480,
+    height: 'auto',
     backgroundColor: '#FFF',
     paddingTop: hp('4%'),
     paddingHorizontal: wp('5%'),

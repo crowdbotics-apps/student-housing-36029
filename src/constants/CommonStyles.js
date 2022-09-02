@@ -11,7 +11,7 @@ const CommonStyles =  StyleSheet.create({
     input: {
         width: '100%',
         height: 45,
-        marginTop: 10,
+        marginTop: 6,
         backgroundColor: 'transparent',
         elevation: 6,
         shadowColor: "rgba(0, 0, 0, 0.5)",

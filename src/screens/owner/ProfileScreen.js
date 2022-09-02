@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView, FlatList, TouchableHighlight } from 'react-native';
 import { Avatar, Button, Divider, Image, ListItem } from 'react-native-elements';
-import NavigationHeader from '../../components/NavigationHeader2';
+import NavigationHeader from '../../components/NavigationHeader';
 import Colors from '../../constants/Colors';
 import { AUTH_TOKEN, hp, rf, wp } from '../../constants/Constants';
 import Icon from '../../constants/Icon';
@@ -16,7 +16,7 @@ import { setProfileImage, useIsLoading, useProfile, useReviews } from '../../red
 import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
 import { isEmpty } from '../../services/AuthValidation';
-import ImageUpload from '../../components/ImageUpload';
+import ImagePicker from '../../components/ImagePicker';
 import { updateProfile } from '../../redux/sagas/profile/updateSaga';
 import TextInputBottomSheet from '../../components/TextInputBottomSheet';
 import LocalStorage from '../../services/LocalStorage';
@@ -138,7 +138,7 @@ export default function OwnerProfileScreen() {
                   <Icon.Feather name='camera' color={'#CCDBE0'} size={36} style={{ marginBottom: 10}} />
                   <LatoText color={Colors.primaryColor} fontSize={rf(1.7)}>Upload picture</LatoText>
                 </TouchableOpacity>
-                <ImageUpload
+                <ImagePicker
                   showPicker={showImagePicker}
                   closePicker={() => setShowImagePicker(false)}
                   onPickImage={onPickImage}

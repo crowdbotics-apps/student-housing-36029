@@ -9,7 +9,7 @@ import LatoText from '../../components/LatoText';
 import LeftSlider from '../../components/LeftSlider';
 import ListEmpty from '../../components/ListEmpty';
 import MultirangeSlider from '../../components/MultirangeSlider';
-import NavigationHeader from '../../components/NavigationHeader2';
+import NavigationHeader from '../../components/NavigationHeader';
 import PrimaryButton from '../../components/PrimaryButton';
 import PropertyItem from '../../components/PropertyItem';
 import PropertyLoader from '../../components/PropertyLoader';

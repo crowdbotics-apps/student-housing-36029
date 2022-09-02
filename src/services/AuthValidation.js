@@ -94,6 +94,73 @@ export const validateChangePassword = (formValues) => {
     return true
 }
 
+export const validatePropertyForm = (formValues, media, rules) => {
+    const {
+        title,
+        description,
+        minimum_renting_duration,
+        per_night_price,
+        type,
+        bath_room,
+        status,
+        country,
+        city,
+        available_from,
+        available_to,
+        facilities,
+        accessiblities,
+        amenities,
+        time_type,
+    } = formValues;
+    
+    if(title.length == 0){
+        alert('Title field is required'); return false;
+    }
+    if(description.length == 0){
+        alert('Description field is required'); return false;
+    }
+    if(minimum_renting_duration.length == 0){
+        alert('Minimum renting duration field is required'); return false;
+    }
+    if(per_night_price.length == 0){
+        alert('Price field is required'); return false;
+    }
+    if(type.length == 0){
+        alert('Property type is required'); return false;
+    }
+    if(bath_room.length == 0){
+        alert('Bathroom field is required'); return false;
+    }
+    if(status.length == 0){
+        alert('Property Status is required'); return false;
+    }
+    if(city.length == 0){
+        alert('City field is required'); return false;
+    }
+    if(country.length == 0){
+        alert('Country field is required'); return false;
+    }
+    if(facilities.length == 0){
+        alert('Room facilities not selected'); return false;
+    }
+    if(accessiblities.length == 0){
+        alert('Room accessiblities not selected'); return false;
+    }
+    if(amenities.length == 0){
+        alert('Property amenities not selected'); return false;
+    }
+    if(time_type.length == 0){
+        alert('Time type not selected'); return false;
+    }
+    if(!rules || rules.length == 0){
+        alert('Atleast ONE house rule is required'); return false;
+    }
+    if(!media || media.length == 0){
+        alert('Atleast ONE photo is required'); return false;
+    }
+    return true;
+}
+
 
 const errorMsgs = {
     empty: ' cannot be empty!',

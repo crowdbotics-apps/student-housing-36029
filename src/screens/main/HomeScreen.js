@@ -6,7 +6,7 @@ import Animated from 'react-native-reanimated';
 import { useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
 import ListEmpty from '../../components/ListEmpty';
-import NavigationHeader from '../../components/NavigationHeader2';
+import NavigationHeader from '../../components/NavigationHeader';
 import PropertyItem from '../../components/PropertyItem';
 import PropertyLoader from '../../components/PropertyLoader';
 import Colors from '../../constants/Colors';

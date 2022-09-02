@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
 import LatoText from '../../components/LatoText';
 import ListEmpty from '../../components/ListEmpty';
-import NavigationHeader from '../../components/NavigationHeader2';
+import NavigationHeader from '../../components/NavigationHeader';
 import PrimaryButton from '../../components/PrimaryButton';
 import PropertyItem from '../../components/PropertyItem';
 import PropertyLoader from '../../components/PropertyLoader';
@@ -12,9 +12,8 @@ import Row from '../../components/Row';
 import Colors from '../../constants/Colors';
 import { hp, rf, wp } from '../../constants/Constants';
 import { navigate } from '../../navigations/NavigationService';
-import { setPropertyDetails, useIsLoading, useProperty } from '../../redux/reducers/PropertyReducer';
-import { fetchOwnerProperty, fetchProperty } from '../../redux/sagas/property/fetchSaga';
-import { updateWishlist } from '../../redux/sagas/property/updateSaga';
+import { setPropertyDetails, useIsLoading, useProperty } from '../../redux/reducers/OwnerReducer';
+import { fetchPostedProperty } from '../../redux/sagas/owner/fetchSaga';
 import { useDispatchEffect } from '../../utilities/hooks';
 
 export default function OwnerHomeScreen() {
@@ -29,9 +28,10 @@ export default function OwnerHomeScreen() {
         <PrimaryButton
           title={'Post New Property'}
           onPress={() => navigate('NewProperty')}
-          titleStyle={{ fontSize: rf(1.7) }}
-          buttonStyle={{ width: wp('45%'), height: hp('5%') }}
-          containerStyle={{ }}
+          titleStyle={{ fontSize: rf(1.6) }}
+          buttonStyle={{ width: wp('45%'), height: hp('5%'),  }}
+          containerStyle={{ paddingHorizontal: 0 }}
+
           />
       </Row>
 
@@ -48,12 +48,12 @@ const PropertyList = () => {
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
 
-  useDispatchEffect(fetchOwnerProperty);
+  useDispatchEffect(fetchPostedProperty);
 
   const onViewProperty = (id) => { 
     dispatch(setPropertyDetails(properties.find(p => p.id === id)));
-    navigate('PropertyDetails')
-   }
+    navigate('EditProperty');
+  }
    
   if(isLoading) 
    return <PropertyLoader />
@@ -82,6 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: Colors.background,
-  }
+  },
 });
 

@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Button, Image, ListItem, Rating } from 'react-native-elements';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import { Button, ListItem, Rating, Icon as RNEIcon } from 'react-native-elements';
+import Video from 'react-native-video';
 import { useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import { rf, wp } from '../constants/Constants';
 import Icon from '../constants/Icon';
+import { useIsOwner } from '../redux/reducers/AuthReducer';
 import { isImage } from '../utilities/utils';
 import HeartButton from './HeartButton';
 import LatoText from './LatoText';
 import Row from './Row';
 import { TextButton } from './TextButton';
 
+
 export default function PropertyItem({ id, title, media=[],  rating,  description, is_wish_listed, toggleFavourite, onViewProperty   }) {
   const dispatch = useDispatch();
-  const mediaFiles = media.map(file => file.property_media.split('?')[0]); 
+  const isOwner = useIsOwner()
+  const mediaFiles = media.map(file => file.property_media?.split('?')[0]); 
     
   return (
           <ListItem containerStyle={styles.container}>
@@ -43,7 +47,7 @@ export default function PropertyItem({ id, title, media=[],  rating,  descriptio
               </ListItem.Title>
               <ListItem.Subtitle>
                 <Button
-                    title={'View Property'}
+                    title={isOwner?'Edit Property':'View Property'}
                     type='solid'
                     onPress={() => { onViewProperty(id) }}
                     titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
@@ -67,7 +71,7 @@ export default function PropertyItem({ id, title, media=[],  rating,  descriptio
     )
 }
 
-const ImageCarousel = ({ images }) => { 
+const ImageCarousel = ({ images=[] }) => { 
   const [index, setIndex] = useState(0);
   const onLeftPress = () => { 
     setIndex(index!==0 ? index-1 : index);
@@ -75,20 +79,39 @@ const ImageCarousel = ({ images }) => {
   const onRightPress = () => { 
     setIndex(index!==images.length-1 ? index+1 : index);
    }
-
+   console.log('images: ', images);
+  if(images.length)
   return(
     <View style={styles.image}>
       {
         isImage(images[index]) ? 
         <Image source={{ uri: images[index] }} style={styles.image}/>
         :
-        <View style={styles.image} ><LatoText>Video File</LatoText></View>
+        <VideoFile uri={images[index]} />
       }
       <Icon.Material name={'keyboard-arrow-left'} color={'#FFF'} size={15} style={styles.arrowLeft} onPress={onLeftPress}/>
       <Icon.Material name={'keyboard-arrow-right'} color={'#FFF'} size={15} style={styles.arrowRight} onPress={onRightPress}/>
     </View>
   )
+  else return <View style={styles.image}>
+          <Icon.FontAwesome name={'photo'} color={'#ddd'} size={145}/>
+  </View>
  }
+
+ const VideoFile = ({ uri, }) => (
+    <Video
+      source={{ uri }}
+      style={styles.image}
+    >
+      <RNEIcon 
+        name='play' type='ionicon' 
+        size={24} color={Colors.text} 
+        containerStyle={{ width: 60, height: 40, backgroundColor: '#FFFFFF70', borderRadius:4 }} 
+        />
+    </Video>
+
+  )
+
 const styles = StyleSheet.create({
   container: {
     height: 186,
@@ -109,8 +132,10 @@ const styles = StyleSheet.create({
     height: 145,
     width: wp('40%'),
     borderRadius: 6,
-    resizeMode: 'cover'
-
+    resizeMode: 'cover',
+    backgroundColor: '#fefefe',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rating:{
     alignItems: "flex-start",

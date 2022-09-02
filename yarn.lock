@@ -6037,6 +6037,11 @@ react-native-collapsible@^1.6.0:
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
   integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
 
+react-native-create-thumbnail@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.5.1.tgz#3473360acf5fceb812bda0dae6fe77dc5ce0b7a8"
+  integrity sha512-ML9tzRRxyTJFptEZdTbRQ1TKLGdBa7ynCc2KdPpyeNT/XmD6pBUq0E/EJtvQpMMlz8ZRq7q4KJHW4dCZc365/A==
+
 react-native-dotenv@^2.5.3:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-2.6.2.tgz#b63fc5f60d8dc86fcb4ba02e9626652e8f6c187f"
@@ -6057,6 +6062,11 @@ react-native-elements@^3.3.1:
     opencollective-postinstall "^2.0.3"
     react-native-ratings "8.0.4"
     react-native-size-matters "^0.3.1"
+
+react-native-geolocation-service@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-5.3.0.tgz#2f361ce003457651b656266d5e1328f3e335e693"
+  integrity sha512-imK/yjxqPMIydSjZLpqPh7U073Fpe1JAaZHiIzLzWnzv89OGey6t4Zj/POg3+xtmGcbDoMcEOx8hbNY/fXaD9Q==
 
 react-native-gesture-handler@^1.10.3:
   version "1.10.3"

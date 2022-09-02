@@ -1,28 +1,25 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Icon, ListItem } from 'react-native-elements';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ReactNativeModal from 'react-native-modal';
-import {
-  requestStoragePermission,
-  checkCameraPermission,
-} from '../services/AppPermissions';
 import Colors from '../constants/Colors';
-import { WIDTH} from '../constants/Constants';
-import {Icon, LinearProgress, ListItem} from 'react-native-elements';
+import { WIDTH } from '../constants/Constants';
+import {
+  checkCameraPermission
+} from '../services/AppPermissions';
 import LatoText from './LatoText';
 
 const PICTURE_OPTIONS = ['Take Picture', 'Open Image Gallery'];
 
-export default function ImageUpload({
+export default function ImagePicker({
   showPicker,
   closePicker,
-  onUpload,
   onPickImage,
   multipleSelection=false
 }) {
 
   const [cameraPermission, setCameraPermission] = useState(true);
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (Platform.OS == 'android') {
@@ -134,99 +131,7 @@ export default function ImageUpload({
       type: `image/${fileType}` // or your mime type what you want
     }; 
   }
-  // const onPickImage = async (image) => {
-  //   console.log('image: ', image);
-  //   if(image){
-  //     const formData = new FormData();
-  //     const uriParts = image.uri.split('.');
-  //     const fileType = uriParts[uriParts.length - 1];
-  //     formData.append('image',{
-  //       uri: Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-  //       name: image.fileName,
-  //       type: `image/${fileType}` // or your mime type what you want
-  //     });
-  //     const token = await LocalStorage.getData(AUTH_TOKEN); 
-  //     const isTrainer = await LocalStorage.getData(IS_TRAINER); 
-  //     console.log('isTrainer: ', isTrainer);
-  //     try {
-  //       setUploading(true)
-  //       let response = await fetch(
-  //         `https://flexor.is/api/${isTrainer?'trainer':'client'}/upload-image`,
-  //         {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Accept': 'application/json',
-  //                 'Content-Type': 'multipart/form-data',
-  //                 'x-auth-token': token
-  //             },
-  //              body: formData
-  //         }
-  //       );
-  //         const result = await response.json();
-  //         console.log('data: ', result);
-  //         if(result && result.success === true){
-  //           onUpload(result.url)
-  //         }
-  //         else if(result.message){
-  //           alert(result.message)    
-  //           onUpload(null)
-  //         }
-  //     } catch (error) {
-  //       console.error({error});
-  //       alert(error)
-  //       onUpload(null);
-  //     } finally {
-  //       setUploading(false)
-  //     }
-  //   }
-  // }  
-//   const uploadImage = async (imagebase) => {
-//     setUploading(true)    
-//     const clientId = "9c059832fa1e968";
-//     const auth = `Client-ID ${  clientId}`;
-//     const formData = new FormData();
-//     formData.append("image", imagebase);
-//     formData.append("type", "base64");
-//     try {
-//       const result = await fetch("https://api.imgur.com/3/image", {
-//         method: 'POST',
-//         body: formData,
-//         headers: {
-//           Accept: 'application/json',
-//           Authorization: auth,
-//         },
-//       })
-//       const response_body = await result.json();
-//       return response_body.data.link
-//     } catch (error) {
-//       console.log('Error uploading image: ', error);
-//       showAlert({
-//         title: 'Something went wrong!',
-//         message: error,
-//         alertType: 'error'
-//       })
-//     } finally {
-//       setUploading(false)
-//     }
-// };
-
   return (
-    <>
-      <ReactNativeModal
-        isVisible={uploading}
-        backdropOpacity={0.5}
-      >
-        <View style={styles.modal}>
-          <Text style={styles.headingText}>
-            {`Photo Upload`}{' '}
-          </Text>
-          <LinearProgress
-            variant="indeterminate"
-            color={Colors.primaryColor}
-            style={{width: WIDTH - 50, height: 6, borderRadius: 10}}
-          />
-        </View>
-      </ReactNativeModal>
       <ReactNativeModal
         isVisible={showPicker}
         backdropOpacity={0.5}
@@ -248,7 +153,7 @@ export default function ImageUpload({
           </ListItem>
           <ListItem style={{ width: WIDTH - 60, height: 40 }}
             onPress={() => {
-              // closePicker();
+              closePicker();
               openGallery();
             }}
             Component={TouchableOpacity}
@@ -260,20 +165,9 @@ export default function ImageUpload({
           </ListItem>
         </View>
       </ReactNativeModal>
-    </>
   );
 }
 const styles = StyleSheet.create({
-  modal: {
-    width: WIDTH - 30,
-    height: 100,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,1)',
-    borderRadius: 14,
-    padding: 10,
-    elevation: 8,
-  },
   modal2: {
     width: WIDTH - 30,
     height: 150,
@@ -283,11 +177,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 10,
     elevation: 8,
-  },
-  headingText: {
-    color: Colors.primaryColor,
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   headingText2: {
     color: Colors.primaryColor,

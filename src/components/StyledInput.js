@@ -32,14 +32,15 @@ const StyledInput = React.forwardRef((props, ref) => {
             props.onChangeText && props.onChangeText(text);
         }
         
-    const _onEndEditting = (event) => {
-        const text = event.nativeEvent.text || '';
-        text.length===0 && props.required && setError('This field is required')
-        props.onEndEditing && props.onEndEditing(text);
+    const _onEndEditting = (text) => {
+        let error = null;
+        if(text.length===0 && props.required) error = 'This field is required';
+        setError(error);
+        props.onEndEditing && props.onEndEditing(text, error);
     }
        
     return (
-    <View>
+    <View style={{ marginTop: 10 }}>
       {props.label && <LatoText fontSize={rf(1.6)}>{props.label}</LatoText>}
       <Input
         ref={ref}
@@ -65,7 +66,7 @@ const StyledInput = React.forwardRef((props, ref) => {
         caretHidden={props.caretHidden}
         secureTextEntry={props.secureTextEntry}
         clearTextOnFocus={props.clearTextOnFocus || false}
-        onEndEditing={_onEndEditting}
+        onEndEditing={(e) => _onEndEditting(e.nativeEvent.text)}
         multiline={props.multiline}
         numberOfLines={props.numberOfLines}
         maxLength={props.maxLength}

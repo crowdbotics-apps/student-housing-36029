@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 import HeartButton from '../../components/HeartButton';
 import ImageCarousel from '../../components/ImageCarousel';
 import LatoText from '../../components/LatoText';
-import NavigationHeader from '../../components/NavigationHeader2';
+import NavigationHeader from '../../components/NavigationHeader';
 import PrimaryButton from '../../components/PrimaryButton';
 import Row from '../../components/Row';
 import StyledDatepicker from '../../components/StyledDatepicker';

@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     width: wp('90%'),
     alignItems: 'flex-start',
     justifyContent: 'center',
+    marginTop: 10
   },
   modalFlagStyle: {
     fontSize: 22,

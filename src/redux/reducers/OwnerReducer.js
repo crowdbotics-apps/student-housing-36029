@@ -19,6 +19,7 @@ export const ownerSlice = createSlice({
     reviews: [],
     houseRules: [],
     media: { photos: [], videos: [] },
+    propertyRating: []
   },
   reducers: {
     startLoading: (state, action) => {
@@ -61,6 +62,12 @@ export const ownerSlice = createSlice({
     },
     setReviews: (state, action) => {
       state.reviews = action.payload;
+      state.error = null;
+      state.isLoading = false
+    },
+    setPropertyRating: (state, action) => {
+      state.propertyRating = action.payload;
+      state.success = false;
       state.error = null;
       state.isLoading = false
     },
@@ -122,6 +129,7 @@ export const {
   updatePropertyList,
   setPropertyDetails,
   setReviews,
+  setPropertyRating,
   setHouseRules,
   editHouseRules,
   setPropertyForm,
@@ -141,6 +149,7 @@ export const usePropertyDetails =  () => useSelector(state => state.Owner.proper
 export const usePropertyForm =  () => useSelector(state => state.Owner.propertyForm)
 export const useFormErrors =  () => useSelector(state => state.Owner.formErrors)
 export const useReviews =  () => useSelector(state => state.Owner.reviews)
+export const usePropertyRating =  () => useSelector(state => state.Owner.propertyRating)
 export const useHouseRules =  () => useSelector(state => state.Owner.houseRules)
 export const useMedia =  () => useSelector(state => state.Owner.media)
 export const useIsLoading =  () => useSelector(state => state.Owner.isLoading)

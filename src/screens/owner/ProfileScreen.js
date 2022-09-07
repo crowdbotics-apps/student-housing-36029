@@ -12,7 +12,7 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { setProfileImage, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
+import { setProfileImage, useBookingHistory, useIsLoading, usePaymentMethod, useProfile, useReviews,  } from '../../redux/reducers/ProfileReducer';
 import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
 import { isEmpty } from '../../services/AuthValidation';
@@ -22,14 +22,22 @@ import TextInputBottomSheet from '../../components/TextInputBottomSheet';
 import LocalStorage from '../../services/LocalStorage';
 import { getSimplifiedError } from '../../services/ApiErrorhandler';
 import UploadingModal from '../../components/UploadingModal';
-import { fetchReviews } from '../../redux/sagas/profile/fetchReviewsSaga';
 import ListEmpty from '../../components/ListEmpty';
+import { fetchProfile } from '../../redux/sagas/profile/fetchSaga';
+import { fetchUserRating } from '../../redux/sagas/profile/fetchReviewsSaga';
+import { fetchPropertyRating } from '../../redux/sagas/owner/fetchReviewsSaga';
+import { usePropertyRating } from '../../redux/reducers/OwnerReducer';
+import { fetchPaymentMethod } from '../../redux/sagas/profile/paymentMethodSaga';
+import { fetchBookingHistory } from '../../redux/sagas/profile/fetchBookingSaga';
+import { goBack } from '../../navigations/NavigationService';
+// import { CardField, useStripe } from '@stripe/stripe-react-native';
 
 export default function OwnerProfileScreen() {
   const dispatch = useDispatch();
   const user = useUser();
   const profile = useProfile();
   const reviews = useReviews();
+  const propertyRating = usePropertyRating();
   const isLoading = useIsLoading();
   const isKeyboardVisible = useKeyboard();
 
@@ -56,7 +64,6 @@ export default function OwnerProfileScreen() {
   const submitForm = (formValues, imgFile) => {
     if(isEmpty(formValues['city'])) { alert('City field is required'); return }
     if(isEmpty(formValues['country'])) { alert('Country field is required'); return }
-    if(isEmpty(formValues['college'])) { alert('College field is required'); return }
     const updateProfileData = {
       id: user.id,
       profile: formValues,
@@ -106,7 +113,11 @@ export default function OwnerProfileScreen() {
       }
     }
   
-    useDispatchEffect(fetchReviews, null, true);
+    useDispatchEffect(fetchProfile, null, !profile.id);
+    useDispatchEffect(fetchUserRating, user?.id, user);
+    useDispatchEffect(fetchPropertyRating, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
+    useDispatchEffect(fetchBookingHistory, null, true);
 
     return (
         <View style={styles.container}>
@@ -127,7 +138,16 @@ export default function OwnerProfileScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.formContainer} >
-              <LatoText bold color={Colors.text} fontSize={rf(2.2)} style={{ alignSelf: 'flex-start', marginBottom: 20 }}>Profile</LatoText>
+            <Button
+              title={'Profile'}
+              type='clear'
+              onPress={() => goBack()}
+              icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
+              titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Black', }}
+              buttonStyle={{ backgroundColor: "transparent", padding: 0}}
+              containerStyle={{  alignSelf: 'flex-start',  marginBottom:20 }}
+              TouchableComponent={TouchableOpacity}
+              /> 
 
               {
                 profile.profile_image_url && !isEmpty(profile.profile_image_url) ?
@@ -152,7 +172,7 @@ export default function OwnerProfileScreen() {
                 onEdit={value => onSubmitValue('full_name', value)}
                 />
 
-              <View style={[styles.formContainer2, { height: 270 }]} >
+              <View style={[styles.formContainer2, { height: 150 }]} >
                 <StyledInput
                   containerStyle={CommonStyles.input}
                   label='City'
@@ -171,27 +191,14 @@ export default function OwnerProfileScreen() {
                   value={formValues.country}
                   onChangeText={(text) => onSubmitValue("country", text)}
                 />
-                <StyledInput
-                  containerStyle={CommonStyles.input}
-                  label='College'
-                  placeholder={"Start typing college name"}
-                  keyboardType="default"
-                  returnKeyType="done"
-                  value={formValues.college}
-                  onChangeText={(text) => onSubmitValue("college", text)}
-                />
               </View>
 
               <Reviews 
-                title={'Reviews given'} 
+                title={'Reviews received'} 
                 data={reviews}
               />
-              {/* <Reviews 
-                title={'Reviews received'} 
-                data={REVIEWS_DUMMY}
-              /> */}
               <CreditCardPayment />
-              <BookingHistory data={BOOKINGS}/>
+              <BookingHistory />
             </View>
 
             </ScrollView>
@@ -258,7 +265,7 @@ const Reviews = ({ title, data }) => {
           keyExtractor={(item, i) => item.id}
           style={{ width: '100%', height: 'auto' }}
           ItemSeparatorComponent={() => <Divider style={{ width: '100%', height: 1, backgroundColor: Colors.primaryColor }} />}
-          ListEmptyComponent={() => <ListEmpty text='No reviews' />}
+          ListEmptyComponent={() => <ListEmpty text='No reviews' height={50} />}
           />  
       </View>
     }
@@ -267,8 +274,14 @@ const Reviews = ({ title, data }) => {
  }
 
  const CreditCardPayment = () => { 
-  const [collapsed, setCollapsed] = useState(true);
+  const paymentMethods =  usePaymentMethod()
+  // const stripe = useStripe();
 
+  const [collapsed, setCollapsed] = useState(true);
+  const [editCard, setEditCard] = useState(false);
+  const [cardValues, setCardValues] = useState({
+
+  });
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
    }
@@ -283,11 +296,17 @@ const Reviews = ({ title, data }) => {
     {
     !collapsed &&
       <View style={styles.content}>
-        <Row style={{ width: '100%', height: 40}}>
-          <LatoText fontSize={rf(1.6)}>{`Curent payment method`}</LatoText>
-          <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• 8821  `}</LatoText>
-          <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} />
-        </Row>
+        {
+          paymentMethods.map(({card},i) => (
+            <Row style={{ width: '100%', height: 40}}>
+              <LatoText fontSize={rf(1.6)}>{`Saved Card: `}</LatoText>
+              <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• ${card.last4}  `}</LatoText>
+              <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} onPress={() => setEditCard(true)}/>
+            </Row>
+          ))
+        }
+        {
+        paymentMethods.length === 0 &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}
@@ -299,13 +318,50 @@ const Reviews = ({ title, data }) => {
             TouchableComponent={TouchableHighlight}
             />   
         </Row>
+        }
+        <View style={{ width: '100%', marginVertical: 12, }}>
+          {/* <StyledInput
+            containerStyle={CommonStyles.input}
+            label='Add new card'
+            placeholder={"Enter card credentials"}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            value={formValues.city}
+            onChangeText={(text) => onSubmitValue("city", text)}
+          /> */}
+          {/* <CardField
+            postalCodeEnabled={true}
+            placeholders={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={{
+              backgroundColor: '#FFFFFF',
+              textColor: Colors.text,
+            }}
+            style={{
+              width: '100%',
+              height: 50,
+              marginVertical: 20,
+            }}
+            onCardChange={(cardDetails) => {
+              console.log('cardDetails', cardDetails);
+            }}
+            onFocus={(focusedField) => {
+              console.log('focusField', focusedField);
+            }}
+          />
+ */}
+        </View>
+
+
       </View>
     }
   </>
   )
  }
 
- const BookingHistory = ({ title, data }) => { 
+ const BookingHistory = () => { 
+  const bookings = useBookingHistory()
   const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
@@ -322,16 +378,16 @@ const Reviews = ({ title, data }) => {
     !collapsed &&
       <View style={styles.content}>
         <FlatList
-          data={data}
+          data={bookings}
           renderItem={({item, index}) => (
             <View style={styles.propertyItem} >
-              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 25}}>{item.name} </LatoText>  
+              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 25}}>{item.property.title} </LatoText>  
               <Row style={{ width: "100%", flexWrap: "wrap" }}>
-                <LatoText style={{ width: '50%', lineHeight: 25 }}>Rate property: <Stars ratings={item.rating.property} /></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 25 }}>Rate property: <Stars ratings={item.property.rating} /></LatoText>
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.date}</LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: </LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.amount}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.book_from}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: {`${item.property.city},${item.property.country}`}</LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid:{data.total_bill} usd ({data.total_days} nights,{' '}{data.price_per_night} usd per night)</LatoText>
               </Row>
             </View>
           )}
@@ -339,7 +395,7 @@ const Reviews = ({ title, data }) => {
           style={{ width: '100%', height: 'auto' }}
           contentContainerStyle={{ alignItems: "center"}}
           // ItemSeparatorComponent={() => <Divider style={{ width: '100%', height: 1, backgroundColor: Colors.primaryColor }} />}
-          // ListEmptyComponent={() => <ListEmpty text='No reviews' />}
+          ListEmptyComponent={() => <ListEmpty text='No bookings yet' height={50} />}
           ListFooterComponent={() => <View style={{ height: 20 }}/>}
           />  
       </View>

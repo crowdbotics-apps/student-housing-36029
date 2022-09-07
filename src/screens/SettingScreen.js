@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView, Alert } from 'react-native';
 import { Button, Image } from 'react-native-elements';
-import images from '../../assets/images';
-import NavigationHeader from '../../components/NavigationHeader';
-import Colors from '../../constants/Colors';
-import { hp, rf, wp } from '../../constants/Constants';
-import Icon from '../../constants/Icon';
-import { goBack, navigate } from '../../navigations/NavigationService';
-import Row from '../../components/Row';
-import LatoText from '../../components/LatoText';
-import StyledInput from '../../components/StyledInput';
-import CommonStyles from '../../constants/CommonStyles';
-import PrimaryButton from '../../components/PrimaryButton';
+import images from '../assets/images';
+import NavigationHeader from '../components/NavigationHeader';
+import Colors from '../constants/Colors';
+import { hp, rf, wp } from '../constants/Constants';
+import Icon from '../constants/Icon';
+import { goBack, navigate } from '../navigations/NavigationService';
+import Row from '../components/Row';
+import LatoText from '../components/LatoText';
+import StyledInput from '../components/StyledInput';
+import CommonStyles from '../constants/CommonStyles';
+import PrimaryButton from '../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
-import { useUser } from '../../redux/reducers/AuthReducer';
-import { useIsLoading } from '../../redux/reducers/AuthReducer';
-import { TextButton } from '../../components/TextButton';
-import { isEmailValid, isEmpty, isPasswordValid, isPhoneNumberValid } from '../../services/AuthValidation';
-import { changePassAction } from '../../redux/sagas/auth/changePassSaga';
-import { changeEmailAction } from '../../redux/sagas/auth/changeEmailSaga';
-import { changePhoneAction } from '../../redux/sagas/auth/changePhoneSaga';
+import { useUser } from '../redux/reducers/AuthReducer';
+import { useIsLoading } from '../redux/reducers/AuthReducer';
+import { TextButton } from '../components/TextButton';
+import { isEmailValid, isEmpty, isPasswordValid, isPhoneNumberValid } from '../services/AuthValidation';
+import { changePassAction } from '../redux/sagas/auth/changePassSaga';
+import { changeEmailAction } from '../redux/sagas/auth/changeEmailSaga';
+import { changePhoneAction } from '../redux/sagas/auth/changePhoneSaga';
+import { deactivateAccount } from '../redux/sagas/auth/AuthSagas';
 
-export default function OwnerSettingScreen() {
+export default function SettingScreen() {
   const dispatch = useDispatch();
   const authUser = useUser();
   const isLoading = useIsLoading();
@@ -47,17 +48,25 @@ export default function OwnerSettingScreen() {
   }     
 
   const onDeactivate = () => { 
-    
+    Alert.alert(
+      'Confirm Deactivate',
+      'Are you sure to deactivate your account?',
+      [
+        {
+          text: 'NO',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => { dispatch(deactivateAccount());  }},
+      ],
+      {cancelable: true},
+    );
    }
     return (
         <View style={styles.container}>
 
         <NavigationHeader />
   
-        <Image  
-            source={images.background2}
-            style={styles.background}
-          />
         <KeyboardAvoidingView
           //keyboardVerticalOffset={keyboardVerticalOffset}
           behavior={Platform.OS == "ios" ? "padding" : null}
@@ -68,22 +77,25 @@ export default function OwnerSettingScreen() {
               width: wp("100%"),
               alignItems: "center",
               justifyContent: "center",
-              paddingBottom: 20,
             }}
             showsVerticalScrollIndicator={false}
           >
+            <Image  
+                source={images.background2}
+                style={styles.background}
+              />
 
             <View style={styles.formContainer} >
-                <Button
-                  title={'Student Housing App'}
-                  type='clear'
-                  onPress={() => goBack()}
-                  icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
-                  titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
-                  buttonStyle={{ backgroundColor: "transparent", }}
-                  containerStyle={{ marginBottom: 30, alignSelf: 'flex-start' }}
-                  TouchableComponent={TouchableOpacity}
-                  />  
+              <Button
+                title={'Student Housing App'}
+                type='clear'
+                onPress={() => goBack()}
+                icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight:5 }}/>}
+                titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
+                buttonStyle={{ backgroundColor: "transparent", }}
+                containerStyle={{ marginBottom: hp('2%'), alignSelf: 'flex-start' }}
+                TouchableComponent={TouchableOpacity}
+                />  
 
               <SettingItem 
                 title={'Change account password'} 
@@ -108,9 +120,9 @@ export default function OwnerSettingScreen() {
                 containerStyle={{ marginTop: hp('4%') }}
                 />
               <View style={styles.formContainer2}>
-                <TextButton title='FAQ' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('FAQ')}/>
-                <TextButton title='Payment' titleStyle={{ color: Colors.primaryColor }} onPress={() => navigate('Payment')}/>
-                <TextButton title='Deactivate your account' titleStyle={{ color: Colors.text }} onPress={onDeactivate}/>
+                <TextButton title='FAQ' titleStyle={{ color: Colors.primaryColor, height:16 }} onPress={() => navigate('FAQ')}/>
+                <TextButton title='Payment' titleStyle={{ color: Colors.primaryColor, height:16 }} onPress={() => navigate('Payment')}/>
+                <TextButton title='Deactivate your account' titleStyle={{ color: Colors.text, height:16 }} onPress={onDeactivate}/>
               </View>
             </View>
 
@@ -168,9 +180,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: wp('100%'),
-    height: hp('100%')-225,
+    height: hp('100%')-60,
     backgroundColor: 'transparent',
-    paddingVertical: hp('4%'),
+    paddingVertical: hp('3%'),
     paddingHorizontal: wp('5%')
 
   },

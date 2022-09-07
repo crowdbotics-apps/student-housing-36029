@@ -29,12 +29,21 @@ const ApiService = {
   changePassword: (params) => post(`/api/v1/user/change-password/`, params),
   updateEmail: (params) => post(`/api/v1/user/change-email/`, params),
   updatePhoneNUMber: (params) => post(`/api/v1/user/update-phone-number/`, params),
+  deactivateAccount: () => post(`/api/v1/user/deactivate-account/`),
   getUser: () => get(`/me/`),
   
   getProfile: () => get(`/api/v1/profile/`),
+  getOwnerProfile: (id) => get(`/api/v1/user/get-property-owner/${id}/`),
   insertProfile: (params) => post(`/api/v1/profile/`, params),
   updateProfile: (id, params) => patch(`/api/v1/profile/${id}/`, params),
   getReviews: () => get(`/api/v1/user-rating/`),
+  getMoreReviews: (params) => get(`/api/v1/user-rating/?${params}`),
+  postReview: (params) => post(`/api/v1/user-rating/`,params),
+  getBookingHistry: () => get(`/api/v1/booking-history/`),
+  getPaymentMethod: () => get(`/api/v1/user-payment-info/`),
+  insertPaymentMethod: (param) => post(`/api/v1/credit-card/`,param),
+  updatePaymentMethod: (id, param) => put(`/api/v1/credit-card/${id}/`,param),
+  deletePaymentMethod: (id) => post(`/api/v1/credit-card/`,{ pm_id: id }),
 
   postFeedback: (params) => post(`/feedback/`, params),
   
@@ -42,14 +51,18 @@ const ApiService = {
   getWishlist: () => get(`/api/v1/property/?is_wish_listed=True`),
   updateWishlist: (params) => post(`/api/v1/property-wishlist/`, params),
   bookProperty: (params) => post(`/api/v1/book-property/`, params),
+  getPropertyDetails: (id) => get(`/api/v1/property/${id}/`),
 
   getFilters: () => get(`/api/v1/property-config/`),
 
   getSearch: (param) => get(`/api/v1/property-search/?${param}/`),
 
+  getChannelList: () => get(`/api/v1/chat-channel/`),
+  createNewChat: (params) => post('/api/v1/get-or-create-chat/',params),
   // Owner side APIs
 
   getOwnerProperty: () => get(`/api/v1/user/owned-properties/`),
+  getPropertRating: () => get('/api/v1/property-rating/'),
   addHouseRule: (params) => post(`/api/v1/housing-rules/`, params),
   updateHouseRule: (id, params) => patch(`/api/v1/housing-rules/${id}/`, params),
   deleteHouseRule: (id) => del(`/api/v1/housing-rules/${id}/`),
@@ -57,6 +70,8 @@ const ApiService = {
   postProperty: (params) => post(`/api/v1/property/`, params),
   updateProperty: (id, params) => put(`/api/v1/property/${id}/`, params),
   deleteMedia: (id) => del(`/api/v1/delete-property-media/${id}/`),
+
+  getUserOwnRating: (id) => get(`/api/v1/user-own-rating/${id}/`)
 };
 
 export default ApiService;

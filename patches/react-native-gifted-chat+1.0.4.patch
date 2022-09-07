@@ -1,0 +1,21 @@
+diff --git a/node_modules/react-native-gifted-chat/lib/GiftedChat.js b/node_modules/react-native-gifted-chat/lib/GiftedChat.js
+index 3b939bb..eac0407 100644
+--- a/node_modules/react-native-gifted-chat/lib/GiftedChat.js
++++ b/node_modules/react-native-gifted-chat/lib/GiftedChat.js
+@@ -3,7 +3,6 @@ import React from 'react';
+ import { Platform, StyleSheet, View, KeyboardAvoidingView, } from 'react-native';
+ import { ActionSheetProvider, } from '@expo/react-native-action-sheet';
+ import uuid from 'uuid';
+-import { SafeAreaView } from 'react-native-safe-area-context';
+ import dayjs from 'dayjs';
+ import localizedFormat from 'dayjs/plugin/localizedFormat';
+ import * as utils from './utils';
+@@ -421,7 +420,7 @@ class GiftedChat extends React.Component {
+     render() {
+         if (this.state.isInitialized === true) {
+             const { wrapInSafeArea } = this.props;
+-            const Wrapper = wrapInSafeArea ? SafeAreaView : View;
++            const Wrapper = View;
+             const actionSheet = this.props.actionSheet ||
+                 (() => { var _a; return (_a = this._actionSheetRef.current) === null || _a === void 0 ? void 0 : _a.getContext(); });
+             const { getLocale } = this;

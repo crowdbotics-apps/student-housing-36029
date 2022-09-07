@@ -1,11 +1,14 @@
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import { usePubNub } from 'pubnub-react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Image } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
+import BookingSuccessModal from '../../components/BookingSuccessModal';
 import Footer from '../../components/Footer';
 import HeartButton from '../../components/HeartButton';
 import ImageCarousel from '../../components/ImageCarousel';
+import InfoBox from '../../components/InfoBox';
 import LatoText from '../../components/LatoText';
 import NavigationHeader from '../../components/NavigationHeader';
 import PrimaryButton from '../../components/PrimaryButton';
@@ -13,26 +16,36 @@ import Row from '../../components/Row';
 import StyledDatepicker from '../../components/StyledDatepicker';
 import { TextButton } from '../../components/TextButton';
 import Colors from '../../constants/Colors';
-import { hp, MAPS_API_KEY, rf, wp } from '../../constants/Constants';
+import { hp, rf, wp } from '../../constants/Constants';
 import { FACILITY_ICONS } from '../../constants/Data';
 import Icon from '../../constants/Icon';
-import { goBack } from '../../navigations/NavigationService';
+import { goBack, navigate } from '../../navigations/NavigationService';
+import { useUser } from '../../redux/reducers/AuthReducer';
+import { setChannelListUpdated, setChatDetails, useChannelList, useChannelListUpdated } from '../../redux/reducers/ChatReducer';
 import { useIsLoading, usePropertyDetails } from '../../redux/reducers/PropertyReducer';
-import { updateWishlist } from '../../redux/sagas/property/updateSaga';
-import { totalPrice } from '../../utilities/utils';
-import { GeocodeAddress } from '../../services/Geocoding';
-import GoogleMaps from '../../components/GoogleMaps';
-import InfoBox from '../../components/InfoBox';
+import { createNewChat } from '../../redux/sagas/chat/insertSaga';
 import { bookProperty } from '../../redux/sagas/property/bookPropertySaga';
+import { fetchPropertyDetails } from '../../redux/sagas/property/fetchSaga';
+import { updateWishlist } from '../../redux/sagas/property/updateSaga';
+import { GeocodeAddress } from '../../services/Geocoding';
+import { getChannelName, setMetaData } from '../../services/PubNubChat';
 import { checkIsBooked } from '../../utilities/checkIsBooked';
-import BookingSuccessModal from '../../components/BookingSuccessModal';
+import { useDispatchEffect } from '../../utilities/hooks';
+import { totalPrice } from '../../utilities/utils';
 
 
 export default function PropertyDetails() {
   const dispatch = useDispatch();
   const details = usePropertyDetails();
   const isLoading = useIsLoading();
+  const channelListUpdated = useChannelListUpdated(); 
+  const channelListData = useChannelList();
+  const channelStore = channelListData.results; 
+  const authUser = useUser();
+  const pubnub = usePubNub()
+
   const [showSuccess, setShowSuccess] = useState(false);
+
   const {
     id,
     title,
@@ -51,8 +64,32 @@ export default function PropertyDetails() {
     housing_rules,
     type,
     is_wish_listed,
-    bookings
+    bookings,
+    owner
   } = details;
+
+  useDispatchEffect(fetchPropertyDetails, id, id);
+  useDispatchEffect(createNewChat, owner?.id, owner?.id);
+
+  useEffect(() => {
+    if(channelListUpdated){
+      const channel = channelStore.find(c => {
+        if(c.participants?.length) 
+          return c.participants?.findIndex(p => p.user.id===owner?.id) !== -1
+        return false
+      }); 
+      if(channel){
+        const { participants = [] } = channel;
+        if (participants.length)
+        dispatch(setChatDetails({
+            channel: getChannelName(channel),
+            ...participants.find((p) => p.user.id !== authUser.id),
+        }));
+        setMetaData(pubnub, getChannelName(channel));
+      }
+      dispatch(setChannelListUpdated(false));
+    }
+  }, [channelListUpdated]);
 
   const mediaFiles = media.map(file => file.property_media.split('?')[0]); 
   
@@ -296,7 +333,8 @@ export default function PropertyDetails() {
               title='Property Owner’s Profile' 
               titleStyle={{ color: Colors.primaryColor }} 
               containerStyle={{ height:40 }}
-              onPress={() => {}}
+              onPress={() => { navigate('OwnerProfilePreview', { id: owner?.id })}}
+              disabled={!owner}
               />
             <Button
               title={'Contact Property Owner'}
@@ -305,6 +343,7 @@ export default function PropertyDetails() {
               titleStyle={{ color: Colors.white, fontSize: rf(1.6), fontFamily: 'Lato-Bold', }}
               buttonStyle={{ backgroundColor: Colors.primaryColor, width: wp('40%'),height: 35, borderRadius: 6, padding: 0 }}
               containerStyle={{ width: wp('40%'), height: 35,borderRadius: 6, marginBottom: 20,  }}
+              disabled={!owner}
               />   
           </Row>
 

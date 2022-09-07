@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { createLogger } from "redux-logger"
 import createSagaMiddleware from "redux-saga"
 import rootReducer from "../reducers/rootReducer"
@@ -9,10 +9,18 @@ const logger = createLogger({
   timestamp: false // print the timestamp with each action?,
 })
 
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 
+const appReducer = combineReducers(rootReducer);
+
+const reducerProxy = (state, action) => {
+  if(action.type === 'RESET') {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+}
 export default configureStore({
-  reducer: rootReducer,
+  reducer: reducerProxy,
   middleware: getDefaultMiddleware => [
     ...getDefaultMiddleware({ thunk: false }),
     sagaMiddleware,

@@ -23,20 +23,24 @@ export default function VideoFile({ data, containerStyle, onAdd, onRemove }) {
   if(thumbnail && thumbnail.length)
     return (
       <ImageBackground source={{ uri: thumbnail }} style={containerStyle} resizeMode='cover' onPress={() => navigate('VideoPlayer', { video: data })}>
+        {
+        onRemove &&
         <Icon 
           name='close' type='ionicon' 
           size={20} color={Colors.text} 
           containerStyle={{ width:24, height: 24, backgroundColor: '#FFFFFF50', borderRadius:2, position: 'absolute', top:10, right: 10 }} 
           onPress={onRemove}
           />
+        }         
         <Icon 
           name='play' type='ionicon' 
           size={24} color={Colors.text} 
           containerStyle={{ width: 60, height: 40, backgroundColor: '#FFFFFF70', borderRadius:4 }} 
-          />
+          onPress={() => navigate('VideoPlayer', { video: data })}/>
       </ImageBackground>
     )
   else return (
+    onAdd ?
     <Pressable onPress={onAdd}>
     <View style={{...containerStyle, backgroundColor: '#ededed'}}>
        <Icon 
@@ -47,6 +51,7 @@ export default function VideoFile({ data, containerStyle, onAdd, onRemove }) {
        <LatoText bold color={'#999'} fontSize={rf(1.6)}>Add Video</LatoText>
     </View>
     </Pressable>
+    : null
   )
 }
 const styles = StyleSheet.create({

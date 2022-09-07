@@ -12,6 +12,8 @@ import { isLocationPermissionGranted } from '../services/AppPermissions';
 import LocalStorage from '../services/LocalStorage';
 import Geolocation from 'react-native-geolocation-service';
 import { GeocodePosition } from '../services/Geocoding';
+import { fetchChannelList } from '../redux/sagas/chat/fetchSaga';
+import { usePubNub } from 'pubnub-react';
 
 
 export const usePrevious = (value) => { 
@@ -25,7 +27,7 @@ export const usePrevious = (value) => {
 
 export function useTokenCheck() {
     const [checking, setChecking] = useState(true);
-
+    const pubnub = usePubNub()
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -40,6 +42,8 @@ export function useTokenCheck() {
           ApiService.setAuthHeader(token);
           dispatch(fetchProfile());
           dispatch(fetchConfig());
+          dispatch(fetchChannelList());
+          pubnub.setUUID(token);
         }
         await new Promise((resolve) => {
           setTimeout(() => {

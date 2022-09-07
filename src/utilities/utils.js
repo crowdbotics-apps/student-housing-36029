@@ -60,3 +60,21 @@ export function escapeRegexCharacters(str) {
 export function toQueryString(arr=[]) {
   return arr.length>0 ? arr.join(',') : null;
 }
+export function timeInWords(date) {
+  return moment(date).calendar(null, {
+    sameDay: '[Today]',
+    nextDay: '[Tomorrow]',
+    nextWeek: 'MMM, D',
+    lastDay: '[Yesterday]',
+    lastWeek: '[Last] dddd',
+    sameElse: 'MMM, D'
+});
+;
+}
+export const truncateText = (text, len) => {
+  return text && text.length > len ? `${text.slice(0,len-3)}...` : text
+}
+
+export const getChatChannel = (ownerId, studentID) => {
+  return `student_housing_${ownerId}_${studentID}`;
+};

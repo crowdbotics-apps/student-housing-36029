@@ -6,4 +6,5 @@ export default {
   background2: '#FAFAFA',
   white: "#fff",
   text: "#232F39",
+  textButton: "#0965E0"
 };

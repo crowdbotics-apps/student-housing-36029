@@ -12,17 +12,19 @@ import PaymentScreen from '../screens/main/PaymentScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 import PropertyDetails from '../screens/main/PropertyDetails';
 import SearchScreen from '../screens/main/SearchScreen';
-import SettingScreen from '../screens/main/SettingScreen';
+import SettingScreen from '../screens/SettingScreen';
 import OwnerHomeScreen from '../screens/owner/HomeScreen';
 import OwnerPaymentScreen from '../screens/owner/PaymentScreen';
 import OwnerProfileScreen from '../screens/owner/ProfileScreen';
 import OwnerPropertyDetails from '../screens/owner/PropertyDetails';
 import NewPropertyScreen from '../screens/owner/NewPropertyScreen';
-import OwnerSettingScreen from '../screens/owner/SettingScreen';
 import { useTokenCheck } from '../utilities/hooks';
 import { isReadyRef, navigationRef } from './NavigationService';
 import EditPropertyScreen from '../screens/owner/EditPropertyScreen';
 import VideoPlayerScreen from '../screens/VideoPlayerScreen';
+import OwnerProfilePreview from '../screens/main/OwnerProfilePreview';
+import Inbox from '../screens/main/Inbox';
+import ChatScreen from '../screens/main/ChatScreen';
 
 const Stack = createStackNavigator();
 
@@ -64,7 +66,10 @@ const Navigation = () => {
           <Stack.Screen name="FAQ" component={FaqScreen} />
           <Stack.Screen name="Payment" component={PaymentScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="OwnerProfilePreview" component={OwnerProfilePreview} />
           <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
+          <Stack.Screen name="Inbox" component={Inbox} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
         </>
         :
         <>
@@ -72,10 +77,14 @@ const Navigation = () => {
           <Stack.Screen name="NewProperty" component={NewPropertyScreen} />
           <Stack.Screen name="EditProperty" component={EditPropertyScreen} />
           <Stack.Screen name="PropertyDetails" component={OwnerPropertyDetails} />
-          <Stack.Screen name="Settings" component={OwnerSettingScreen} />
+          <Stack.Screen name="Settings" component={SettingScreen} />
+          <Stack.Screen name="FAQ" component={FaqScreen} />
           <Stack.Screen name="Payment" component={OwnerPaymentScreen} />
           <Stack.Screen name="Profile" component={OwnerProfileScreen} />
           <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Inbox" component={Inbox} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
         </>
       }
       </Stack.Navigator>

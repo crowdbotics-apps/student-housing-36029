@@ -20,3 +20,5 @@ export const SMALL_FONT_SIZE = 'small';
 export const WEEDAYNAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 
 
 export const MAPS_API_KEY = 'AIzaSyDZxuPkQdL9XOdkZ3iRuQdEkNywiBC1Il4';
+
+export const adminEmail = 'smeppp@gmail.com';

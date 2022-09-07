@@ -4,21 +4,21 @@ import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
 import { startLoading, setProfile, setError } from "../../reducers/ProfileReducer";
 
-export const fetchProfile = createAction("profile/fetchProfile");
+export const fetchBookingHistory = createAction("profile/fetchBookingHistory");
 
 function* fetchData() {
   yield put(startLoading(true))
   try {
-    let res = yield call(ApiService.getProfile);
-    console.log('fetchProfile res.data: ', res.data)
-    if(res.data.user_profile)
-        yield put(setProfile(res.data.user_profile));
+    let res = yield call(ApiService.getBookingHistry);
+    console.log('fetchBookingHistory res.data: ', res.data)
+    if(res.data.resuls)
+        yield put(setProfile(res.data.resuls));
   } catch (error) {
     console.log({ error });
     yield put(setError(getSimplifiedError(error)))
   }
 }
 
-export function* fetchProfileSaga() {
-  yield takeLatest(fetchProfile, fetchData);
+export function* fetchBookingSaga() {
+  yield takeLatest(fetchBookingHistory, fetchData);
 }

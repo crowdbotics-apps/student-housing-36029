@@ -11,7 +11,7 @@ export default function VideoPlayerScreen() {
     return (
           <SafeAreaView style={styles.container}>
             <RNVideoPlayer
-              source={{ uri: video.url }}
+              source={{ uri: video.uri }}
               style={styles.videoPlayer}
               title={video.title}              
             />

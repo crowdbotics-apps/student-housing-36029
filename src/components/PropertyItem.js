@@ -79,7 +79,7 @@ const ImageCarousel = ({ images=[] }) => {
   const onRightPress = () => { 
     setIndex(index!==images.length-1 ? index+1 : index);
    }
-   console.log('images: ', images);
+  //  console.log('images: ', images);
   if(images.length)
   return(
     <View style={styles.image}>

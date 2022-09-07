@@ -99,7 +99,7 @@ const RightMenu = () => {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        {text: 'YES', onPress: () => { dispatch(signOutAction()) }},
+        {text: 'YES', onPress: () => { dispatch(signOutAction());  }},
       ],
       {cancelable: true},
     );
@@ -112,8 +112,9 @@ const RightMenu = () => {
     { id: 5, label: 'Sign In', onPress:() => {setShowPopover(false); navigate('Signin', { tab: 1 }); }},
   ] : [
     { id: 1, label: 'Profile', onPress:() => { setShowPopover(false); navigate('Profile') }},
-    { id: 2, label: 'Settings', onPress:() => {setShowPopover(false); navigate('Settings') }},
-    { id: 3, label: 'Log Out', onPress:() => {setShowPopover(false); onLogout(); }},
+    { id: 2, label: 'Inbox', onPress:() => {setShowPopover(false); navigate('Inbox') }},
+    { id: 3, label: 'Settings', onPress:() => {setShowPopover(false); navigate('Settings') }},
+    { id: 4, label: 'Log Out', onPress:() => {setShowPopover(false); onLogout(); }},
   ]; 
   
   return (

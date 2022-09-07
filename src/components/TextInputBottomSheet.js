@@ -7,7 +7,7 @@ import StyledInput from './StyledInput';
 import CommonStyles from '../constants/CommonStyles';
 import PrimaryButton from './PrimaryButton';
 
-export default function TextInputBottomSheet({ isVisible, value, onSubmitValue }) {
+export default function TextInputBottomSheet({ isVisible, value, onSubmitValue, closeSheet }) {
 
     const [text, setText] = useState();
     return (
@@ -27,7 +27,7 @@ export default function TextInputBottomSheet({ isVisible, value, onSubmitValue }
                 />
                 <PrimaryButton
                     title={'Save'}
-                    onPress={() => onSubmitValue(text)}
+                    onPress={() => onSubmitValue(text || value)}
                     buttonStyle={{ width: wp('90%'), height: 40,  }}
                     containerStyle={{ marginTop: 24 }}
                     />

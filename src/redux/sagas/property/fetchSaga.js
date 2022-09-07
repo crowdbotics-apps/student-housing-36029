@@ -2,7 +2,7 @@ import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
-import { startLoading, setProperty, setWishlist, setConfig, setError } from "../../reducers/PropertyReducer";
+import { startLoading, setProperty, setWishlist, setConfig, setError, setPropertyDetails } from "../../reducers/PropertyReducer";
 import queryString from 'query-string';
 
 
@@ -85,4 +85,24 @@ function* fetchSearchData({ payload }) {
 
 export function* searchPropertySaga() {
   yield takeLatest(searchProperty, fetchSearchData);
+}
+
+
+export const fetchPropertyDetails = createAction("property/fetchPropertyDetails");
+
+function* fetchDetails({ payload: id }) {
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.getPropertyDetails, id);
+    console.log('fetchPropertyDetails res.data: ', res.data)
+    if(res.data.property)
+        yield put(setPropertyDetails(res.data.property));
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
+
+export function* fetchPropertyDetailsSaga() {
+  yield takeLatest(fetchPropertyDetails, fetchDetails);
 }

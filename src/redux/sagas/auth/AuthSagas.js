@@ -7,7 +7,9 @@ import { logoutUser, setAuthToken, setCounter, setError, setSuccess, setUser, st
 import RNToast from "../../../components/RNToast";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import { navigate } from "../../../navigations/NavigationService";
-import { Alert } from "react-native";
+import { fetchProfile } from "../profile/fetchSaga";
+import { fetchConfig } from "../property/fetchSaga";
+import { fetchChannelList } from "../chat/fetchSaga";
 
 
 export const signInAction = createAction("auth/signIn");
@@ -26,11 +28,14 @@ function* login({ payload }) {
     if (res.data.token) {
       const token = res.data.token;
       const user = res.data.user;
-      ApiService.setAuthHeader(token);
-      LocalStorage.storeData(AUTH_TOKEN, token);
-      yield put(setAuthToken(token))
-      LocalStorage.storeData(USER_DATA, user);
       yield put(setUser(user));  
+      yield put(setAuthToken(token))
+      yield call(LocalStorage.storeData, AUTH_TOKEN, token);
+      yield call(LocalStorage.storeData, USER_DATA, user);
+      yield call(ApiService.setAuthHeader, token);
+      yield put(fetchProfile());
+      yield put(fetchConfig());
+      yield put(fetchChannelList());
       RNToast.showShort('Login Successfully');
     }
     else if(res.data.detail) {
@@ -149,8 +154,33 @@ function* logout() {
     yield call(LocalStorage.delete, AUTH_TOKEN);
     yield call(LocalStorage.delete, USER_DATA);
     ApiService.removeAuthHeader();
-    yield put(logoutUser(null))
+    // yield put(logoutUser(null))
+    yield put({ type: 'RESET' });
 }
 export function* logoutSaga() {
   yield takeLatest(signOutAction, logout)
+}
+
+export const deactivateAccount = createAction("auth/deactivateAccount");
+
+function* deactivate() {
+  yield put(startLogin(true))
+  try {
+    let res = yield call(ApiService.deactivateAccount);
+    if(res.data){
+      yield call(LocalStorage.delete, AUTH_TOKEN);
+      yield call(LocalStorage.delete, USER_DATA);
+      ApiService.removeAuthHeader();
+      yield put({ type: 'RESET' });  
+    }
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+    alert(getSimplifiedError(error))
+    
+  }
+
+}
+export function* deactivateAccountSaga() {
+  yield takeLatest(deactivateAccount, deactivate)
 }

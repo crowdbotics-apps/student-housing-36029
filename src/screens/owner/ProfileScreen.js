@@ -118,7 +118,6 @@ export default function OwnerProfileScreen() {
     useDispatchEffect(fetchPropertyRating, null, true);
     useDispatchEffect(fetchPaymentMethod, null, true);
     useDispatchEffect(fetchBookingHistory, null, true);
-    useDispatchEffect(fetchPaymentMethod, null, true);
 
     return (
         <View style={styles.container}>

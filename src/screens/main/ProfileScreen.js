@@ -12,7 +12,7 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { setProfileImage, useBookingHistory, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
+import { setProfileImage, useBookingHistory, useIsLoading, usePaymentMethod, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
 import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
 import { isEmpty } from '../../services/AuthValidation';
@@ -272,7 +272,14 @@ const Reviews = ({ title, data }) => {
  }
 
  const CreditCardPayment = () => { 
+  const paymentMethods =  usePaymentMethod()
+  // const stripe = useStripe();
+
   const [collapsed, setCollapsed] = useState(true);
+  const [editCard, setEditCard] = useState(false);
+  const [cardValues, setCardValues] = useState({
+
+  });
 
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
@@ -288,11 +295,17 @@ const Reviews = ({ title, data }) => {
     {
     !collapsed &&
       <View style={styles.content}>
-        <Row style={{ width: '100%', height: 40}}>
-          <LatoText fontSize={rf(1.6)}>{`Curent payment method`}</LatoText>
-          <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• 8821  `}</LatoText>
-          <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} />
-        </Row>
+        {
+          paymentMethods.map(({card},i) => (
+            <Row style={{ width: '100%', height: 40}}>
+              <LatoText fontSize={rf(1.6)}>{`Saved Card: `}</LatoText>
+              <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• ${card.last4}  `}</LatoText>
+              <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} onPress={() => setEditCard(true)}/>
+            </Row>
+          ))
+        }
+        {
+        paymentMethods.length === 0 &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}
@@ -304,6 +317,7 @@ const Reviews = ({ title, data }) => {
             TouchableComponent={TouchableHighlight}
             />   
         </Row>
+        }
       </View>
     }
   </>

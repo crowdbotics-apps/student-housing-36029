@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
+import RNToast from "../../../components/RNToast";
 import ApiService from "../../../services/ApiService";
 import { startLoading, setProfile, setError } from "../../reducers/ProfileReducer";
 
@@ -11,8 +12,10 @@ function* updateData({ payload }) {
   yield put(startLoading(true))
   try {
     let res = yield call(ApiService.updateProfile, id, profile);
-    if(res.data.user_profile)
-        yield put(setProfile(res.data.user_profile));
+    if(res.data.user_profile) {
+      yield put(setProfile(res.data.user_profile));
+      RNToast.showShort("Profile updated");
+    }
     else if(res.data.detail) {
       alert(res.data.detail);
       yield put(setError(res.data.detail))

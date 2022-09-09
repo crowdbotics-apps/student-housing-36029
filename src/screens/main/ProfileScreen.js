@@ -12,7 +12,7 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { setProfileImage, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
+import { setProfileImage, useBookingHistory, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
 import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
 import { isEmpty } from '../../services/AuthValidation';
@@ -24,6 +24,8 @@ import { getSimplifiedError } from '../../services/ApiErrorhandler';
 import UploadingModal from '../../components/UploadingModal';
 import { fetchReviews } from '../../redux/sagas/profile/fetchReviewsSaga';
 import ListEmpty from '../../components/ListEmpty';
+import { fetchPaymentMethod } from '../../redux/sagas/profile/paymentMethodSaga';
+import { fetchBookingHistory } from '../../redux/sagas/profile/fetchBookingSaga';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
@@ -107,6 +109,9 @@ export default function ProfileScreen() {
     }
   
     useDispatchEffect(fetchReviews, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
+    useDispatchEffect(fetchBookingHistory, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
 
     return (
         <View style={styles.container}>
@@ -191,7 +196,7 @@ export default function ProfileScreen() {
                 data={REVIEWS_DUMMY}
               /> */}
               <CreditCardPayment />
-              <BookingHistory data={BOOKINGS}/>
+              <BookingHistory />
             </View>
 
             </ScrollView>
@@ -305,7 +310,8 @@ const Reviews = ({ title, data }) => {
   )
  }
 
- const BookingHistory = ({ title, data }) => { 
+ const BookingHistory = ({ }) => { 
+  const bookings = useBookingHistory()
   const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
@@ -322,16 +328,16 @@ const Reviews = ({ title, data }) => {
     !collapsed &&
       <View style={styles.content}>
         <FlatList
-          data={data}
+          data={bookings}
           renderItem={({item, index}) => (
             <View style={styles.propertyItem} >
-              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 25}}>{item.name} </LatoText>  
+              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 30}}>{item.property.title} </LatoText>  
               <Row style={{ width: "100%", flexWrap: "wrap" }}>
-                <LatoText style={{ width: '50%', lineHeight: 25 }}>Rate property: <Stars ratings={item.rating.property} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.date}</LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: </LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.amount}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Rate property:</LatoText> <Stars ratings={item.property.rating} size={rf(2)}/></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Rate owner:</LatoText> <Stars ratings={item.property.owner.rating} size={rf(2)} /></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Date:</LatoText> {item.book_from}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Location:</LatoText> {`${item.property.city}, ${item.property.country}`} </LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Amount paid:</LatoText>  {item.total_bill} usd ({item.total_days} nights,{' '}{item.price_per_night} usd per night)</LatoText>
               </Row>
             </View>
           )}
@@ -351,7 +357,7 @@ const Reviews = ({ title, data }) => {
  const Stars = ({ ratings=0, total=5, size }) => { 
   const stars = new Array(Math.round(ratings)).fill('★'); 
   const remianing = new Array(total - Math.round(ratings)).fill('☆'); ; 
-  return <LatoText color={'#F2BF07'} fontSize={rf(1.7)}>
+  return <LatoText color={'#F2BF07'} fontSize={size || rf(1.7)}>
     {stars.map(star => star)}{remianing.map(star => star)}
   </LatoText>
   }

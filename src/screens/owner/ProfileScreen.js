@@ -118,6 +118,7 @@ export default function OwnerProfileScreen() {
     useDispatchEffect(fetchPropertyRating, null, true);
     useDispatchEffect(fetchPaymentMethod, null, true);
     useDispatchEffect(fetchBookingHistory, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
 
     return (
         <View style={styles.container}>
@@ -387,7 +388,7 @@ const Reviews = ({ title, data }) => {
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.book_from}</LatoText>
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: {`${item.property.city},${item.property.country}`}</LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid:{data.total_bill} usd ({data.total_days} nights,{' '}{data.price_per_night} usd per night)</LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.total_bill} usd ({item.total_days} nights,{' '}{item.price_per_night} usd per night)</LatoText>
               </Row>
             </View>
           )}

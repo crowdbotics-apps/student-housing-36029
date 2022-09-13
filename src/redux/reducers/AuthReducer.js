@@ -11,7 +11,8 @@ export const authSlice = createSlice({
     user: null,
     error: null,
     success: false,
-    counter: 60
+    counter: 60,
+    isAdmin: false
   },
   reducers: {
     startLogin: (state, action) => {
@@ -46,6 +47,9 @@ export const authSlice = createSlice({
       state.error = null;
       state.isLoading = false;
     },
+    setAdmin: (state, action) => {
+      state.isAdmin = action.payload;
+    },
     logoutUser: (state, action) => {
       state.isLoading = false;
       state.user = null;
@@ -63,13 +67,14 @@ export const {
   setAuthToken,
   setUser,
   setCounter,
+  setAdmin,
   logoutUser
 } = authSlice.actions;
 
 export const useAuhToken = () => useSelector((state) => state.Auth.authToken);
 export const useUser = () => useSelector((state) => state.Auth.user);
 export const useIsOwner = () => useSelector((state) => state.Auth.user?.is_property_owner);
-export const useIsAdmin = () => useSelector((state) => state.Auth.user?.is_admin);
+export const useIsAdmin = () => useSelector((state) => state.Auth.isAdmin);
 export const useCounter = () => useSelector((state) => state.Auth.counter);
 export const useIsLoading = () => useSelector((state) => state.Auth.isLoading);
 export const useSuccess = () => useSelector((state) => state.Auth.success);

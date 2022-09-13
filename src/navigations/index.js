@@ -73,6 +73,10 @@ const Navigation = () => {
           <Stack.Screen name="Inbox" component={Inbox} />
           <Stack.Screen name="Chat" component={ChatScreen} />
         </>
+        : isAdmin ?
+        <>
+          <Stack.Screen name="Main" component={AdminHomeScreen} />
+        </> 
         : isOwner ?
         <>
           <Stack.Screen name="Main" component={OwnerHomeScreen} />
@@ -88,10 +92,6 @@ const Navigation = () => {
           <Stack.Screen name="Inbox" component={Inbox} />
           <Stack.Screen name="Chat" component={ChatScreen} />
         </>
-        : isAdmin ?
-        <>
-          <Stack.Screen name="Main" component={AdminHomeScreen} />
-        </> 
         : null
       }
       </Stack.Navigator>

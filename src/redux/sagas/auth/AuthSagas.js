@@ -3,7 +3,7 @@ import ApiService from "../../../services/ApiService";
 import { AUTH_TOKEN, USER_DATA } from "../../../constants/Constants";
 import LocalStorage from "../../../services/LocalStorage";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { logoutUser, setAuthToken, setCounter, setError, setSuccess, setUser, startLogin } from "../../reducers/AuthReducer";
+import { logoutUser, setAdmin, setAuthToken, setCounter, setError, setSuccess, setUser, startLogin } from "../../reducers/AuthReducer";
 import RNToast from "../../../components/RNToast";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import { navigate } from "../../../navigations/NavigationService";
@@ -11,6 +11,7 @@ import { fetchProfile } from "../profile/fetchSaga";
 import { fetchConfig } from "../property/fetchSaga";
 import { fetchChannelList } from "../chat/fetchSaga";
 
+const ADMIN_EMAIL = 'admin@studenthousing.com'; 
 
 export const signInAction = createAction("auth/signIn");
 
@@ -29,7 +30,8 @@ function* login({ payload }) {
       const token = res.data.token;
       const user = res.data.user;
       yield put(setUser(user));  
-      yield put(setAuthToken(token))
+      yield put(setAuthToken(token));
+      yield put(setAdmin(user.email===ADMIN_EMAIL));
       yield call(LocalStorage.storeData, AUTH_TOKEN, token);
       yield call(LocalStorage.storeData, USER_DATA, user);
       yield call(ApiService.setAuthHeader, token);

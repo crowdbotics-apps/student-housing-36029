@@ -17,7 +17,7 @@ import Navigation from './src/navigations';
 import { Provider } from 'react-redux';
 import store from "./src/redux/store";
 import AppTheme from './src/constants/AppTheme';
-// import { StripeProvider } from '@stripe/stripe-react-native';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import PubNub from 'pubnub';
 import { PubNubProvider } from 'pubnub-react';
 import uuid from 'react-native-uuid';
@@ -34,11 +34,11 @@ export default function App() {
   });
   
   return (
-    // <StripeProvider
-    //   publishableKey="pk_test_qblFNYngBkEdjEZ16jxxoWSM"
-    //   // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-    //   // merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
-    // >
+    <StripeProvider
+      publishableKey="pk_test_qblFNYngBkEdjEZ16jxxoWSM"
+      // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+      // merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
+    >
     <PubNubProvider client={pubnub}>
       <ThemeProvider theme={AppTheme}>
         <Provider store={store}>
@@ -57,7 +57,7 @@ export default function App() {
         </Provider>
       </ThemeProvider>
     </PubNubProvider>
-    // </StripeProvider>
+    </StripeProvider>
   );
 }
 

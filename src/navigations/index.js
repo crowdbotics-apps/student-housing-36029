@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { useAuhToken, useIsOwner } from '../redux/reducers/AuthReducer';
+import { useAuhToken, useIsAdmin, useIsOwner } from '../redux/reducers/AuthReducer';
 import ForgetPassword from '../screens/auth/ForgetPassword';
 import SigninScreen from '../screens/auth/SigninScreen';
 import StartScreen from '../screens/auth/StartScreen';
@@ -25,6 +25,7 @@ import VideoPlayerScreen from '../screens/VideoPlayerScreen';
 import OwnerProfilePreview from '../screens/main/OwnerProfilePreview';
 import Inbox from '../screens/main/Inbox';
 import ChatScreen from '../screens/main/ChatScreen';
+import AdminHomeScreen from '../screens/admin/HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ const Navigation = () => {
   const Token = useAuhToken(); 
   const checking = useTokenCheck(); 
   const isOwner = useIsOwner(); 
+  const isAdmin = useIsAdmin(); 
 
   if(checking)
     return null
@@ -57,7 +59,7 @@ const Navigation = () => {
         <Stack.Screen name="VerifyPhone" component={VerifyPhone} />
         </>
         :
-        !isOwner ?
+        !isOwner && !isAdmin ?
         <>
           <Stack.Screen name="Main" component={HomeScreen} />
           <Stack.Screen name="Search" component={SearchScreen} />
@@ -71,7 +73,7 @@ const Navigation = () => {
           <Stack.Screen name="Inbox" component={Inbox} />
           <Stack.Screen name="Chat" component={ChatScreen} />
         </>
-        :
+        : isOwner ?
         <>
           <Stack.Screen name="Main" component={OwnerHomeScreen} />
           <Stack.Screen name="NewProperty" component={NewPropertyScreen} />
@@ -86,6 +88,11 @@ const Navigation = () => {
           <Stack.Screen name="Inbox" component={Inbox} />
           <Stack.Screen name="Chat" component={ChatScreen} />
         </>
+        : isAdmin ?
+        <>
+          <Stack.Screen name="Main" component={AdminHomeScreen} />
+        </> 
+        : null
       }
       </Stack.Navigator>
     </NavigationContainer>

@@ -57,7 +57,7 @@ const Nearby = () => {
 
   useEffect(() => {
     if(properties.length>0 && isFocused) {
-      startLoading(false)
+      dispatch(startLoading(false))
     }
   }, [isFocused]);
   

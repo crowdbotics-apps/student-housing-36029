@@ -24,8 +24,10 @@ import { getSimplifiedError } from '../../services/ApiErrorhandler';
 import UploadingModal from '../../components/UploadingModal';
 import { fetchReviews } from '../../redux/sagas/profile/fetchReviewsSaga';
 import ListEmpty from '../../components/ListEmpty';
-import { fetchPaymentMethod } from '../../redux/sagas/profile/paymentMethodSaga';
+import { fetchPaymentMethod, saveStripeToken } from '../../redux/sagas/profile/paymentMethodSaga';
 import { fetchBookingHistory } from '../../redux/sagas/profile/fetchBookingSaga';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
+import { useRef } from 'react';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
@@ -113,6 +115,8 @@ export default function ProfileScreen() {
     useDispatchEffect(fetchBookingHistory, null, true);
     useDispatchEffect(fetchPaymentMethod, null, true);
 
+    const scrollRef = useRef(); 
+
     return (
         <View style={styles.container}>
         <NavigationHeader />
@@ -123,6 +127,7 @@ export default function ProfileScreen() {
           style={styles.container}
         >
           <ScrollView
+          ref={scrollRef}
             contentContainerStyle={{
               width: wp("100%"),
               alignItems: "center",
@@ -130,6 +135,11 @@ export default function ProfileScreen() {
               paddingBottom: hp("8%"),
             }}
             showsVerticalScrollIndicator={false}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              scrollRef.current && scrollRef.current.scrollToEnd({ 
+                animating: true
+              })
+            }}    
           >
             <View style={styles.formContainer} >
               <LatoText bold color={Colors.text} fontSize={rf(2.2)} style={{ alignSelf: 'flex-start', marginBottom: 20 }}>Profile</LatoText>
@@ -272,18 +282,44 @@ const Reviews = ({ title, data }) => {
  }
 
  const CreditCardPayment = () => { 
+  const user = useUser();
+  const dispatch = useDispatch();
   const paymentMethods =  usePaymentMethod()
-  // const stripe = useStripe();
+  const stripe = useStripe();
 
   const [collapsed, setCollapsed] = useState(true);
+  const [showCardInput, setShowCardInput] = useState(false);
+  const [tokenLoading, setTokenLoading] = useState(false);
   const [editCard, setEditCard] = useState(false);
   const [cardValues, setCardValues] = useState({
 
   });
-
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
    }
+
+   const saveCard = async (cardValues) => { 
+    console.log('cardVales: ', cardValues)
+    if(cardValues.complete===false) return;
+    if(cardValues.validNumber!=='Valid') { alert('Invalid Card Number'); return }
+    if(cardValues.validExpiryDate!=='Valid') { alert('Invalid Card Expiry date'); return }
+    if(cardValues.validCVC!=='Valid') { alert('Invalid CVC'); return }
+
+    setTokenLoading(true)
+    const result = await stripe.createToken({
+      type: 'Card',
+      ...cardValues,
+      name: user.full_name,
+    });
+    console.log('[Token]: ', result);
+    if (result.error) {
+      console.log(result.error.message);
+    } else if (result.token) {
+      setTokenLoading(false);
+      dispatch(saveStripeToken({ token: result.token.id }));
+    }
+
+  }
   return (
     <>
     <Pressable onPress={toggleCollapsed}>
@@ -310,13 +346,54 @@ const Reviews = ({ title, data }) => {
           <Button
             title={'Add Payment Method'}
             type='solid'
-            onPress={() => {}}
+            onPress={() => { setShowCardInput(true)}}
             titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
             buttonStyle={{ backgroundColor: Colors.primaryColor, height: 35, borderRadius: 6, paddingHorizontal: 25 }}
             containerStyle={{ height: 35,borderRadius: 6,  padding:0 }}
             TouchableComponent={TouchableHighlight}
             />   
         </Row>
+        }
+        {
+        showCardInput &&
+        <View style={{ width: '100%', marginVertical: 12, }}>
+          <CardField
+            postalCodeEnabled={true}
+            placeholders={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={{
+              backgroundColor: '#FFFFFF',
+              textColor: Colors.text,
+              fontFamily: 'Lato-Regular',
+              fontSize: rf(2),
+              
+            }}
+            style={{
+              width: wp('90%'),
+              height: 40,
+              marginVertical: 0,
+            }}
+            onCardChange={(cardDetails) => {
+              console.log('cardDetails', cardDetails);
+              setCardValues(cardDetails)
+            }}
+            onFocus={(focusedField) => {
+              console.log('focusField', focusedField);
+            }}
+          />
+          <Button
+            title={'Save Card'}
+            type='solid'
+            onPress={() => saveCard(cardValues)}
+            loading={tokenLoading}
+            titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
+            buttonStyle={{ width: 100, backgroundColor: Colors.primaryColor, height: 30, borderRadius: 6,  }}
+            containerStyle={{ width: 100, height: 30,borderRadius: 6,  padding:0, marginTop: 10 }}
+            TouchableComponent={TouchableHighlight}
+            />   
+
+        </View>
         }
       </View>
     }

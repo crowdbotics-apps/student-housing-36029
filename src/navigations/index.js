@@ -26,6 +26,7 @@ import OwnerProfilePreview from '../screens/main/OwnerProfilePreview';
 import Inbox from '../screens/main/Inbox';
 import ChatScreen from '../screens/main/ChatScreen';
 import AdminHomeScreen from '../screens/admin/HomeScreen';
+import Users from '../screens/admin/Users';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +77,7 @@ const Navigation = () => {
         : isAdmin ?
         <>
           <Stack.Screen name="Main" component={AdminHomeScreen} />
+          <Stack.Screen name="Users" component={Users} />
         </> 
         : isOwner ?
         <>

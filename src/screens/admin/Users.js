@@ -14,10 +14,14 @@ import { Check } from "../../components/Check";
 import Row from "../../components/Row";
 import { ScrollView } from "react-native-gesture-handler";
 import Dialog from "react-native-dialog";
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Users() {
+
+const navigation = useNavigation();
+
     const tab = 0;
     const [label, setLabel] = useState(tab === 0 ? 'Property Owners' : 'Students');
     const [visible, setVisible] = useState(false);
@@ -26,16 +30,14 @@ export default function Users() {
     const [phone, setphone] = useState(false);
     const [country, setcountry] = useState(false);
     const [booking, setbooking] = useState(false);
+    const [hover, sethover] = useState(true)
 
     const ListData = ['Name Surname', 'Email', 'Phone Number', 'Country State', 'Booking'];
     // const ListData = [{item:'Name Surname' , key : 1},{ item:'Email',key:2}, {item:'Phone Number',key:3}, {item:'Country State',key:4}, {item:'Booking',key:5}];
 
-    const showDialog = () => {
-        setVisible(true);
-    };
-
     const handleCancel = () => {
         setVisible(false);
+        sethover(true)
     };
 
 
@@ -45,12 +47,13 @@ export default function Users() {
             {/* Dialog Box */}
             <Dialog.Container visible={visible} >
                 <View style={{ width: (wp('85%')), height: (hp('50%')) }}>
+                    {/* <View style={{ flex:1, flexWrap:'wrap',}}> */}
                     <Row style={{ justifyContent: 'center' }}>
                         <LatoText style={{ fontFamily: "Lato-Bold" }} fontSize={20}>Customize Rows</LatoText>
                         <Icon.Ionicon name='close' size={20} color={Colors.text} style={{ left: (wp('18%')) }} onPress={handleCancel} />
                     </Row>
-                    <Row>
-                        <View style={{ flexDirection: 'column' }}>
+                    <Row style={{ justifyContent: 'flex-start' }}>
+                        <View style={{ flexDirection: 'column', width: (wp('36%')) }}>
                             <LatoText style={{ fontFamily: "Lato-Bold" }}>Add/Remove Rows</LatoText>
                             <Check text={'Name Surname'} checked={namesurname} onChange={() => { setnamesurname(!namesurname) }} />
                             <Check text={'Email'} checked={email} onChange={() => { setemail(!email) }} />
@@ -61,11 +64,11 @@ export default function Users() {
 
                             <Pressable
                                 onPress={() => {
-                                        setnamesurname(false),
+                                    setnamesurname(false),
                                         setemail(false),
                                         setphone(false),
                                         setcountry(false)
-                                        setbooking(false)
+                                    setbooking(false)
                                 }}
 
                             ><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>Reset to default</LatoText></Pressable>
@@ -125,32 +128,37 @@ export default function Users() {
                             type='clear'
                             onPress={() => goBack()}
                             icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight: 5 }} />}
-                            titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold', }}
+                            titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold' }}
                             buttonStyle={{ backgroundColor: "transparent", }}
                             containerStyle={{ alignSelf: 'flex-start' }}
                             TouchableComponent={TouchableOpacity}
                         />
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <Row>
                         <Button
                             title="Customize Rows"
                             type='clear'
-                            onPress={showDialog}
-                            titleStyle={{ color: Colors.text, fontSize: rf(1.8), fontFamily: 'Lato-Bold', }}
-                            buttonStyle={{ backgroundColor: "transparent", borderBottomColor: Colors.text, borderBottomWidth: 1 }}
+                            onPress={() => {
+                                sethover(!hover)
+                                setVisible(true);
+                            }}
+                            titleStyle={!hover ? { color: "blue", fontSize: rf(1.8), fontFamily: 'Lato-Bold' } : [{ color: Colors.text, fontSize: rf(1.8), fontFamily: 'Lato-Bold' }]}
+                            buttonStyle={!hover ? { backgroundColor: "transparent", borderBottomColor: "blue", borderBottomWidth: 1 } : [{ backgroundColor: "transparent", borderBottomColor: Colors.text, borderBottomWidth: 1 }]}
                             containerStyle={{ alignSelf: 'flex-start' }}
                             TouchableComponent={TouchableOpacity}
                         />
                         <Button
                             title="Add Account"
                             type='clear'
-                            onPress={() => goBack()}
-                            titleStyle={{ color: "blue", fontSize: rf(1.8), fontFamily: 'Lato-Bold', }}
-                            buttonStyle={{ backgroundColor: "transparent", borderBottomColor: "blue", borderBottomWidth: 1, left: 5 }}
+                            onPress={() => {
+                                sethover(!hover)
+                            }}
+                            titleStyle={hover ? { color: "blue", fontSize: rf(1.8), fontFamily: 'Lato-Bold' } : [{ color: Colors.text, fontSize: rf(1.8), fontFamily: 'Lato-Bold' }]}
+                            buttonStyle={hover ? { backgroundColor: "transparent", borderBottomColor: "blue", borderBottomWidth: 1, left: 5 } : [{ backgroundColor: "transparent", borderBottomColor: Colors.text, borderBottomWidth: 1, left: 5 }]}
                             containerStyle={{ alignSelf: 'flex-start' }}
                             TouchableComponent={TouchableOpacity}
                         />
-                    </View>
+                    </Row>
                 </View>
                 <Tab.Navigator
                     initialRouteName={'Students'}
@@ -181,6 +189,8 @@ const PropertyOwner = () => {
     )
 }
 const Students = () => {
+
+    const navigation = useNavigation();
     const ApiData = [
         { name: 'Australia', email: 'email@gmal.com', phone: "+441234567890", id: 0 },
         { name: 'Australia', email: 'email@gmal.com', phone: "+441234567890", id: 1 },
@@ -233,7 +243,7 @@ const Students = () => {
                 {
                     ApiData.map((item, index) => {
                         return (
-                            <View key={index} style={bookingdetails ? styles.card : [styles.card, { height: 'auto' }]}>
+                            <View key={index} style={item.id != activeItem ? styles.card : [styles.card, { height: 'auto' }]}>
                                 <Row style={{ left: 5 }}>
                                     <LatoText fontSize={12}>Name Surname</LatoText>
                                     <LatoText fontSize={12}>{item.email}</LatoText>
@@ -270,7 +280,7 @@ const Students = () => {
                                                     <View style={{ flexDirection: 'column', left: 10, justifyContent: 'space-around' }} >
                                                         <LatoText style={{ fontFamily: 'Lato-Bold' }}>Property Name   <Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /></LatoText>
                                                         <LatoText>Student: {Bitem.studentname}</LatoText>
-                                                        <Pressable><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
+                                                        <Pressable onPress={()=>{navigation.navigate('Booking')}}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
                                                     </View>
                                                     <View style={{ flexDirection: 'column', justifyContent: 'space-around', left: 3 }} >
                                                         <Icon.Material name="edit" size={15} color={'#0965E0'} />

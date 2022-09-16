@@ -26,7 +26,7 @@ const ChatBox = ({ isVisible=true, closeChatbox, onLoadMore }) => {
   const [uploading, setUploading] = useState(false);
 
   const {
-    messageList,
+      messageList,
     mediaFiles,
     channelName,
     lastMsgTimeToken,

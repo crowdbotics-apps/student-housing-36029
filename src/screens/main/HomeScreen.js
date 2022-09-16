@@ -12,7 +12,7 @@ import PropertyLoader from '../../components/PropertyLoader';
 import Colors from '../../constants/Colors';
 import { hp, rf, wp } from '../../constants/Constants';
 import { navigate } from '../../navigations/NavigationService';
-import { setPropertyDetails, useIsLoading, useProperty, useWishlist, useWishlistUpdated } from '../../redux/reducers/PropertyReducer';
+import { setPropertyDetails, startLoading, useIsLoading, useProperty, useWishlist, useWishlistUpdated } from '../../redux/reducers/PropertyReducer';
 import { fetchProperty, fetchWishlist } from '../../redux/sagas/property/fetchSaga';
 import { updateWishlist } from '../../redux/sagas/property/updateSaga';
 import { useDispatchEffect } from '../../utilities/hooks';
@@ -51,9 +51,16 @@ const Nearby = () => {
   const properties = useProperty();
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
+  const isFocused = useIsFocused();
 
-  useDispatchEffect(fetchProperty);
+  useDispatchEffect(fetchProperty, null, properties.length===0);
 
+  useEffect(() => {
+    if(properties.length>0 && isFocused) {
+      dispatch(startLoading(false))
+    }
+  }, [isFocused]);
+  
   const onFavourite = (id, val) => { 
     console.log(id, val);
     dispatch(

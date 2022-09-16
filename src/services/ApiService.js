@@ -44,6 +44,7 @@ const ApiService = {
   insertPaymentMethod: (param) => post(`/api/v1/credit-card/`,param),
   updatePaymentMethod: (id, param) => put(`/api/v1/credit-card/${id}/`,param),
   deletePaymentMethod: (id) => post(`/api/v1/credit-card/`,{ pm_id: id }),
+  saveStripeToken: (params) => post(`/api/v1/stripe-user/`,params),
 
   postFeedback: (params) => post(`/feedback/`, params),
   

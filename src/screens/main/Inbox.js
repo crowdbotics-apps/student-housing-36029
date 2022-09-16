@@ -17,6 +17,7 @@ import { navigate } from '../../navigations/NavigationService';
 import { useUser } from '../../redux/reducers/AuthReducer';
 import { setChatDetails, setChats, useChannelList } from '../../redux/reducers/ChatReducer';
 import { getChannelName, useUnreadMessageCounts } from '../../services/PubNubChat';
+import { timeInWords } from '../../utilities/utils';
 
 export default function Inbox() {
   
@@ -56,7 +57,12 @@ const Chats = () => {
     }
   }, [authUser, channelStore]);
 
-  const {unreadCounts, setUnreadCounts} = useUnreadMessageCounts();
+  const {
+    lastMessageTimeTokens,
+    unreadCounts,
+    setUnreadCounts
+  } = useUnreadMessageCounts();
+
   console.log('unreadCounts: ', unreadCounts)
   
   const onSearch = (text) => { 
@@ -88,6 +94,7 @@ const Chats = () => {
             {...item} 
             onPress={(id) => onPressChat(id,index)}
             unreadCount={unreadCounts[index] || 0}
+            timeToken={lastMessageTimeTokens[index] || ''}
             />
         )}
         keyExtractor={(item, i) => item.id}
@@ -138,7 +145,7 @@ const Chats = () => {
 
     )
   }
- const ChatItem = ({ id, profile_image, user, onPress, unreadCount }) => { 
+ const ChatItem = ({ id, profile_image, user, onPress, unreadCount, timeToken }) => { 
   const isUnread = unreadCount>0; 
   const backgroundColor = isUnread ? '#4797AF' : '#F7FAFC'; 
   const unreadColor = isUnread ? Colors.white : null; 
@@ -162,7 +169,7 @@ const Chats = () => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <View style={{ alignItems: 'flex-end', justifyContent: 'space-between', height: 40, }}>
-          <LatoText bold fontSize={rf(1.5)} color={unreadColor || '#828282'}>{'2 days ago'}</LatoText>
+          <LatoText bold fontSize={rf(1.5)} color={unreadColor || '#828282'}>{timeInWords(new Date(timeToken/10000))}</LatoText>
           {
             unreadCount === 0 ?
             <Icon.Community name='check-circle-outline' size={20} color={Colors.text} />

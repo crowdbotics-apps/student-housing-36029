@@ -12,7 +12,7 @@ import CommonStyles from '../../constants/CommonStyles';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../redux/reducers/AuthReducer';
-import { setProfileImage, useIsLoading, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
+import { setProfileImage, useBookingHistory, useIsLoading, usePaymentMethod, useProfile, useReviews } from '../../redux/reducers/ProfileReducer';
 import { useDispatchEffect, useKeyboard } from '../../utilities/hooks';
 import { BOOKINGS, REVIEWS_DUMMY } from '../../constants/Data';
 import { isEmpty } from '../../services/AuthValidation';
@@ -24,6 +24,10 @@ import { getSimplifiedError } from '../../services/ApiErrorhandler';
 import UploadingModal from '../../components/UploadingModal';
 import { fetchReviews } from '../../redux/sagas/profile/fetchReviewsSaga';
 import ListEmpty from '../../components/ListEmpty';
+import { fetchPaymentMethod, saveStripeToken } from '../../redux/sagas/profile/paymentMethodSaga';
+import { fetchBookingHistory } from '../../redux/sagas/profile/fetchBookingSaga';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
+import { useRef } from 'react';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
@@ -107,6 +111,11 @@ export default function ProfileScreen() {
     }
   
     useDispatchEffect(fetchReviews, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
+    useDispatchEffect(fetchBookingHistory, null, true);
+    useDispatchEffect(fetchPaymentMethod, null, true);
+
+    const scrollRef = useRef(); 
 
     return (
         <View style={styles.container}>
@@ -118,6 +127,7 @@ export default function ProfileScreen() {
           style={styles.container}
         >
           <ScrollView
+          ref={scrollRef}
             contentContainerStyle={{
               width: wp("100%"),
               alignItems: "center",
@@ -125,6 +135,11 @@ export default function ProfileScreen() {
               paddingBottom: hp("8%"),
             }}
             showsVerticalScrollIndicator={false}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              scrollRef.current && scrollRef.current.scrollToEnd({ 
+                animating: true
+              })
+            }}    
           >
             <View style={styles.formContainer} >
               <LatoText bold color={Colors.text} fontSize={rf(2.2)} style={{ alignSelf: 'flex-start', marginBottom: 20 }}>Profile</LatoText>
@@ -191,7 +206,7 @@ export default function ProfileScreen() {
                 data={REVIEWS_DUMMY}
               /> */}
               <CreditCardPayment />
-              <BookingHistory data={BOOKINGS}/>
+              <BookingHistory />
             </View>
 
             </ScrollView>
@@ -267,11 +282,44 @@ const Reviews = ({ title, data }) => {
  }
 
  const CreditCardPayment = () => { 
-  const [collapsed, setCollapsed] = useState(true);
+  const user = useUser();
+  const dispatch = useDispatch();
+  const paymentMethods =  usePaymentMethod()
+  const stripe = useStripe();
 
+  const [collapsed, setCollapsed] = useState(true);
+  const [showCardInput, setShowCardInput] = useState(false);
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [editCard, setEditCard] = useState(false);
+  const [cardValues, setCardValues] = useState({
+
+  });
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
    }
+
+   const saveCard = async (cardValues) => { 
+    console.log('cardVales: ', cardValues)
+    if(cardValues.complete===false) return;
+    if(cardValues.validNumber!=='Valid') { alert('Invalid Card Number'); return }
+    if(cardValues.validExpiryDate!=='Valid') { alert('Invalid Card Expiry date'); return }
+    if(cardValues.validCVC!=='Valid') { alert('Invalid CVC'); return }
+
+    setTokenLoading(true)
+    const result = await stripe.createToken({
+      type: 'Card',
+      ...cardValues,
+      name: user.full_name,
+    });
+    console.log('[Token]: ', result);
+    if (result.error) {
+      console.log(result.error.message);
+    } else if (result.token) {
+      setTokenLoading(false);
+      dispatch(saveStripeToken({ token: result.token.id }));
+    }
+
+  }
   return (
     <>
     <Pressable onPress={toggleCollapsed}>
@@ -283,29 +331,78 @@ const Reviews = ({ title, data }) => {
     {
     !collapsed &&
       <View style={styles.content}>
-        <Row style={{ width: '100%', height: 40}}>
-          <LatoText fontSize={rf(1.6)}>{`Curent payment method`}</LatoText>
-          <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• 8821  `}</LatoText>
-          <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} />
-        </Row>
+        {
+          paymentMethods.map(({card},i) => (
+            <Row style={{ width: '100%', height: 40}}>
+              <LatoText fontSize={rf(1.6)}>{`Saved Card: `}</LatoText>
+              <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• ${card.last4}  `}</LatoText>
+              <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} onPress={() => setEditCard(true)}/>
+            </Row>
+          ))
+        }
+        {
+        paymentMethods.length === 0 &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}
             type='solid'
-            onPress={() => {}}
+            onPress={() => { setShowCardInput(true)}}
             titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
             buttonStyle={{ backgroundColor: Colors.primaryColor, height: 35, borderRadius: 6, paddingHorizontal: 25 }}
             containerStyle={{ height: 35,borderRadius: 6,  padding:0 }}
             TouchableComponent={TouchableHighlight}
             />   
         </Row>
+        }
+        {
+        showCardInput &&
+        <View style={{ width: '100%', marginVertical: 12, }}>
+          <CardField
+            postalCodeEnabled={true}
+            placeholders={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={{
+              backgroundColor: '#FFFFFF',
+              textColor: Colors.text,
+              fontFamily: 'Lato-Regular',
+              fontSize: rf(2),
+              
+            }}
+            style={{
+              width: wp('90%'),
+              height: 40,
+              marginVertical: 0,
+            }}
+            onCardChange={(cardDetails) => {
+              console.log('cardDetails', cardDetails);
+              setCardValues(cardDetails)
+            }}
+            onFocus={(focusedField) => {
+              console.log('focusField', focusedField);
+            }}
+          />
+          <Button
+            title={'Save Card'}
+            type='solid'
+            onPress={() => saveCard(cardValues)}
+            loading={tokenLoading}
+            titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
+            buttonStyle={{ width: 100, backgroundColor: Colors.primaryColor, height: 30, borderRadius: 6,  }}
+            containerStyle={{ width: 100, height: 30,borderRadius: 6,  padding:0, marginTop: 10 }}
+            TouchableComponent={TouchableHighlight}
+            />   
+
+        </View>
+        }
       </View>
     }
   </>
   )
  }
 
- const BookingHistory = ({ title, data }) => { 
+ const BookingHistory = ({ }) => { 
+  const bookings = useBookingHistory()
   const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
@@ -322,16 +419,16 @@ const Reviews = ({ title, data }) => {
     !collapsed &&
       <View style={styles.content}>
         <FlatList
-          data={data}
+          data={bookings}
           renderItem={({item, index}) => (
             <View style={styles.propertyItem} >
-              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 25}}>{item.name} </LatoText>  
+              <LatoText bold fontSize={rf(1.8)} style={{ lineHeight: 30}}>{item.property.title} </LatoText>  
               <Row style={{ width: "100%", flexWrap: "wrap" }}>
-                <LatoText style={{ width: '50%', lineHeight: 25 }}>Rate property: <Stars ratings={item.rating.property} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.date}</LatoText>
-                <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: </LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.amount}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Rate property:</LatoText> <Stars ratings={item.property.rating} size={rf(2)}/></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Rate owner:</LatoText> <Stars ratings={item.property.owner.rating} size={rf(2)} /></LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Date:</LatoText> {item.book_from}</LatoText>
+                <LatoText style={{ width: '50%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Location:</LatoText> {`${item.property.city}, ${item.property.country}`} </LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 20 }} fontSize={rf(1.6)}><LatoText bold>Amount paid:</LatoText>  {item.total_bill} usd ({item.total_days} nights,{' '}{item.price_per_night} usd per night)</LatoText>
               </Row>
             </View>
           )}
@@ -351,7 +448,7 @@ const Reviews = ({ title, data }) => {
  const Stars = ({ ratings=0, total=5, size }) => { 
   const stars = new Array(Math.round(ratings)).fill('★'); 
   const remianing = new Array(total - Math.round(ratings)).fill('☆'); ; 
-  return <LatoText color={'#F2BF07'} fontSize={rf(1.7)}>
+  return <LatoText color={'#F2BF07'} fontSize={size || rf(1.7)}>
     {stars.map(star => star)}{remianing.map(star => star)}
   </LatoText>
   }

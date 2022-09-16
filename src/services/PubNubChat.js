@@ -16,6 +16,7 @@ export const useUnreadMessageCounts = () => {
   const channelStore = channelListData.results; 
 
   const [unreadCounts, setUnreadCounts] = useState([]);
+  const [lastMessageTimeTokens, setLastMessageTimeTokens] = useState([]);
 
   useEffect(() => {
     pubnub.setUUID(authToken);
@@ -37,14 +38,15 @@ export const useUnreadMessageCounts = () => {
       console.log('metaData: ', metaData);
     let timetokens = [];
     if(metaData.length && channelNames.length === metaData.length){
-      timetokens = channelNames.map((name) => {
+      timetokens = channelNames.map((chanelName) => {
         if(authUser.is_student)
-          return metaData.find((channelData) => channelData.id === name)?.custom.studentTimeToken;
+          return metaData.find((metaItem) => metaItem.id === chanelName)?.custom.studentTimeToken;
         else if(authUser.is_property_owner)
-          return metaData.find((channelData) => channelData.id === name)?.custom.ownerTimeToken;
+          return metaData.find((channelData) => channelData.id === chanelName)?.custom.ownerTimeToken;
       });
     }
     if(timetokens.length){
+      setLastMessageTimeTokens(timetokens);
       const tmpTime = timetokens.map((time) => {
         const unixTime = time / 10000 + 1;
         return unixTime * 10000;
@@ -70,7 +72,7 @@ export const useUnreadMessageCounts = () => {
     }
   }
 
-  return {unreadCounts, setUnreadCounts};
+  return {lastMessageTimeTokens, unreadCounts, setUnreadCounts};
 }
 
 export const useMessages = () => { 

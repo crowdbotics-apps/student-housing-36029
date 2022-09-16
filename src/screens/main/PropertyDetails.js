@@ -1,11 +1,14 @@
 import moment from 'moment';
 import { usePubNub } from 'pubnub-react';
 import React, { useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import BookingSuccessModal from '../../components/BookingSuccessModal';
+import ChatBox from '../../components/ChatBox';
 import Footer from '../../components/Footer';
+import GoogleMaps from '../../components/GoogleMaps';
 import HeartButton from '../../components/HeartButton';
 import ImageCarousel from '../../components/ImageCarousel';
 import InfoBox from '../../components/InfoBox';
@@ -45,6 +48,7 @@ export default function PropertyDetails() {
   const pubnub = usePubNub()
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showChatbox, setShowChatbox] = useState(false);
 
   const {
     id,
@@ -167,11 +171,14 @@ export default function PropertyDetails() {
     );
   };
 
+  const scrollRef = useRef();
+
     return (
       <View style={styles.container}>
         <NavigationHeader />
 
         <ScrollView
+          ref={scrollRef}
           contentContainerStyle={{
             width: wp("100%"),
             alignItems: "center",
@@ -179,6 +186,11 @@ export default function PropertyDetails() {
             paddingBottom: 0,
           }}
           showsVerticalScrollIndicator={false}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            scrollRef.current && scrollRef.current.scrollToEnd({ 
+              animating: true,
+            })
+          }}  
         >
           <Button
             title={'Property Details'}
@@ -267,7 +279,7 @@ export default function PropertyDetails() {
           <View style={{ width: wp('90%'), marginTop: 24, }}>
             <LatoText bold style={styles.heading} >{`Location:`}</LatoText>
             <LatoText style={styles.text} >{`${city}, ${country}`}</LatoText>
-            {/* <GoogleMaps 
+            <GoogleMaps
               center={coords || { latitude: 0, longitude: 0 }}
               markers={[{
                 key: city, 
@@ -277,7 +289,7 @@ export default function PropertyDetails() {
                 description: `${city}, ${country}`
               }]}
               mapContainer={{ height: 185, marginTop: 16 }}
-            /> */}
+            />
           </View>
 
           <View style={{ width: wp('90%'), marginTop: 24, }}>
@@ -339,7 +351,7 @@ export default function PropertyDetails() {
             <Button
               title={'Contact Property Owner'}
               type='solid'
-              onPress={() => {}}
+              onPress={() => { setShowChatbox(true) }}
               titleStyle={{ color: Colors.white, fontSize: rf(1.6), fontFamily: 'Lato-Bold', }}
               buttonStyle={{ backgroundColor: Colors.primaryColor, width: wp('40%'),height: 35, borderRadius: 6, padding: 0 }}
               containerStyle={{ width: wp('40%'), height: 35,borderRadius: 6, marginBottom: 20,  }}
@@ -347,7 +359,13 @@ export default function PropertyDetails() {
               />   
           </Row>
 
-          <View style={{ height: 50 }} />
+          <ChatBox 
+          isVisible={showChatbox} 
+          closeChatbox={()=> setShowChatbox(false)} 
+          onLoadMore={() => navigate('Chat')}
+          />
+
+          <View style={{ height: 60 }} />
              
         </ScrollView>
 

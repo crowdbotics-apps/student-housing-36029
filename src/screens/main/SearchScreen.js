@@ -118,12 +118,12 @@ const SearchFilters = () => {
           defaults={[0, 5000]}
           />
        </Row>
-       <Row style={{ width: wp('90%'), marginTop: 0, justifyContent: "flex-start" }}>
+       <Row style={{ width: wp('90%'), marginTop: 0, justifyContent: "flex-start",flexWrap: 'wrap', }}>
         <LatoText bold style={styles.label}>Bathroom</LatoText>
         <Check text={'Shared'} checked={mainFilters.bathroom.includes('Shared')  || false} onChange={()=>handleChangeCheckBox('bathroom','Shared')} />
         <Check text={'Private'} checked={mainFilters.bathroom.includes('Private')  || false} onChange={()=>handleChangeCheckBox('bathroom','Private')} />
        </Row>
-       <Row style={{ width: wp('90%'), marginVertical: 10, justifyContent: "flex-start" }}>
+       <Row style={{ width: wp('90%'), marginVertical: 10, justifyContent: "flex-start", flexWrap: 'wrap', }}>
         <LatoText bold style={styles.label}>Room Type</LatoText>
         <Check text={'Entire place'} checked={mainFilters.room_type?.includes('Entire place') || false} onChange={()=>handleChangeCheckBox('room_type','Entire place')}/>
         <Check text={'Private room'} checked={mainFilters.room_type?.includes('Private room') || false} onChange={()=>handleChangeCheckBox('room_type','Private room')}/>

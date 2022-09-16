@@ -70,10 +70,27 @@ function* deleteData({ payload: id }) {
   }
 }
 
+export const saveStripeToken = createAction("profile/saveStripeToken");
+
+function* insertCardData({ payload }) {
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.saveStripeToken, payload);
+    console.log('saveStripeToken res.data: ', res.data)
+    if(res.data) {
+      yield put(setPaymentMethod(res.data));
+      RNToast.showShort('Successfully added');
+    }
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
 
 export function* paymentMethodSaga() {
   yield takeLatest(fetchPaymentMethod, fetchData);
   yield takeLatest(createPaymentMethod, insertData);
   yield takeLatest(updatePaymentMethod, updateData);
   yield takeLatest(deletePaymentMethod, deleteData);
+  yield takeLatest(saveStripeToken, insertCardData);
 }

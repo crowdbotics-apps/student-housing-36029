@@ -20,7 +20,7 @@ export const propertySlice = createSlice({
   },
   reducers: {
     startLoading: (state, action) => {
-      state.isLoading = true;
+      state.isLoading = action.payload || true;
       state.success = false
       state.error = null;
     },

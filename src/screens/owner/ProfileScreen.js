@@ -27,9 +27,10 @@ import { fetchProfile } from '../../redux/sagas/profile/fetchSaga';
 import { fetchUserRating } from '../../redux/sagas/profile/fetchReviewsSaga';
 import { fetchPropertyRating } from '../../redux/sagas/owner/fetchReviewsSaga';
 import { usePropertyRating } from '../../redux/reducers/OwnerReducer';
-import { fetchPaymentMethod } from '../../redux/sagas/profile/paymentMethodSaga';
+import { fetchPaymentMethod, saveStripeToken } from '../../redux/sagas/profile/paymentMethodSaga';
 import { fetchBookingHistory } from '../../redux/sagas/profile/fetchBookingSaga';
 import { goBack } from '../../navigations/NavigationService';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
 // import { CardField, useStripe } from '@stripe/stripe-react-native';
 
 export default function OwnerProfileScreen() {
@@ -274,10 +275,14 @@ const Reviews = ({ title, data }) => {
  }
 
  const CreditCardPayment = () => { 
+  const user = useUser();
+  const dispatch = useDispatch();
   const paymentMethods =  usePaymentMethod()
-  // const stripe = useStripe();
+  const stripe = useStripe();
 
   const [collapsed, setCollapsed] = useState(true);
+  const [showCardInput, setShowCardInput] = useState(false);
+  const [tokenLoading, setTokenLoading] = useState(false);
   const [editCard, setEditCard] = useState(false);
   const [cardValues, setCardValues] = useState({
 
@@ -285,6 +290,28 @@ const Reviews = ({ title, data }) => {
   const toggleCollapsed = () => { 
     setCollapsed(!collapsed)
    }
+   const saveCard = async (cardValues) => { 
+    console.log('cardVales: ', cardValues)
+    if(cardValues.complete===false) return;
+    if(cardValues.validNumber!=='Valid') { alert('Invalid Card Number'); return }
+    if(cardValues.validExpiryDate!=='Valid') { alert('Invalid Card Expiry date'); return }
+    if(cardValues.validCVC!=='Valid') { alert('Invalid CVC'); return }
+
+    setTokenLoading(true)
+    const result = await stripe.createToken({
+      type: 'Card',
+      ...cardValues,
+      name: user.full_name,
+    });
+    console.log('[Token]: ', result);
+    if (result.error) {
+      console.log(result.error.message);
+    } else if (result.token) {
+      setTokenLoading(false);
+      dispatch(saveStripeToken({ token: result.token.id }));
+    }
+  }
+
   return (
     <>
     <Pressable onPress={toggleCollapsed}>
@@ -311,7 +338,7 @@ const Reviews = ({ title, data }) => {
           <Button
             title={'Add Payment Method'}
             type='solid'
-            onPress={() => {}}
+            onPress={() => { setShowCardInput(true)}}
             titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
             buttonStyle={{ backgroundColor: Colors.primaryColor, height: 35, borderRadius: 6, paddingHorizontal: 25 }}
             containerStyle={{ height: 35,borderRadius: 6,  padding:0 }}
@@ -319,17 +346,10 @@ const Reviews = ({ title, data }) => {
             />   
         </Row>
         }
+        {
+        showCardInput &&
         <View style={{ width: '100%', marginVertical: 12, }}>
-          {/* <StyledInput
-            containerStyle={CommonStyles.input}
-            label='Add new card'
-            placeholder={"Enter card credentials"}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            value={formValues.city}
-            onChangeText={(text) => onSubmitValue("city", text)}
-          /> */}
-          {/* <CardField
+          <CardField
             postalCodeEnabled={true}
             placeholders={{
               number: '4242 4242 4242 4242',
@@ -345,13 +365,25 @@ const Reviews = ({ title, data }) => {
             }}
             onCardChange={(cardDetails) => {
               console.log('cardDetails', cardDetails);
+              setCardValues(cardDetails)
             }}
             onFocus={(focusedField) => {
               console.log('focusField', focusedField);
             }}
           />
- */}
+          <Button
+            title={'Save Card'}
+            type='solid'
+            onPress={() => saveCard(cardValues)}
+            loading={tokenLoading}
+            titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold', }}
+            buttonStyle={{ width: 100, backgroundColor: Colors.primaryColor, height: 30, borderRadius: 6,  }}
+            containerStyle={{ width: 100, height: 30,borderRadius: 6,  padding:0, marginTop: 10 }}
+            TouchableComponent={TouchableHighlight}
+            />   
+
         </View>
+        }
 
 
       </View>
@@ -387,7 +419,7 @@ const Reviews = ({ title, data }) => {
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Rate owner: <Stars ratings={item.rating.owner} /></LatoText>
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Date: {item.book_from}</LatoText>
                 <LatoText style={{ width: '50%', lineHeight: 22 }}>Location: {`${item.property.city},${item.property.country}`}</LatoText>
-                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid:{data.total_bill} usd ({data.total_days} nights,{' '}{data.price_per_night} usd per night)</LatoText>
+                <LatoText style={{ width: '100%', lineHeight: 22 }}>Amount paid: {item.total_bill} usd ({item.total_days} nights,{' '}{item.price_per_night} usd per night)</LatoText>
               </Row>
             </View>
           )}

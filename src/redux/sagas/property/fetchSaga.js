@@ -91,7 +91,7 @@ export function* searchPropertySaga() {
 export const fetchPropertyDetails = createAction("property/fetchPropertyDetails");
 
 function* fetchDetails({ payload: id }) {
-  yield put(startLoading(true))
+  // yield put(startLoading(true))
   try {
     let res = yield call(ApiService.getPropertyDetails, id);
     console.log('fetchPropertyDetails res.data: ', res.data)

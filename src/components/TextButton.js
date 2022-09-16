@@ -11,7 +11,7 @@ export const TextButton = ({ title, titleStyle, containerStyle, onPress }) => {
       type='clear'
       onPress={onPress}
       titleStyle={{ color: Colors.text, fontSize: rf(1.8), fontFamily: 'Lato-Bold', height: 22, ...titleStyle }}
-      buttonStyle={{ width: 'auto', backgroundColor: "transparent", borderBottomWidth: 1, borderBottomColor: titleStyle.color, padding: 0 }}
+      buttonStyle={{ width: 'auto', backgroundColor: "transparent", borderBottomWidth: 1, borderBottomColor: titleStyle?.color || Colors.text, padding: 0 }}
       containerStyle={{ ...containerStyle }}
       TouchableComponent={TouchableOpacity} />
   );

@@ -26,6 +26,10 @@ import OwnerProfilePreview from '../screens/main/OwnerProfilePreview';
 import Inbox from '../screens/main/Inbox';
 import ChatScreen from '../screens/main/ChatScreen';
 import AdminHomeScreen from '../screens/admin/HomeScreen';
+import Users from '../screens/admin/Users';
+import Booking from '../screens/admin/Booking';
+import Allchats from '../screens/admin/Allchats';
+import MSG from '../screens/admin/MSG';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +80,10 @@ const Navigation = () => {
         : isAdmin ?
         <>
           <Stack.Screen name="Main" component={AdminHomeScreen} />
+          <Stack.Screen name="Users" component={Users} />
+          <Stack.Screen name="Booking" component={Booking} />
+          <Stack.Screen name="Allchats" component={Allchats} />
+          <Stack.Screen name="MSG" component={MSG} />
         </> 
         : isOwner ?
         <>

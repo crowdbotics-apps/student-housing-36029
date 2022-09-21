@@ -2001,7 +2001,7 @@ babel-plugin-dynamic-import-node@^2.3.3:
 
 "babel-plugin-import-glob-meta@github:crowdbotics/babel-plugin-import-glob-meta":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/crowdbotics/babel-plugin-import-glob-meta.git#fdffe71d6c97b2c1fc7cdffbaf15dbe1d023dfa5"
+  resolved "https://codeload.github.com/crowdbotics/babel-plugin-import-glob-meta/tar.gz/fdffe71d6c97b2c1fc7cdffbaf15dbe1d023dfa5"
   dependencies:
     glob "^7.1.7"
     identifierfy "^2.0.0"
@@ -4003,7 +4003,7 @@ iconv-lite@^0.6.2:
 
 identifierfy@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/identifierfy/-/identifierfy-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/identifierfy/-/identifierfy-2.0.0.tgz#82922a33791e28b4e4d119dd1bc4a20c9a69c9c0"
   integrity sha512-Gx1CmO0DbL5aECe3kclZNNDsGPIRo9NThTSTAeS3U8Pn58OsadGpU6ByxFriVHT8HQtGO9WErxZOfrXcx3yHOw==
   dependencies:
     esutils "^2.0.2"
@@ -6431,17 +6431,17 @@ react-native-create-thumbnail@^1.5.1:
   resolved "https://registry.npmjs.org/react-native-create-thumbnail/-/react-native-create-thumbnail-1.5.1.tgz"
   integrity sha512-ML9tzRRxyTJFptEZdTbRQ1TKLGdBa7ynCc2KdPpyeNT/XmD6pBUq0E/EJtvQpMMlz8ZRq7q4KJHW4dCZc365/A==
 
-react-native-dialog@^9.2.2:
-  version "9.2.2"
-  resolved "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-9.2.2.tgz"
-  integrity sha512-d2w3fyqB6G8Os0DYJKnfVl6PgqQwplW8dHSvzkQpczXzmX5V4BXOJTTXqoiKwI+nsS6QEHYb6Bk8VG7vV9WuXQ==
-
 react-native-dotenv@^2.5.3:
   version "2.6.2"
   resolved "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-2.6.2.tgz"
   integrity sha512-yGVEYjhXTpHFEpeaJS6qdnI1TyFFHj3E2k9X3HgkIsOh7c86t+JkBRfHP7zeOOyquE5ewN7+OcLEARgkFhDuRA==
   dependencies:
     dotenv "^10.0.0"
+
+react-native-draggable-flatlist@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.1.2.tgz#b66538007f645ccd851c729d4b8a8f7e07666d3f"
+  integrity sha512-cqBR+lZktTqHY/J7V0aq+TZNkuqeILxwZ5bBXKndokwH4qvZl7ifijM7LlfWhfhU1/pzjketTsX7P2zyojfAaQ==
 
 react-native-elements@^3.3.1:
   version "3.4.2"
@@ -6553,6 +6553,11 @@ react-native-popover-view@^5.1.0:
     deprecated-react-native-prop-types "^2.3.0"
     prop-types "^15.8.1"
 
+react-native-portalize@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-portalize/-/react-native-portalize-1.0.7.tgz#8b3c742a06f863654d526ea1075a8596625f8482"
+  integrity sha512-icqopPh9ZSV+I8C5LlZN9pQJ0OMeBDNqHhP80+qDx0hOGEcsDC09wgjogbEMfJE0GcMDM7PDYtyQkqa9gIqd1g==
+
 react-native-radio-buttons-group@^2.2.11:
   version "2.2.11"
   resolved "https://registry.npmjs.org/react-native-radio-buttons-group/-/react-native-radio-buttons-group-2.2.11.tgz"
@@ -6623,11 +6628,6 @@ react-native-svg@^12.3.0:
   dependencies:
     css-select "^4.2.1"
     css-tree "^1.0.0-alpha.39"
-
-react-native-swipe-list-view@^3.2.9:
-  version "3.2.9"
-  resolved "https://registry.npmjs.org/react-native-swipe-list-view/-/react-native-swipe-list-view-3.2.9.tgz"
-  integrity sha512-SjAEuHc/D6ovp+RjDUhfNmw6NYOntdT7+GFhfMGfP/BSLMuMWynpzJy9GKQeyB8sI78T6Lzip21TVbongOg1Mw==
 
 react-native-tab-view@^2.x:
   version "2.16.0"

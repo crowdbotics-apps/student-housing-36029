@@ -445,12 +445,12 @@ const Reviews = ({ title, data }) => {
   )
  }
 
- const Stars = ({ ratings=0, total=5, size }) => { 
-  const stars = new Array(Math.round(ratings)).fill('★'); 
-  const remianing = new Array(total - Math.round(ratings)).fill('☆'); ; 
-  return <LatoText color={'#F2BF07'} fontSize={size || rf(1.7)}>
-    {stars.map(star => star)}{remianing.map(star => star)}
-  </LatoText>
+  const Stars = ({ ratings=0, total=5, size }) => { 
+    const stars = new Array(Math.round(ratings)).fill('★'); 
+    const remianing = new Array(total - Math.round(ratings)).fill('☆'); ; 
+    return <LatoText color={'#F2BF07'} fontSize={size || rf(1.7)}>
+      {stars.map(star => star)}{remianing.map(star => star)}
+    </LatoText>
   }
 
 const styles = StyleSheet.create({

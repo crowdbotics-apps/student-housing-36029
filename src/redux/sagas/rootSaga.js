@@ -22,6 +22,7 @@ import { updateProfileSaga } from './profile/updateSaga';
 import { bookPropertySaga } from './property/bookPropertySaga';
 import { fetchConfigSaga, fetchPropertyDetailsSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
 import { updateWishlistSaga } from './property/updateSaga';
+import { fetchUsersSaga } from './users/fetchSaga';
 
 export default function* rootSaga() {
     yield all([
@@ -57,6 +58,7 @@ export default function* rootSaga() {
         paymentMethodSaga(),
         fetchBookingSaga(),
         fetchChannelListSaga(),
-        createNewChatSaga()
+        createNewChatSaga(),
+        fetchUsersSaga()
     ])
 }

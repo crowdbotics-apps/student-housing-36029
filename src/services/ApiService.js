@@ -72,7 +72,12 @@ const ApiService = {
   updateProperty: (id, params) => put(`/api/v1/property/${id}/`, params),
   deleteMedia: (id) => del(`/api/v1/delete-property-media/${id}/`),
 
-  getUserOwnRating: (id) => get(`/api/v1/user-own-rating/${id}/`)
+  getUserOwnRating: (id) => get(`/api/v1/user-own-rating/${id}/`),
+
+  // Admin side APIs
+
+  getAllUsers: (params) => get(`/api/v1/get-all-users/?${params}`),
+
 };
 
 export default ApiService;

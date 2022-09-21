@@ -9,6 +9,7 @@ import PrimaryButton from '../../components/PrimaryButton';
 import Icon from '../../constants/Icon';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { navigate } from '../../navigations/NavigationService';
 
 
 export default function AdminHomeScreen() {
@@ -23,27 +24,26 @@ export default function AdminHomeScreen() {
             title={'View Users'}
             buttonStyle={{ width: wp('40%'), height: hp('5%'), }}
             onPress={()=>{navigation.navigate('Users')}}
-
           />
         </View>
         <View style={{ flexDirection: 'row', top: hp('6%') }}>
           <Pressable onPress={()=>{alert('Working')}}>
             <View style={styles.section__view}>
-              <Icon.Ionicon name='home' size={16} color={Colors.primaryColor} />
+              <Icon.Ionicon name='home' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Properties</LatoText>
             </View>
           </Pressable>
           <Pressable onPress={()=>{alert('Working')}}>
             <View style={styles.section__view}>
-              <Icon.FontAwesome name='dollar' size={16} color={Colors.primaryColor} />
+              <Icon.FontAwesome name='dollar' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Transaction</LatoText>
             </View>
           </Pressable>
         </View>
         <View style={{ top: hp('8%'),left:-5 }}>
-          <Pressable onPress={()=>{alert('Working')}}>
+          <Pressable onPress={()=>{ navigate('Bookings') }}>
             <View style={styles.section__view}>
-              <Icon.FontAwesome name='history' size={16} color={Colors.primaryColor} />
+              <Icon.FontAwesome name='history' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Booking History</LatoText>
             </View>
           </Pressable>

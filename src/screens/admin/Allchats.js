@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function Allchats() {
     const navigation = useNavigation();
-    const [checked, setchecked] = useState(true);
+    const [checked, setchecked] = useState(false);
     const Apidata = [
         {
             From: "Jhon Doe",

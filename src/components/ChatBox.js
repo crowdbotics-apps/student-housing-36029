@@ -16,7 +16,7 @@ import { useChatDetails } from '../redux/reducers/ChatReducer';
 import { useMessages } from '../services/PubNubChat';
 import { TextButton } from './TextButton';
 
-const ChatBox = ({ isVisible=true, closeChatbox, onLoadMore }) => {
+const ChatBox = ({ isVisible = true, closeChatbox, onLoadMore }) => {
   const authUser = useUser();
   const chatDetails = useChatDetails();
 
@@ -26,7 +26,7 @@ const ChatBox = ({ isVisible=true, closeChatbox, onLoadMore }) => {
   const [uploading, setUploading] = useState(false);
 
   const {
-      messageList,
+    messageList,
     mediaFiles,
     channelName,
     lastMsgTimeToken,
@@ -56,120 +56,120 @@ const ChatBox = ({ isVisible=true, closeChatbox, onLoadMore }) => {
     }
   };
 
-  if(isVisible)
-  return (
-    <View style={styles.chatbox}>
-      <ChatHeader isOnline={isOnline} name={chatDetails.user?.name} onPressSetting={() => setShowSettingSlider(true)} closeChatbox={closeChatbox} />
-      <GiftedChat
-        messages={messageList}
-        placeholder={'Type a message here...'}
-        onSend={(messages) => onSend(messages)}
-        textInputProps={{ color: Colors.text, fontFamily: 'Lato-Regular', fontSize: rf(1.8) }}
-        renderAvatarOnTop
-        scrollToBottom
-        inverted={true}
-        renderBubble={(props) => (
-          <Bubble
-            {...props}
-            wrapperStyle={{
-              right: {
-                backgroundColor: '#C3FFDB',
-                paddingHorizontal: 5,
-                paddingVertical: 2,
-                borderRadius: 10,
-                marginRight: 10,
-                marginVertical: 2
-              },
-              left: {
-                backgroundColor: '#F2F2F2',
-                paddingHorizontal: 5,
-                paddingVertical: 2,
-                borderRadius: 10,
-                marginLeft: 0,
-                marginVertical: 2
-              }
-            }}
-            textStyle={{
-              left: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', },
-              right: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', }
-            }}
-            renderTime={(props) => null} />
-        )}
-        renderSend={(props) => (
-          <Send {...props}>
+  if (isVisible)
+    return (
+      <View style={styles.chatbox}>
+        <ChatHeader isOnline={isOnline} name={chatDetails.user?.name} onPressSetting={() => setShowSettingSlider(true)} closeChatbox={closeChatbox} />
+        <GiftedChat
+          messages={messageList}
+          placeholder={'Type a message here...'}
+          onSend={(messages) => onSend(messages)}
+          textInputProps={{ color: Colors.text, fontFamily: 'Lato-Regular', fontSize: rf(1.8) }}
+          renderAvatarOnTop
+          scrollToBottom
+          inverted={true}
+          renderBubble={(props) => (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                right: {
+                  backgroundColor: '#C3FFDB',
+                  paddingHorizontal: 5,
+                  paddingVertical: 2,
+                  borderRadius: 10,
+                  marginRight: 10,
+                  marginVertical: 2
+                },
+                left: {
+                  backgroundColor: '#F2F2F2',
+                  paddingHorizontal: 5,
+                  paddingVertical: 2,
+                  borderRadius: 10,
+                  marginLeft: 0,
+                  marginVertical: 2
+                }
+              }}
+              textStyle={{
+                left: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', },
+                right: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', }
+              }}
+              renderTime={(props) => null} />
+          )}
+          renderSend={(props) => (
+            <Send {...props}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  height: "100%",
+                  marginRight: 10,
+                }}
+              >
+                <Icon.Ionicon
+                  name="send"
+                  size={20}
+                  color={Colors.primaryColor} />
+              </View>
+            </Send>
+          )}
+          renderAccessory={(props) => (
             <View
               style={{
-                justifyContent: "center",
-                height: "100%",
-                marginRight: 10,
+                height: 20,
+                marginLeft: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: -4
               }}
             >
-              <Icon.Ionicon
-                name="send"
-                size={20}
-                color={Colors.primaryColor} />
+              <Icon.Material
+                name="attach-file"
+                size={18}
+                color={'#828282'}
+                onPress={() => setShowVideoPicker(true)} />
+              <Icon.Community
+                name="image-outline"
+                size={18}
+                color={'#828282'}
+                onPress={() => setShowImagePicker(true)} />
             </View>
-          </Send>
-        )}
-        renderAccessory={(props) => (
-          <View
-            style={{
-              height: 20,
-              marginLeft: 10,
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginVertical: -4
-            }}
-          >
-            <Icon.Material
-              name="attach-file"
-              size={18}
-              color={'#828282'}
-              onPress={() => setShowVideoPicker(true)} />
-            <Icon.Community
-              name="image-outline"
-              size={18}
-              color={'#828282'}
-              onPress={() => setShowImagePicker(true)} />
-          </View>
-        )}
-        renderMessageVideo={(props) => (
-          <VideoFile
-            data={{
-              uri: props?.currentMessage?.video,
-              title: ''
-            }}
-            containerStyle={props?.containerStyle} />
-        )}
-        renderChatFooter={() => onLoadMore && messageList.length>6 && <TextButton title={'View more messages'} titleStyle={{ color: Colors.primaryColor }} onPress={onLoadMore}/> }
-        // renderChatEmpty={() => <ListEmpty text={'No messages yet'}/>}
-        user={{
-          _id: authUser?.id,
-          name: authUser?.full_name,
-        }} />
-      {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={120} />}
+          )}
+          renderMessageVideo={(props) => (
+            <VideoFile
+              data={{
+                uri: props?.currentMessage?.video,
+                title: ''
+              }}
+              containerStyle={props?.containerStyle} />
+          )}
+          renderChatFooter={() => onLoadMore && messageList.length > 6 && <TextButton title={'View more messages'} titleStyle={{ color: Colors.primaryColor }} onPress={onLoadMore} />}
+          // renderChatEmpty={() => <ListEmpty text={'No messages yet'}/>}
+          user={{
+            _id: authUser?.id,
+            name: authUser?.full_name,
+          }} />
+        {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={120} />}
 
-      <ImagePicker
-        showPicker={showImagePicker}
-        closePicker={() => setShowImagePicker(false)}
-        onPickImage={onPickImage} />
-      <VideoPicker
-        showPicker={showVideoPicker}
-        closePicker={() => setShowVideoPicker(false)}
-        onPickVideo={onPickVideo} />
+        <ImagePicker
+          showPicker={showImagePicker}
+          closePicker={() => setShowImagePicker(false)}
+          onPickImage={onPickImage} />
+        <VideoPicker
+          showPicker={showVideoPicker}
+          closePicker={() => setShowVideoPicker(false)}
+          onPickVideo={onPickVideo} />
 
-      <UploadingModal uploading={uploading} />
+        <UploadingModal uploading={uploading} />
 
-      <ChatRightSlider
-        isVisible={showSettingSlider}
-        closeModal={() => setShowSettingSlider(false)}
-        media={mediaFiles}
-        isOnline={isOnline}
-        user={{ name: chatDetails.user?.name, avatar: chatDetails.user?.profile_image }} />
+        <ChatRightSlider
+          isVisible={showSettingSlider}
+          closeModal={() => setShowSettingSlider(false)}
+          media={mediaFiles}
+          isOnline={isOnline}
+          user={{ name: chatDetails.user?.name, avatar: chatDetails.user?.profile_image }} />
 
-    </View>
+      </View>
 
-  )
+    )
   else return null;
 };
 const ChatHeader = ({ isOnline, name, onPressSetting, closeChatbox }) => {
@@ -182,7 +182,7 @@ const ChatHeader = ({ isOnline, name, onPressSetting, closeChatbox }) => {
         </LatoText>
         <Row style={{ justifyContent: 'flex-end', }}>
           <Icon.Ionicon name='settings-outline' size={rf(2.4)} color={Colors.primaryColor} onPress={onPressSetting} />
-          { closeChatbox && <Icon.Ionicon name='close' size={rf(2.4)} color={Colors.text} onPress={closeChatbox}  style={{ marginLeft: 5 }}/> }
+          {closeChatbox && <Icon.Ionicon name='close' size={rf(2.4)} color={Colors.text} onPress={closeChatbox} style={{ marginLeft: 5 }} />}
         </Row>
       </Row>
     </View>
@@ -193,7 +193,7 @@ const ChatHeader = ({ isOnline, name, onPressSetting, closeChatbox }) => {
 const styles = StyleSheet.create({
   chatbox: {
     width: wp('90%'),
-    height: hp('100%')-230, 
+    height: hp('100%') - 230,
     elevation: 6,
     backgroundColor: Colors.white
   },
@@ -201,27 +201,27 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     borderBottomWidth: 1,
-    borderColor:  Colors.primaryColor,
+    borderColor: Colors.primaryColor,
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor:'#F7FAFC'
+    backgroundColor: '#F7FAFC'
   },
   searchBar: {
     height: 40,
     width: '90%',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   inputContainer: {
     height: 50,
     borderBottomWidth: 0
-},
+  },
   inputText: {
-      fontFamily: 'Lato-Regular',
-      color: Colors.text,
-      fontSize: rf(1.8)
+    fontFamily: 'Lato-Regular',
+    color: Colors.text,
+    fontSize: rf(1.8)
   },
 
 })

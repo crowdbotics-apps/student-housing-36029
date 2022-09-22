@@ -231,8 +231,8 @@ const Students = () => {
     ]
     const [checked, setchecked] = useState(false);
     const [bookingdetails, setBookingdetails] = useState(true);
-    const [activeItem, setActiveItem] = useState(0);
-    // const [bookingid, setbookingid] = useState();
+    const [activeItem, setActiveItem] = useState();
+    const [select, setselect] = useState();
 
 
 
@@ -250,9 +250,9 @@ const Students = () => {
                                     <LatoText fontSize={12}>{item.phone}</LatoText>
                                 </Row>
                                 {
-                                    checked ?
+                                    checked ? 
                                         <Icon.Community name='checkbox-marked' size={13} style={{ right: 9, bottom: 5 }} /> :
-                                        <Icon.Community name='checkbox-blank-outline' size={13} style={{ right: 9, bottom: 5 }} />
+                                        <Icon.Community name='checkbox-blank-outline' size={13} style={{ right: 9, bottom: 5 }} onPress={()=>{setselect(item.id)}}/>
                                 }
                                 <Row style={{ bottom: 20, left: 5 }}>
                                     <LatoText fontSize={12}>{item.name}</LatoText>

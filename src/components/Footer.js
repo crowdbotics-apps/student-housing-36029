@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View,Linking } from 'react-native';
 import { Button } from 'react-native-elements';
 import Colors from '../constants/Colors';
 import { rf, wp } from '../constants/Constants';
@@ -19,7 +19,7 @@ export default function Footer() {
               <Button
                 title={'About Us'}
                 type='clear'
-                onPress={() => {}}
+                onPress={() => {Linking.openURL('https://www.studenthousingbyowner.com/about-us')}}
                 titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold' }}
                 buttonStyle={{ padding: 0 }}
                 TouchableComponent={TouchableOpacity}
@@ -27,7 +27,7 @@ export default function Footer() {
               <Button
                 title={'How to book'}
                 type='clear'
-                onPress={() => {}}
+                onPress={() => {Linking.openURL('https://www.studenthousingbyowner.com/how-to-book')}}
                 titleStyle={{ color: Colors.white, fontSize: rf(1.4), fontFamily: 'Lato-Bold' }}
                 buttonStyle={{ padding: 0, marginLeft: 20 }}
                 TouchableComponent={TouchableOpacity}

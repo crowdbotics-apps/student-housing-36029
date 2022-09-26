@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { goBack } from '../../navigations/NavigationService';
 import NavigationHeader from "../../components/NavigationHeader";
 import Colors from "../../constants/Colors";
@@ -10,8 +10,16 @@ import { rf, wp, hp } from "../../constants/Constants";
 import Row from "../../components/Row";
 import LatoText from "../../components/LatoText";
 import { useNavigation } from '@react-navigation/native';
+import { fetchAllBookings } from "../../redux/sagas/bookings/fetchSaga";
+import { useDispatchEffect } from "../../utilities/hooks";
+import { useIsLoading, useBookings } from "../../redux/reducers/BookingsReducer";
+import ListEmpty from "../../components/ListEmpty";
 
 export default function Booking() {
+    const isLoading = useIsLoading();
+    const bookingsData = useBookings();
+
+    const [bookingData, setBookingData] = useState([]);
     const navigation = useNavigation();
     const BookingData = [
         {
@@ -80,6 +88,20 @@ export default function Booking() {
             studentname: 'Name Surname',
         },
     ]
+
+
+    useDispatchEffect(fetchAllBookings, null, bookingData.length === 0);
+
+    useEffect(() => {
+        if (bookingsData && bookingsData.results) {
+            const allBookings = bookingsData.results || [];
+            setBookingData(bookingData.concat(allBookings));
+            // console.log("Property Console",bookingData[0].property.media[1].property_media)
+        }
+    }, [bookingsData]);
+
+
+
     return (
         <View style={styles.container}>
             <NavigationHeader />
@@ -111,24 +133,32 @@ export default function Booking() {
 
                 <ScrollView showsVerticalScrollIndicator={false} style={{ height: (hp('70%')), top: 20 }}>
                     {
-                        BookingData.map((item, index) => {
-                            return (
-                                <View style={styles.bookingdetails} key={index}>
-                                    <Image source={{ uri: item.imgurl }} style={{ width: (wp('30%')) }} />
-                                    <View style={{ flexDirection: 'column', left: 10, justifyContent: 'space-around' }} >
-                                        <LatoText style={{ fontFamily: 'Lato-Bold' }}>Property Name   <Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /></LatoText>
-                                        <LatoText>Student: {item.studentname}</LatoText>
-                                        <Pressable onPress={()=>{navigation.navigate('Allchats')}}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
+                        bookingData.length === 0 ?
+                            isLoading ?
+                                <ActivityIndicator color={'blue'} size='large' />
+                                :
+                                <ListEmpty text='No items to display' height={hp('40%')} />
+                            :
+                            bookingData.map((item, index) => {
+                                let image = item.property.media[0].property_media.split('?');
+                                
+                                return (
+                                    <View style={styles.bookingdetails} key={index}>
+                                        <Image source={{ uri: image[0]}} style={{ width: (wp('30%')) }} />
+                                        <View style={{ flexDirection: 'column', left: 10, justifyContent: 'space-around' }} >
+                                            <LatoText style={{ fontFamily: 'Lato-Bold' }}>{item.property.title}<Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /></LatoText>
+                                            <LatoText>Student: {item.user.user.name}</LatoText>
+                                            <Pressable onPress={() => { navigation.navigate('BookingDetails') }}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
+                                        </View>
+                                        <View style={{ flexDirection: 'column', justifyContent: 'space-around', left: 3 }} >
+                                            <Icon.Material name="edit" size={15} color={'#0965E0'} />
+                                            <LatoText></LatoText>
+                                            <Icon.Material name="delete-outline" size={15} color={'#0965E0'} />
+                                        </View>
                                     </View>
-                                    <View style={{ flexDirection: 'column', justifyContent: 'space-around', left: 3 }} >
-                                        <Icon.Material name="edit" size={15} color={'#0965E0'} />
-                                        <LatoText></LatoText>
-                                        <Icon.Material name="delete-outline" size={15} color={'#0965E0'} />
-                                    </View>
-                                </View>
 
-                            )
-                        })
+                                )
+                            })
                     }
                 </ScrollView>
 
@@ -175,10 +205,10 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.30,
         shadowRadius: 4.65,
-        
+
         elevation: 8,
-        
-        
+
+
     },
 
 })

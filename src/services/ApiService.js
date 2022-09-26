@@ -21,7 +21,7 @@ const ApiService = {
     delete axios.defaults.headers.common["Authorization"];
   },
 
-  login: (params) => post(`/api/v1/login/`, params),  
+  login: (params) => post(`/api/v1/login/`, params),
   signup: (params) => post(`/api/v1/signup/`, params),
   verifyOtp: (params) => post(`/api/v1/verify-user/`, params),
   resendOtp: (params) => post(`/api/v1/resend-otp/`, params),
@@ -31,23 +31,23 @@ const ApiService = {
   updatePhoneNUMber: (params) => post(`/api/v1/user/update-phone-number/`, params),
   deactivateAccount: () => post(`/api/v1/user/deactivate-account/`),
   getUser: () => get(`/me/`),
-  
+
   getProfile: () => get(`/api/v1/profile/`),
   getOwnerProfile: (id) => get(`/api/v1/user/get-property-owner/${id}/`),
   insertProfile: (params) => post(`/api/v1/profile/`, params),
   updateProfile: (id, params) => patch(`/api/v1/profile/${id}/`, params),
   getReviews: () => get(`/api/v1/user-rating/`),
   getMoreReviews: (params) => get(`/api/v1/user-rating/?${params}`),
-  postReview: (params) => post(`/api/v1/user-rating/`,params),
+  postReview: (params) => post(`/api/v1/user-rating/`, params),
   getBookingHistry: () => get(`/api/v1/booking-history/`),
   getPaymentMethod: () => get(`/api/v1/user-payment-info/`),
-  insertPaymentMethod: (param) => post(`/api/v1/credit-card/`,param),
-  updatePaymentMethod: (id, param) => put(`/api/v1/credit-card/${id}/`,param),
-  deletePaymentMethod: (id) => post(`/api/v1/credit-card/`,{ pm_id: id }),
-  saveStripeToken: (params) => post(`/api/v1/stripe-user/`,params),
+  insertPaymentMethod: (param) => post(`/api/v1/credit-card/`, param),
+  updatePaymentMethod: (id, param) => put(`/api/v1/credit-card/${id}/`, param),
+  deletePaymentMethod: (id) => post(`/api/v1/credit-card/`, { pm_id: id }),
+  saveStripeToken: (params) => post(`/api/v1/stripe-user/`, params),
 
   postFeedback: (params) => post(`/feedback/`, params),
-  
+
   getProperty: () => get(`/api/v1/property/`),
   getWishlist: () => get(`/api/v1/property/?is_wish_listed=True`),
   updateWishlist: (params) => post(`/api/v1/property-wishlist/`, params),
@@ -59,7 +59,7 @@ const ApiService = {
   getSearch: (param) => get(`/api/v1/property-search/?${param}/`),
 
   getChannelList: () => get(`/api/v1/chat-channel/`),
-  createNewChat: (params) => post('/api/v1/get-or-create-chat/',params),
+  createNewChat: (params) => post('/api/v1/get-or-create-chat/', params),
   // Owner side APIs
 
   getOwnerProperty: () => get(`/api/v1/user/owned-properties/`),
@@ -72,7 +72,14 @@ const ApiService = {
   updateProperty: (id, params) => put(`/api/v1/property/${id}/`, params),
   deleteMedia: (id) => del(`/api/v1/delete-property-media/${id}/`),
 
-  getUserOwnRating: (id) => get(`/api/v1/user-own-rating/${id}/`)
+  getUserOwnRating: (id) => get(`/api/v1/user-own-rating/${id}/`),
+
+  // Admin side APIs
+
+  getAllUsers: (params) => get(`/api/v1/get-all-users/?${params}`),
+  getAllBookings: () => get(`/api/v1/all-bookings/`),
+  getAllChats:()=>get(`/api/v1/get-all-chat/`),
+
 };
 
 export default ApiService;

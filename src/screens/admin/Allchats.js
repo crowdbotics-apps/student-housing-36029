@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import NavigationHeader from "../../components/NavigationHeader";
 import Colors from "../../constants/Colors";
 import Footer from "../../components/Footer";
@@ -11,13 +11,30 @@ import { hp, wp, rf } from "../../constants/Constants";
 import { Check } from "../../components/Check";
 import { ScrollView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-
+import { fetchAllChats } from "../../redux/sagas/chat/fetchAllChats";
+import { useDispatchEffect } from "../../utilities/hooks";
+import { useIsLoading, useAllChats } from "../../redux/reducers/AllChatsreducer";
+import ListEmpty from "../../components/ListEmpty";
 
 export default function Allchats() {
     const navigation = useNavigation();
+    const isLoading = useIsLoading();
+    const allChatsData = useAllChats();
+
     const [checked, setchecked] = useState(false);
+    const [fetchChats, setfetchChats] = useState([]);
+    useDispatchEffect(fetchAllChats, null, fetchChats.length === 0)
+
+    useEffect(() => {
+        if (allChatsData && allChatsData.results) {
+            const allChats = allChatsData.results || [];
+            setfetchChats(fetchChats.concat(allChats));
+            console.log('All Chats',fetchChats)
+        }
+
+    }, [allChatsData]);
+
     const Apidata = [
         {
             From: "Jhon Doe",
@@ -108,9 +125,15 @@ export default function Allchats() {
                 </Row>
                 <View style={{ marginTop: hp('5%') }}>
                     <Check text="Select all" checked={checked} onChange={() => { setchecked(!checked) }} />
-                    <ScrollView showsVerticalScrollIndicator={false} style={{ height: (hp('54%'))}}>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{ height: (hp('54%')) }}>
                         {
-                            Apidata.map((item,index) => {
+                            fetchChats.length === 0 ?
+                                isLoading ?
+                                    <ActivityIndicator color={'blue'} size='large' />
+                                    :
+                                    <ListEmpty text='No items to display' height={hp('40%')} />
+                                :
+                            Apidata.map((item, index) => {
                                 return (
                                     <View style={styles.card} key={index}>
                                         <Row>

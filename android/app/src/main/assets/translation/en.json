@@ -1,0 +1,19 @@
+{
+    "Header":{
+        "input":""
+    },
+    "welcomeScreen": {
+        "signup": "Sign Up",
+        "signin":"Sign In",
+        "placeholdername":"Full Name",
+        "placeholderemail":"Your email",
+        "placeholderpassword":"Your password",
+        "forgot":"Forgot Password",
+        "name":"Enter full name",
+        "email":"Enter Your email",
+        "phone":"Enter your phone number",
+        "option":"I'm signing up as",
+        "student":"Student",
+        "Property":"Property Owner"
+    }
+}

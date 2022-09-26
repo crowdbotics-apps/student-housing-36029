@@ -21,4 +21,6 @@ export const WEEDAYNAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursda
 
 export const MAPS_API_KEY = 'AIzaSyDZxuPkQdL9XOdkZ3iRuQdEkNywiBC1Il4';
 
-export const adminEmail = 'smeppp@gmail.com';
+export const ADMIN_EMAIL = 'pm1@crowdbotics.com'; 
+
+export const ROW_NAMES =  ['Name Surname', 'Email', 'Phone Number', 'Country, State', 'Bookings'];

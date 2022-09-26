@@ -16,7 +16,7 @@ import { TextButton } from './TextButton';
 
 export default function PropertyItem({ id, title, media=[],  rating,  description, is_wish_listed, toggleFavourite, onViewProperty   }) {
   const dispatch = useDispatch();
-  const isOwner = useIsOwner()
+  const isOwner = useIsOwner();
   const mediaFiles = media.map(file => file.property_media?.split('?')[0]); 
     
   return (

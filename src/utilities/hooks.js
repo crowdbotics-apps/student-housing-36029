@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, BackHandler, Keyboard, ToastAndroid } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { useDispatch } from 'react-redux';
-import { AUTH_TOKEN, IS_TRAINER, USER_DATA } from '../constants/Constants';
-import { setAuthData, setAuthToken, setUser } from '../redux/reducers/AuthReducer';
+import { ADMIN_EMAIL, AUTH_TOKEN, IS_TRAINER, USER_DATA } from '../constants/Constants';
+import { setAdmin, setAuthData, setAuthToken, setUser } from '../redux/reducers/AuthReducer';
 import { setProfile } from '../redux/reducers/ProfileReducer';
 import { fetchProfile } from '../redux/sagas/profile/fetchSaga';
 import { fetchConfig } from '../redux/sagas/property/fetchSaga';
@@ -37,6 +37,7 @@ export function useTokenCheck() {
         if(token && user) {
           dispatch(setUser(user))
           dispatch(setAuthToken(token))
+          dispatch(setAdmin(user.is_admin || user.email===ADMIN_EMAIL))
         }
         if(token) {
           ApiService.setAuthHeader(token);

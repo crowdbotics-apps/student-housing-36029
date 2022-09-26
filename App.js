@@ -22,6 +22,8 @@ import PubNub from 'pubnub';
 import { PubNubProvider } from 'pubnub-react';
 import uuid from 'react-native-uuid';
 import Colors from './src/constants/Colors';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Host } from 'react-native-portalize';
 
 enableScreens();
 
@@ -50,7 +52,9 @@ export default function App() {
                 onReset={() => {
                   BackHandler.exitApp();
                 }}>
-                <Navigation />
+                <Host>
+                  <Navigation />
+                </Host>
               </ErrorBoundary>
             </View>
           </SafeAreaProvider>

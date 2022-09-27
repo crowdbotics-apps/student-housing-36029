@@ -148,7 +148,7 @@ export default function Booking() {
                                         <View style={{ flexDirection: 'column', left: 10, justifyContent: 'space-around' }} >
                                             <LatoText style={{ fontFamily: 'Lato-Bold' }}>{item.property.title}<Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /></LatoText>
                                             <LatoText>Student: {item.user.user.name}</LatoText>
-                                            <Pressable onPress={() => { navigation.navigate('BookingDetails') }}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
+                                            <Pressable onPress={() => { navigation.navigate('BookingDetails',{item : item}) }}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
                                         </View>
                                         <View style={{ flexDirection: 'column', justifyContent: 'space-around', left: 3 }} >
                                             <Icon.Material name="edit" size={15} color={'#0965E0'} />

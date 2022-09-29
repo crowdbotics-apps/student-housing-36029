@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     },
     inputText: {
         fontFamily: 'Lato-Regular',
-        color: '#828282',
-        fontSize: rf(1.5)
+        color: Colors.text,
+        fontSize: rf(1.8)
     }
 })
 

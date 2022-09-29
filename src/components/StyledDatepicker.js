@@ -50,7 +50,7 @@ export default function StyledDatepicker({ onDateChange, value, label, container
 
           {show && (
             <DateTimePicker
-              value={date || new Date()}
+              value={date && new Date()}
               mode={mode}
               is24Hour={false}
               onChange={onChange}

@@ -86,6 +86,10 @@ const Navigation = () => {
           <Stack.Screen name="Allchats" component={Allchats} />
           <Stack.Screen name="MSG" component={MSG} />
           <Stack.Screen name="BookingDetails" component={ParticularyBooking} />
+          <Stack.Screen name="Settings" component={SettingScreen} />
+          <Stack.Screen name="Inbox" component={Inbox} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Search" component={SearchScreen} />
         </> 
         : isOwner ?
         <>

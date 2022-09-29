@@ -18,80 +18,12 @@ import ListEmpty from "../../components/ListEmpty";
 export default function Booking() {
     const isLoading = useIsLoading();
     const bookingsData = useBookings();
-
     const [bookingData, setBookingData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const navigation = useNavigation();
-    const BookingData = [
-        {
-            id: 0,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 1,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 2,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 3,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 4,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 5,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 6,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 7,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 8,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 9,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 10,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 11,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-        {
-            id: 12,
-            imgurl: 'https://media.istockphoto.com/photos/new-homes-on-a-quiet-street-in-raleigh-nc-picture-id1319269543?b=1&k=20&m=1319269543&s=170667a&w=0&h=9Nv2yeDkHR01ADDhxcY4A1PZx9veOOwPRVnNXT6Jk3c=',
-            studentname: 'Name Surname',
-        },
-    ]
-
+    console.log("Search", searchTerm)
 
     useDispatchEffect(fetchAllBookings, null, bookingData.length === 0);
-
     useEffect(() => {
         if (bookingsData && bookingsData.results) {
             const allBookings = bookingsData.results || [];
@@ -99,9 +31,6 @@ export default function Booking() {
             // console.log("Property Console",bookingData[0].property.media[1].property_media)
         }
     }, [bookingsData]);
-
-
-
     return (
         <View style={styles.container}>
             <NavigationHeader />
@@ -126,6 +55,7 @@ export default function Booking() {
                             rightIcon={<Icon.Material name='arrow-drop-down' size={16} style={{ right: 5 }} />}
                             placeholder={'Search for booking'}
                             placeholderTextColor={Colors.text}
+                            onChangeText={(value) => { setSearchTerm(value) }}
                         />
                     </Row>
 
@@ -139,16 +69,23 @@ export default function Booking() {
                                 :
                                 <ListEmpty text='No items to display' height={hp('40%')} />
                             :
-                            bookingData.map((item, index) => {
+                            bookingData.filter((val) => {
+                                if (searchTerm == "") {
+                                    return val
+                                }
+                                else if (val.property.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                    return val                                    
+                                }
+                            }).map((item, index) => {
                                 let image = item.property.media[0].property_media.split('?');
-                                
+
                                 return (
                                     <View style={styles.bookingdetails} key={index}>
-                                        <Image source={{ uri: image[0]}} style={{ width: (wp('30%')) }} />
+                                        <Image source={{ uri: image[0] }} style={{ width: (wp('30%')) }} />
                                         <View style={{ flexDirection: 'column', left: 10, justifyContent: 'space-around' }} >
                                             <LatoText style={{ fontFamily: 'Lato-Bold' }}>{item.property.title}<Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /><Icon.FontAwesome name="star" size={12} color='#F2BF07' /></LatoText>
                                             <LatoText>Student: {item.user.user.name}</LatoText>
-                                            <Pressable onPress={() => { navigation.navigate('BookingDetails',{item : item}) }}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
+                                            <Pressable onPress={() => { navigation.navigate('BookingDetails', { item: item }) }}><LatoText style={{ fontFamily: 'Lato-Bold', color: '#0965E0', textDecorationLine: 'underline' }}>View Booking Details</LatoText></Pressable>
                                         </View>
                                         <View style={{ flexDirection: 'column', justifyContent: 'space-around', left: 3 }} >
                                             <Icon.Material name="edit" size={15} color={'#0965E0'} />

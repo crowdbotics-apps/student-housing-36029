@@ -14,6 +14,7 @@ import Row from "../../components/Row";
 import StyledDatepicker from "../../components/StyledDatepicker";
 import { Check } from "../../components/Check";
 import { useNavigation } from "@react-navigation/native";
+import moment from 'moment';
 
 
 export default function ParticularyBooking({ route }) {    

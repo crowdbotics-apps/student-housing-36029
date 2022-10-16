@@ -41,8 +41,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Student Housing needs access to your gallery to update profile picture</string>
 	<key>UIAppFonts</key>

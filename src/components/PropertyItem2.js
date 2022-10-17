@@ -18,7 +18,7 @@ import { TextButton } from './TextButton';
 export default function PropertyItem2 ({ id, title, media=[],  rating,  description, onViewProperty  }) {
   const dispatch = useDispatch();
 
-  const mediaFiles = media.map(file => file.property_media?.split('?')[0]); 
+  const mediaFiles = media.length ? media.map(file => file.property_media?.split('?')[0]) : []; 
     
   const onDelete = () => { 
     dispatch(deleteProperty(id));
@@ -34,7 +34,7 @@ export default function PropertyItem2 ({ id, title, media=[],  rating,  descript
                       <Rating 
                         ratingCount={5}
                         readonly
-                        startingValue={rating}
+                        startingValue={rating || 0.0}
                         imageSize={wp('3%')}
                         style={styles.rating} 
                         />
@@ -45,7 +45,7 @@ export default function PropertyItem2 ({ id, title, media=[],  rating,  descript
                         />
                     </Row>
                     <LatoText fontSize={rf(1.5)} ellipsizeMode='tail' numberOfLines={3}>
-                      {description}
+                      {description || ''}
                     </LatoText>
                 </View>
               </ListItem.Title>
@@ -78,6 +78,7 @@ export default function PropertyItem2 ({ id, title, media=[],  rating,  descript
 }
 
 const ImageCarousel = ({ images=[] }) => { 
+  console.log({images});
   const [index, setIndex] = useState(0);
   const onLeftPress = () => { 
     setIndex(index!==0 ? index-1 : index);

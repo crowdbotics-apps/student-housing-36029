@@ -29,8 +29,7 @@ import AdminHomeScreen from '../screens/admin/HomeScreen';
 import Users from '../screens/admin/Users';
 import Booking from '../screens/admin/Booking';
 import Allchats from '../screens/admin/Allchats';
-import MSG from '../screens/admin/MSG';
-import ParticularyBooking from '../screens/admin/particularyBooking';
+import Messages from '../screens/admin/Messages';
 import Properties from '../screens/admin/Properties';
 
 const Stack = createStackNavigator();
@@ -89,12 +88,7 @@ const Navigation = () => {
           <Stack.Screen name="PropertyDetails" component={OwnerPropertyDetails} />
           <Stack.Screen name="Bookings" component={Booking} />
           <Stack.Screen name="Allchats" component={Allchats} />
-          <Stack.Screen name="MSG" component={MSG} />
-          <Stack.Screen name="BookingDetails" component={ParticularyBooking} />
-          <Stack.Screen name="Settings" component={SettingScreen} />
-          <Stack.Screen name="Inbox" component={Inbox} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Messages" component={Messages} />
         </> 
         : isOwner ?
         <>

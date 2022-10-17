@@ -114,8 +114,8 @@ function* fetchAllData() {
   try {
     let res = yield call(ApiService.getAllProperty);
     console.log('getAllProperty res.data: ', res.data)
-    if(res.data.properties)
-        yield put(setProperty(res.data.properties));
+    if(res.data.results)
+        yield put(setProperty(res.data.results));
   } catch (error) {
     console.log({ error });
     yield put(setError(getSimplifiedError(error)))

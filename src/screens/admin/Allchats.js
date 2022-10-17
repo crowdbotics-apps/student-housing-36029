@@ -16,6 +16,8 @@ import { fetchAllChats } from "../../redux/sagas/chat/fetchAllChats";
 import { useDispatchEffect } from "../../utilities/hooks";
 import { useIsLoading, useAllChats } from "../../redux/reducers/AllChatsreducer";
 import ListEmpty from "../../components/ListEmpty";
+import { goBack } from "../../navigations/NavigationService";
+
 
 export default function Allchats() {
     const navigation = useNavigation();
@@ -111,7 +113,16 @@ export default function Allchats() {
         <View style={styles.container}>
             <NavigationHeader />
             <View style={styles.main__view}>
-                <LatoText fontSize={16} style={{ fontFamily: 'Lato-Bold', marginTop: 10 }}>All Chats</LatoText>
+            <Button
+                    title="Conversations"
+                    type='clear'
+                    onPress={() => goBack()}
+                    icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight: 5 }} />}
+                    titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold' }}
+                    buttonStyle={{ backgroundColor: "transparent", }}
+                    containerStyle={{ alignSelf: 'flex-start' }}
+                    TouchableComponent={TouchableOpacity}
+                />
                 <Row style={styles.row} >
                     <Icon.FontAwesome name='search' size={16} color={Colors.text} style={{ left: 5 }} />
                     <Input
@@ -119,11 +130,11 @@ export default function Allchats() {
                         inputContainerStyle={styles.inputContainer}
                         inputStyle={[styles.inputText]}
                         rightIcon={<Icon.Material name='arrow-drop-down' size={16} />}
-                        placeholder={'Search for booking'}
+                        placeholder={'Search'}
                         placeholderTextColor={Colors.text}
                     />
                 </Row>
-                <View style={{ marginTop: hp('5%') }}>
+                <View style={{ marginTop: hp('3%') }}>
                     <Check text="Select all" checked={checked} onChange={() => { setchecked(!checked) }} />
                     <ScrollView showsVerticalScrollIndicator={false} style={{ height: (hp('54%')) }}>
                         {
@@ -133,61 +144,49 @@ export default function Allchats() {
                                     :
                                     <ListEmpty text='No items to display' height={hp('40%')} />
                                 :
-                            Apidata.map((item, index) => {
-                                return (
+                                fetchChats.results.map((item, index) => (
                                     <View style={styles.card} key={index}>
                                         <Row>
-                                            <Row style={{ width: '50%', justifyContent: 'center' }}>
+                                            <Row style={{ width: '50%', justifyContent: 'flex-start' }}>
                                                 <Avatar
                                                     size={23}
                                                     rounded
                                                     source={{ uri: `${item.Fromimgurl}`, }}
                                                 />
-                                                <LatoText style={{ fontFamily: 'Lato-Bold', marginLeft: 10 }} fontSize={12}>From:</LatoText>
+                                                <LatoText style={{ fontFamily: 'Lato-Bold', marginLeft: 10 }} fontSize={12}>From: </LatoText>
                                                 <LatoText fontSize={12}>{item.From}</LatoText>
                                             </Row>
-                                            <Row style={{ width: '50%', justifyContent: 'center' }}>
+                                            <Row style={{ width: '50%', justifyContent: 'flex-start' }}>
                                                 <Avatar
                                                     size={23}
                                                     rounded
                                                     source={{ uri: `${item.Toimgurl}`, }}
                                                 />
-                                                <LatoText style={{ fontFamily: 'Lato-Bold', marginLeft: 10 }} fontSize={12}>To:</LatoText>
+                                                <LatoText style={{ fontFamily: 'Lato-Bold', marginLeft: 10 }} fontSize={12}>To: </LatoText>
                                                 <LatoText fontSize={12}>{item.To}</LatoText>
                                             </Row>
                                         </Row>
-                                        <Row>
-                                            {
-                                                checked ?
-                                                    <Icon.Community name='checkbox-marked' size={14} /> :
-                                                    <Icon.Community name='checkbox-blank-outline' size={14} />
-                                            }
-                                            <LatoText fontSize={12} style={{ fontFamily: 'Lato-Bold' }}>Message Body: </LatoText>
+                                        <Row style={{ justifyContent: 'flex-start', marginTop: 8 }}>
+                                            <LatoText fontSize={12} style={{ fontFamily: 'Lato-Bold' }}>Message: </LatoText>
                                             <LatoText fontSize={12}>{item.message}</LatoText>
                                         </Row>
                                         <Button
                                             title="View Messages"
                                             type='clear'
-                                            onPress={() => navigation.navigate('MSG')}
-                                            icon={<Icon.Community name='arrow-top-right' size={16} color={Colors.primaryColor} />}
-                                            titleStyle={{ color: Colors.primaryColor, fontSize: rf(2), textDecorationLine: 'underline' }}
-                                            buttonStyle={{ backgroundColor: "transparent", }}
-                                            containerStyle={{ alignSelf: 'flex-start', left: 20, bottom: 5 }}
+                                            onPress={() => navigation.navigate('Messages')}
+                                            icon={<Icon.Community name='arrow-top-right' size={12} color={Colors.primaryColor} />}
+                                            titleStyle={{ color: Colors.primaryColor, fontSize: rf(1.6), textDecorationLine: 'underline' }}
+                                            buttonStyle={{ backgroundColor: "transparent", paddingHorizontal: 0  }}
+                                            containerStyle={{ alignSelf: 'flex-start',  height: 50, paddingHorizontal: 0 }}
                                             TouchableComponent={TouchableOpacity}
                                             iconRight={true}
                                         />
 
                                     </View>
-
-                                )
-                            })
+                                ))
                         }
-
-
                     </ScrollView>
-
                 </View>
-
             </View>
             <Footer />
         </View>
@@ -200,7 +199,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         backgroundColor: Colors.background,
     },
-    main__view: { marginHorizontal: '5%' },
+    main__view: {
+        marginHorizontal: '5%'
+    },
     row: {
         height: 34,
         borderRadius: 6,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.primaryColor,
         padding: 5,
         justifyContent: 'flex-start',
-        marginTop: (hp('5%'))
+        marginTop: (hp('3%'))
     },
     inputContainer: {
         height: 20,
@@ -220,5 +221,16 @@ const styles = StyleSheet.create({
         color: Colors.text,
         fontSize: 12,
     },
-    card: { height: (hp('10%')), width: (wp('90%')), backgroundColor: '#F7FAFC', borderColor: Colors.primaryColor, borderWidth: 1, borderRadius: 6, padding: '3%', marginTop: 5 },
+    card: {
+        height: 100,
+        width: (wp('90%')),
+        backgroundColor: '#F7FAFC',
+        borderColor: Colors.primaryColor,
+        borderWidth: 1,
+        borderRadius: 6,
+        padding: 16,
+        marginTop: 5,
+        justifyContent: "space-between",
+
+    },
 })

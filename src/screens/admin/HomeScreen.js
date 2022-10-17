@@ -33,10 +33,10 @@ export default function AdminHomeScreen() {
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Properties</LatoText>
             </View>
           </Pressable>
-          <Pressable onPress={()=>{alert('Working')}}>
+          <Pressable onPress={()=>{ navigate('Allchats') }}>
             <View style={styles.section__view}>
-              <Icon.FontAwesome name='dollar' size={20} color={Colors.primaryColor} />
-              <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Transaction</LatoText>
+              <Icon.Entypo name='chat' size={20} color={Colors.primaryColor} />
+              <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Conversations</LatoText>
             </View>
           </Pressable>
         </View>
@@ -66,9 +66,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   main__view: {
-    marginHorizontal: '5%',
-    top: hp('2.5%')
+      marginHorizontal: '5%',
+      top: hp('2.5%')
   },
-  section__view: { height: hp('20%'), width: wp('40%'), alignItems: 'center', justifyContent: "center", borderWidth: 1, borderColor: Colors.primaryColor, borderRadius: 6, backgroundColor: '#F7FAFC', margin: '3%' }
+  section__view: {
+    height: hp('20%'),
+    width: wp('40%'),
+    alignItems: 'center',
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.primaryColor,
+    borderRadius: 6,
+    backgroundColor: '#F7FAFC',
+    margin: '3%'
+  }
 });
 

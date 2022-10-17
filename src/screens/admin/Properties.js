@@ -55,6 +55,7 @@ const PropertyList = () => {
     navigate('EditProperty');
   }
    
+  console.log(properties);
   if(isLoading) 
    return <PropertyLoader />
 
@@ -68,8 +69,8 @@ const PropertyList = () => {
           />
       )}
       keyExtractor={(item, i) => item.id}
-      style={{ width: wp('100%'), height: '100%', padding: wp('2.5%'), backgroundColor: "#FFF", }}
-      contentContainerStyle={{ alignItems:'center'}}
+      style={{ width: wp('100%'), height: '100%', backgroundColor: "#FFF", }}
+      contentContainerStyle={{ alignItems:'center', padding: wp('2.5%')}}
       ListEmptyComponent={() => <ListEmpty text='No items to display' height={hp('80%')}/>}
       ListFooterComponent={() => <View style={{height: 100}}/>}
       />  

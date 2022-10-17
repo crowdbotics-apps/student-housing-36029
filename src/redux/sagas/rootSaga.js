@@ -20,11 +20,12 @@ import { insertProfileSaga } from './profile/insertSaga';
 import { paymentMethodSaga } from './profile/paymentMethodSaga';
 import { updateProfileSaga } from './profile/updateSaga';
 import { bookPropertySaga } from './property/bookPropertySaga';
-import { fetchConfigSaga, fetchPropertyDetailsSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
-import { updateWishlistSaga } from './property/updateSaga';
+import { fetchAllProperty, fetchAllPropertySaga, fetchConfigSaga, fetchPropertyDetailsSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
+import { updateByAdminSaga, updateWishlistSaga } from './property/updateSaga';
 import { fetchUsersSaga } from './users/fetchSaga';
 import {fetchBookingsSaga} from './bookings/fetchSaga';
 import { fetchAllChatsSaga } from './chat/fetchAllChats';
+import { deletePropertySaga } from './property/deleteSaga';
 
 export default function* rootSaga() {
     yield all([
@@ -63,6 +64,9 @@ export default function* rootSaga() {
         createNewChatSaga(),
         fetchUsersSaga(),
         fetchBookingsSaga(),
-        fetchAllChatsSaga()
+        fetchAllChatsSaga(),
+        fetchAllPropertySaga(),
+        deletePropertySaga(),
+        updateByAdminSaga()
     ])
 }

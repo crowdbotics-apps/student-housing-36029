@@ -31,6 +31,7 @@ import Booking from '../screens/admin/Booking';
 import Allchats from '../screens/admin/Allchats';
 import MSG from '../screens/admin/MSG';
 import ParticularyBooking from '../screens/admin/particularyBooking';
+import Properties from '../screens/admin/Properties';
 
 const Stack = createStackNavigator();
 
@@ -82,6 +83,10 @@ const Navigation = () => {
         <>
           <Stack.Screen name="Main" component={AdminHomeScreen} />
           <Stack.Screen name="Users" component={Users} />
+          <Stack.Screen name="Properties" component={Properties} />
+          <Stack.Screen name="NewProperty" component={NewPropertyScreen} />
+          <Stack.Screen name="EditProperty" component={EditPropertyScreen} />
+          <Stack.Screen name="PropertyDetails" component={OwnerPropertyDetails} />
           <Stack.Screen name="Bookings" component={Booking} />
           <Stack.Screen name="Allchats" component={Allchats} />
           <Stack.Screen name="MSG" component={MSG} />

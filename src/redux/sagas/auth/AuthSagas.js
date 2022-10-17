@@ -43,6 +43,7 @@ function* login({ payload }) {
       yield put(setError(res.data.detail))
     }
   } catch (err) {
+    console.log('err: ', err)
     let error = getSimplifiedError(err)
     console.log({ error });
     yield put(setError(error))

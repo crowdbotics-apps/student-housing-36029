@@ -27,7 +27,7 @@ export default function AdminHomeScreen() {
           />
         </View>
         <View style={{ flexDirection: 'row', top: hp('6%') }}>
-          <Pressable onPress={()=>{alert('Working')}}>
+          <Pressable onPress={()=>{ navigate('Properties') }}>
             <View style={styles.section__view}>
               <Icon.Ionicon name='home' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Properties</LatoText>

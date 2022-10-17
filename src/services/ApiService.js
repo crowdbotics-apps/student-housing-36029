@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'https://student-housing-app-23717.botics.co';
+axios.defaults.baseURL = 'https://www.studenthousingbyowner.com';
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers['Accept'] = 'application/json';
 axios.defaults.timeout = 5000;
@@ -79,7 +79,9 @@ const ApiService = {
   getAllUsers: (params) => get(`/api/v1/get-all-users/?${params}`),
   getAllBookings: () => get(`/api/v1/all-bookings/`),
   getAllChats:()=>get(`/api/v1/get-all-chat/`),
-
+  getAllProperty: () => get(`/api/v1/all-property-admin/`),
+  updatePropertyAdmin: (id, params) => put(`/api/v1/all-property-admin/${id}/`, params), 
+  deleteProperty: (id) => del(`/api/v1/all-property-admin/${id}/`),
 };
 
 export default ApiService;

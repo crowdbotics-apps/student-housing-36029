@@ -37,19 +37,22 @@ const ChatRightSlider = ({ isVisible, closeModal, media, user, isOnline }) => {
           <Row style={{ width: '100%', height: 25, marginBottom: 10, justifyContent: 'flex-end', }}>
             <Icon.Ionicon name='close' size={20} color={Colors.text} onPress={closeModal} />
           </Row>
-          <View style={{ justifyContent: 'space-between', alignItems: 'center', width: '100%', height: AVATAR_WIDTH + 40 }}>
-            <Avatar
-              rounded
-              source={user?.avatar?.length ? { uri: user?.avatar } : images.dummyProfileImage}
-              title={user?.name[0]?.toUpperCase()}
-              size={AVATAR_WIDTH}
-              containerStyle={{ width: AVATAR_WIDTH, height: AVATAR_WIDTH, marginBottom: 15 }}
-            />                  
-            <LatoText style={{ textAlign: 'center', width: '100%', }}>
-              <LatoText black style={styles.label}>{user?.name}</LatoText>{"   "}
-              <LatoText color='#828282' fontSize={rf(1.6)}>{isOnline && '(Active)'}</LatoText>
-            </LatoText>
-          </View>
+          {
+            user && 
+            <View style={{ justifyContent: 'space-between', alignItems: 'center', width: '100%', height: AVATAR_WIDTH + 40 }}>
+              <Avatar
+                rounded
+                source={user?.avatar?.length ? { uri: user?.avatar } : images.dummyProfileImage}
+                title={user?.name[0]?.toUpperCase()}
+                size={AVATAR_WIDTH}
+                containerStyle={{ width: AVATAR_WIDTH, height: AVATAR_WIDTH, marginBottom: 15 }}
+              />                  
+              <LatoText style={{ textAlign: 'center', width: '100%', }}>
+                <LatoText black style={styles.label}>{user?.name}</LatoText>{"   "}
+                <LatoText color='#828282' fontSize={rf(1.6)}>{isOnline && '(Active)'}</LatoText>
+              </LatoText>
+            </View>
+          }
 
           <SharedMedia data={media}/>
 

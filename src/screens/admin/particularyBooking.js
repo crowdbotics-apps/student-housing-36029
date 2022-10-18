@@ -164,7 +164,7 @@ export default function ParticularyBooking({ route }) {
                         <Button
                             title="Contact Student"
                             type='solid'
-                            onPress={() => navigation.navigate('Allchats')}
+                            onPress={() => navigation.navigate('AllChats')}
                             titleStyle={{ color: Colors.white, fontSize: rf(2.1) }}
                             buttonStyle={{ width: (wp('50%')), borderRadius: 10 }}
                             containerStyle={{ alignSelf: 'flex-start' }}

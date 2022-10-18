@@ -36,6 +36,19 @@ export const propertySlice = createSlice({
       if(index>=0)
         state.property[index].is_wish_listed = is_wish_listed;
     },
+    updatePropertyList: (state, action) => {
+      const { id, property } = action.payload; 
+      const index = state.property.findIndex(p => p.id === id); 
+      if(index>=0) {
+        if(property) 
+          state.property[index] = property;
+        else 
+          state.property.splice(index,1);
+      }
+      state.updateSuccess = true;
+      state.error = null;
+      state.isLoading = false
+    },
     setWishlist: (state, action) => {
       state.wishlist = action.payload;
       state.success = true;
@@ -90,6 +103,7 @@ export const {
   startLoading,
   setProperty,
   updateProperty,
+  updatePropertyList,
   setWishlist,
   setWishlistUpdated,
   setPropertyDetails,

@@ -33,7 +33,7 @@ export default function AdminHomeScreen() {
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Properties</LatoText>
             </View>
           </Pressable>
-          <Pressable onPress={()=>{ navigate('Allchats') }}>
+          <Pressable onPress={()=>{ navigate('AllChats') }}>
             <View style={styles.section__view}>
               <Icon.Entypo name='chat' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Conversations</LatoText>

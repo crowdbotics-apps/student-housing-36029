@@ -5,7 +5,7 @@ import ProfileReducer from "./ProfileReducer";
 import PropertyReducer from "./PropertyReducer";
 import UsersReducer from "./UsersReducer";
 import BookingsReducer from "./BookingsReducer";
-import AllChatsreducer from "./AllChatsreducer";
+import AllChatsreducer from "./AllChatsReducer";
 
 export default {
     Auth: AuthReducer,
@@ -15,5 +15,5 @@ export default {
     Chat: ChatReducer,
     Users: UsersReducer,
     Bookings:BookingsReducer,
-    AllChat:AllChatsreducer
+    AllChat: AllChatsreducer
 }

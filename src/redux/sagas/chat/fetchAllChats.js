@@ -2,10 +2,10 @@ import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
-import { setAllChats,startLoading,setError } from "../../reducers/AllChatsreducer";
+import { setAllChats,startLoading,setError } from "../../reducers/AllChatsReducer";
 
 
-export const fetchAllChats = createAction("chat/fetchAllChats");
+export const fetchAllChats = createAction("allChat/fetchAllChats");
 
 function* fetchData({ payload }) {
   yield put(startLoading(true))

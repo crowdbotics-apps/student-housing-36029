@@ -10,7 +10,6 @@ export const allChatSlice = createSlice({
     success: null,
     error: null,
     allchat: {},
-    // rows: ['Property Name', 'Student', 'imgUrl', 'Country, State', 'Bookings']
   },
   reducers: {
     startLoading: (state, action) => {

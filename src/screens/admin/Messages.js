@@ -1,142 +1,237 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native"
+import { useRoute } from "@react-navigation/native";
+import { usePubNub } from "pubnub-react";
+import React, { useEffect, useState } from "react";
+import { KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-elements";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import ChatRightSlider from "../../components/ChatRightSlider";
 import Footer from "../../components/Footer";
 import LatoText from "../../components/LatoText";
 import NavigationHeader from "../../components/NavigationHeader";
-import Colors from "../../constants/Colors";
-import { Avatar, Button } from "react-native-elements";
-import Icon from "../../constants/Icon";
-import { hp, rf } from "../../constants/Constants";
 import Row from "../../components/Row";
+import VideoFile from "../../components/VideoFile";
+import Colors from "../../constants/Colors";
+import { hp, rf, wp } from "../../constants/Constants";
+import Icon from "../../constants/Icon";
 import { goBack } from "../../navigations/NavigationService";
+import { isImage } from "../../utilities/utils";
 
 export default function Messages() {
-    const Chat = [
-        {
-            id: 1,
-            sender: true,
-            reciver: false,
-            message: `Hello. i'am available fro chat`,
-            timestamp: new Date()
-        },
-        {
-            id: 2,
-            sender: false,
-            reciver: true,
-            message: `is property availabe for a long period of time (28 days in October?)`,
-            timestamp: new Date()
-        },
-        {
-            id: 3,
-            sender: true,
-            reciver: false,
-            message: `Yes, Sure`,
-            timestamp: new Date()
-        },
-        {
-            id: 4,
-            sender: true,
-            reciver: false,
-            message: `Call me to get more details.`,
-            timestamp: new Date()
-        },
-        {
-            id: 5,
-            sender: false,
-            reciver: true,
-            message: `Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat`,
-            timestamp: new Date()
-        },
-        {
-            id: 6,
-            sender: true,
-            reciver: false,
-            message: `Yes, Sure`,
-            timestamp: new Date()
-        },
-        {
-            id: 7,
-            sender: true,
-            reciver: false,
-            message: `Call me to get more details.`,
-            timestamp: new Date()
-        },
-        {
-            id: 8,
-            sender: true,
-            reciver: false,
-            message: `Velit esse cillum dolore eu fugiat nulla pariatur. `,
-            timestamp: new Date()
-        },
+    const pubnub = usePubNub();
+    const route = useRoute();
+    const conversation = route.params.conversation;
+    const channelName = conversation.channel; 
+    const [ user1, user2 ] = conversation.participants; 
 
+    console.log('channelName: ', channelName)
 
-    ]
+    const [messageList, setMessageList] = useState([]);
+    const [showSettingSlider, setShowSettingSlider] = useState(false);
+    const [mediaFiles, setMediaFiles] = useState([]);
+
+    useEffect(() => {
+        if(channelName){
+          pubnub.history(
+            {
+              channel: channelName,
+              count: 100,
+            },
+            handleMessageHistory,
+          );
+          pubnub.listFiles({ channel: channelName }, handleFiles);
+
+        }
+    }, [channelName]);
+    
+      const handleMessageHistory = (status, response) => {
+        console.log('handleMessageHistory response: ', response)
+        if (response) {
+          const messagesRetrived = response.messages;
+          const newMsgs = []; 
+          if (messagesRetrived.length) {
+            for (const message of messagesRetrived) {
+              const senderId = message.entry?.file ? message.entry?.message?.id : message.entry?.id; 
+              const fileUrl = message.entry?.file && getFileUrl(message.entry?.file, channelName);
+              let image, video;
+              if(message.entry?.file && isImage(message.entry?.file.name)) 
+                image = fileUrl;
+              else 
+                video = fileUrl;
+              console.log('fileUrl: ', fileUrl); 
+              const newMsg = {
+                _id: Math.random()*100000,
+                text: message.entry?.file ? '' : message.entry?.message,
+                createdAt: new Date(message.timetoken/10000),
+                image,
+                video,
+                user: {
+                  _id: senderId === user1.user.id ? user1.user.id : user2.user.id,
+                  name: senderId === user1.user.id ?  user1.user.name  : user2.user.name,
+                }
+              }
+              newMsgs.push(newMsg);
+            }
+            if(messageList.length===0)
+              setMessageList(GiftedChat.append(messageList, newMsgs, true).reverse())
+            } else {
+              setMessageList([]);
+            }
+        }
+      };
+      const handleFiles = (status, response) => {
+        console.log('listFiles response: ', response)
+        let files = response.data; 
+        if(files.length)
+          files = files.map(file => ({
+            ...file,
+            uri: getFileUrl(file,channelName)
+          }))
+        setMediaFiles(files);
+      }
+    
+      const getFileUrl = ({id, name}, channel) => { 
+        return pubnub.getFileUrl({ channel, id, name });
+       }
+    
     return (
         <View style={styles.container}>
             <NavigationHeader />
             <View style={styles.main__view}>
-                <Button
-                    title=""
-                    type='clear'
-                    onPress={() => goBack()}
-                    icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight: 5 }} />}
-                    titleStyle={{ color: Colors.text, fontSize: rf(2.5), fontFamily: 'Lato-Bold' }}
-                    buttonStyle={{ backgroundColor: "transparent", }}
-                    containerStyle={{ alignSelf: 'flex-start' }}
-                    TouchableComponent={TouchableOpacity}
-                />
-                <View style={styles.chat__box}>
-                    <Row style={styles.chat__header}>
-                        <LatoText style={{ fontFamily: 'Lato-Bold', left: 20 }}>Edward Evins/ John Doe</LatoText>
-                        <Icon.Ionicon name="settings" size={16} color={Colors.primaryColor} style={{ right: 10 }} />
-                    </Row>
-                    <Row style={{justifyContent:'flex-start',margin:'5%'}}>
-                        <Avatar
-                            size="small"
-                            rounded
-                            source={{ uri: `https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80`, }}
-                        />
-                        <View style={{width:Chat[0].message.length * 3,height:Chat[0].message.length * 1.5,backgroundColor:'#F2F2F2',borderRadius:6,padding:'2%',left:10}}>
-                        <LatoText fontSize={12}>{Chat[0].message} </LatoText>
-                        </View>
-                    </Row>
-                </View>
+              <Button
+                title="Messages"
+                type='clear'
+                onPress={() => goBack()}
+                icon={<Icon.Ionicon name='arrow-back' size={16} color={Colors.primaryColor} style={{ marginRight: 5 }} />}
+                titleStyle={{ color: Colors.text, fontSize: rf(2), fontFamily: 'Lato-Bold' }}
+                buttonStyle={{ backgroundColor: "transparent", }}
+                containerStyle={{ alignSelf: 'flex-start', marginVertical: 10 }}
+                TouchableComponent={TouchableOpacity}
+              />
+              {/* Chatbox */}
+              <View style={styles.chatbox}>
+                <ChatHeader user1={user1} user2={user2} onPressSetting={() => setShowSettingSlider(true)} />
+                <GiftedChat
+                  messages={messageList}
+                  showUserAvatar
+                  renderAvatarOnTop
+                  scrollToBottom
+                  inverted={true}
+                  renderBubble={(props) => (
+                    <Bubble
+                      {...props}
+                      wrapperStyle={{
+                        right: {
+                          backgroundColor: '#C3FFDB',
+                          paddingHorizontal: 5,
+                          paddingVertical: 2,
+                          borderRadius: 10,
+                          marginRight: 10,
+                          marginVertical: 2
+                        },
+                        left: {
+                          backgroundColor: '#F2F2F2',
+                          paddingHorizontal: 5,
+                          paddingVertical: 2,
+                          borderRadius: 10,
+                          marginLeft: 0,
+                          marginVertical: 2
+                        }
+                      }}
+                      textStyle={{
+                        left: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', },
+                        right: { color: Colors.text, fontSize: rf(1.7), fontFamily: 'Lato-Regular', }
+                      }}
+                      renderTime={(props) => null} />
+                  )}
+                  renderSend={(props) => null}
+                  renderInputToolbar={() => null}
+                  renderMessageVideo={(props) => (
+                    <VideoFile
+                      data={{
+                        uri: props?.currentMessage?.video,
+                        title: ''
+                      }}
+                      containerStyle={props?.containerStyle} />
+                  )}
+                  // renderChatEmpty={() => <ListEmpty text={'No messages yet'}/>}
+                  user={{
+                    _id: user2?.user?.id,
+                    name: user2?.user?.name,
+                    avatar: user2?.profile_image
+                  }} />
+                
+                {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={120} />}
+
+                <ChatRightSlider
+                  isVisible={showSettingSlider}
+                  closeModal={() => setShowSettingSlider(false)}
+                  media={mediaFiles}
+                  />
+
+              </View>
             </View>
             <Footer />
         </View>
     )
 }
 
+const ChatHeader = ({ user1, user2, onPressSetting }) => {
+  return (
+    <View style={styles.searchbarContainer}>
+      <Row style={styles.searchBar}>
+        <LatoText bold>
+          {`${user1.user.name} / ${user2.user.name}`}
+        </LatoText>
+        <Row style={{ justifyContent: 'flex-end', }}>
+          <Icon.Ionicon name='settings-outline' size={rf(2.4)} color={Colors.primaryColor} onPress={onPressSetting} />
+        </Row>
+      </Row>
+    </View>
+
+  );
+};
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: Colors.background,
-        justifyContent: 'flex-start',
+      flex: 1,
+      backgroundColor: Colors.background,
+      justifyContent: 'flex-start',
     },
     main__view: {
-        marginHorizontal: '5%'
+      marginHorizontal: '5%'
     },
-    chat__box: {
-        height: hp('70%'),
-        marginTop: (hp('3%')),
-        borderRadius: 6,
-        shadowColor: '#F7FAFC',
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
-        elevation: 1,
-    },
-    chat__header: {
-        backgroundColor: "#F7FAFC",
-        height: 40,
-        padding: '2%',
-        borderTopLeftRadius: 6,
-        borderTopRightRadius: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: Colors.primaryColor
-    }
 
-})
+    chatbox: {
+      width: wp('90%'),
+      height: hp('100%') - 230,
+      elevation: 6,
+      backgroundColor: Colors.white
+    },
+    searchbarContainer: {
+      height: 40,
+      width: '100%',
+      borderBottomWidth: 1,
+      borderColor: Colors.primaryColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      backgroundColor: '#F7FAFC'
+    },
+    searchBar: {
+      height: 40,
+      width: '90%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    inputContainer: {
+      height: 50,
+      borderBottomWidth: 0
+    },
+    inputText: {
+      fontFamily: 'Lato-Regular',
+      color: Colors.text,
+      fontSize: rf(1.8)
+    },
+  
+});

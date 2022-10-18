@@ -106,22 +106,3 @@ function* fetchDetails({ payload: id }) {
 export function* fetchPropertyDetailsSaga() {
   yield takeLatest(fetchPropertyDetails, fetchDetails);
 }
-
-export const fetchAllProperty = createAction("property/fetchAllProperty");
-
-function* fetchAllData() {
-  yield put(startLoading(true))
-  try {
-    let res = yield call(ApiService.getAllProperty);
-    console.log('getAllProperty res.data: ', res.data)
-    if(res.data.results)
-        yield put(setProperty(res.data.results));
-  } catch (error) {
-    console.log({ error });
-    yield put(setError(getSimplifiedError(error)))
-  }
-}
-
-export function* fetchAllPropertySaga() {
-  yield takeLatest(fetchAllProperty, fetchAllData);
-}

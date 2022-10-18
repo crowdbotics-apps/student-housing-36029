@@ -13,13 +13,19 @@ function* updateData({ payload: id }) {
   try {
     let formValues = yield select(state => state.Owner.propertyForm)
     let houseRules = yield select(state => state.Owner.houseRules)
+    let isAdmin = yield select(state => state.Auth.isAdmin)
     const payload = createPropertyPayload(formValues, houseRules); 
     console.log('payload: ', payload)
-    let res = yield call(ApiService.updateProperty, id, payload);
+    let res = yield call(isAdmin ? ApiService.updatePropertyAdmin : ApiService.updateProperty, id, payload);
     console.log('updateProperty res.data: ', res.data);
     if(res.data.property) {
       yield put(updatePropertyList({ id: id, property: res.data.property }));
       yield put(setPropertyDetails(res.data.property));
+      RNToast.showShort('Successfully updated');
+    }
+    if(isAdmin && res.data.id) {
+      yield put(updatePropertyList({ id: id, property: res.data }));
+      yield put(setPropertyDetails(res.data));
       RNToast.showShort('Successfully updated');
     }
     if(res.data.error) {

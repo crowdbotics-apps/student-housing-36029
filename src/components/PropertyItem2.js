@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { Button, ListItem, Rating, Icon as RNEIcon } from 'react-native-elements';
 import Video from 'react-native-video';
@@ -21,8 +22,21 @@ export default function PropertyItem2 ({ id, title, media=[],  rating,  descript
   const mediaFiles = media.length ? media.map(file => file.property_media?.split('?')[0]) : []; 
     
   const onDelete = () => { 
-    dispatch(deleteProperty(id));
-   }
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this property?',
+      [
+        {
+          text: 'NO',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => dispatch(deleteProperty(id))},
+      ],
+      {cancelable: false},
+    );
+  }
+
   return (
           <ListItem containerStyle={styles.container}>
              <ImageCarousel images={mediaFiles}/>
@@ -62,13 +76,12 @@ export default function PropertyItem2 ({ id, title, media=[],  rating,  descript
               </ListItem.Subtitle>
              </ListItem.Content>
               
-              <Icon 
+              <Icon.Material
                 name={'delete-outline'} 
-                type='material' 
                 color={Colors.text} 
                 size={16} 
                 onPress={onDelete}
-                containerStyle={{ position: 'absolute', top: 20, right: 14 }}
+                style={{ position: 'absolute', top: 20, right: 14 }}
                 /> 
                   
 

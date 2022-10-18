@@ -28,7 +28,7 @@ import ChatScreen from '../screens/main/ChatScreen';
 import AdminHomeScreen from '../screens/admin/HomeScreen';
 import Users from '../screens/admin/Users';
 import Booking from '../screens/admin/Booking';
-import Allchats from '../screens/admin/Allchats';
+import AllChats from '../screens/admin/AllChats';
 import Messages from '../screens/admin/Messages';
 import Properties from '../screens/admin/Properties';
 
@@ -87,7 +87,7 @@ const Navigation = () => {
           <Stack.Screen name="EditProperty" component={EditPropertyScreen} />
           <Stack.Screen name="PropertyDetails" component={OwnerPropertyDetails} />
           <Stack.Screen name="Bookings" component={Booking} />
-          <Stack.Screen name="Allchats" component={Allchats} />
+          <Stack.Screen name="AllChats" component={AllChats} />
           <Stack.Screen name="Messages" component={Messages} />
         </> 
         : isOwner ?

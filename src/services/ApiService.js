@@ -78,7 +78,7 @@ const ApiService = {
 
   getAllUsers: (params) => get(`/api/v1/get-all-users/?${params}`),
   getAllBookings: () => get(`/api/v1/all-bookings/`),
-  getAllChats:()=>get(`/api/v1/get-all-chat/`),
+  getAllChats:(params)=>get(`/api/v1/get-all-chat/?${params}`),
   getAllProperty: () => get(`/api/v1/all-property-admin/`),
   updatePropertyAdmin: (id, params) => put(`/api/v1/all-property-admin/${id}/`, params), 
   deleteProperty: (id) => del(`/api/v1/all-property-admin/${id}/`),

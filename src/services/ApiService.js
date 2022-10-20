@@ -78,7 +78,13 @@ const ApiService = {
 
   // Admin side APIs
 
-  getAllUsers: params => get(`/api/v1/get-all-users/?${params}`)
+  getAllUsers: params => get(`/api/v1/get-all-users/?${params}`),
+  getAllBookings: () => get(`/api/v1/all-bookings/`),
+  getAllChats: params => get(`/api/v1/get-all-chat/?${params}`),
+  getAllProperty: () => get(`/api/v1/all-property-admin/`),
+  updatePropertyAdmin: (id, params) =>
+    put(`/api/v1/all-property-admin/${id}/`, params),
+  deleteProperty: id => del(`/api/v1/all-property-admin/${id}/`)
 }
 
 export default ApiService

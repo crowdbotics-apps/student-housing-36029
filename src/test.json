@@ -1,0 +1,229 @@
+{
+    "id": 265,
+    "property": {
+        "id": 131,
+        "rating": 4.0,
+        "owner": {
+            "id": 88,
+            "last_login": "2021-11-17T20:35:08",
+            "is_superuser": false,
+            "username": "test98@test.com",
+            "first_name": "Testing",
+            "last_name": "Testing",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-10-09T11:24:06",
+            "country_code": null,
+            "email": "test98@test.com",
+            "phone_number": "+201234567891",
+            "full_name": "Testing",
+            "name": "Testing1234",
+            "is_verified": false,
+            "is_email_verify": false,
+            "is_phone_verify": false,
+            "is_student": false,
+            "is_property_owner": true,
+            "groups": [],
+            "user_permissions": []
+        },
+        "title": "Dream NY apptm",
+        "description": "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type ...",
+        "minimum_renting_duration": 25,
+        "per_night_price": 3220.0,
+        "time_type": "Day",
+        "type": "Entire place",
+        "bath_room": "Private",
+        "status": "Rented",
+        "no_of_rooms": 0,
+        "no_of_beds": 0,
+        "country": "NY, USA",
+        "city": "Campbell, 14821 NY",
+        "street": null,
+        "zip_code": null,
+        "longitude": null,
+        "latitude": null,
+        "available_from": "2021-12-03",
+        "available_to": "2022-03-31",
+        "created_at": "2021-11-26T16:22:53.879472",
+        "updated_at": "2021-12-03T10:37:51.017985",
+        "room_facilities": [
+            {
+                "id": 1,
+                "name": "Kitchen/Kitchenette",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.118880",
+                "updated_at": "2021-09-23T10:18:45.693735"
+            },
+            {
+                "id": 3,
+                "name": "Desk",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.141363",
+                "updated_at": "2021-09-23T10:18:45.709996"
+            },
+            {
+                "id": 6,
+                "name": "Patio",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.160974",
+                "updated_at": "2021-09-23T10:18:45.732447"
+            },
+            {
+                "id": 8,
+                "name": "Electric kettle",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.173874",
+                "updated_at": "2021-09-23T10:18:45.745383"
+            },
+            {
+                "id": 10,
+                "name": "Washing machine",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.186543",
+                "updated_at": "2021-09-23T10:18:45.762424"
+            }
+        ],
+        "room_accessibilities": [
+            {
+                "id": 1,
+                "name": "Entire unit located on ground floor",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.197204",
+                "updated_at": "2021-09-23T10:18:45.773080"
+            },
+            {
+                "id": 4,
+                "name": "Toilet with grab rails",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.217131",
+                "updated_at": "2021-09-23T10:18:45.806809"
+            },
+            {
+                "id": 7,
+                "name": "Walk-in shower",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.241378",
+                "updated_at": "2021-09-23T10:18:45.829622"
+            },
+            {
+                "id": 11,
+                "name": "Shower chair",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.272012",
+                "updated_at": "2021-09-23T10:18:45.855713"
+            }
+        ],
+        "property_amenities": [
+            {
+                "id": 1,
+                "name": "Parking",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.281135",
+                "updated_at": "2021-09-23T10:18:45.862941"
+            },
+            {
+                "id": 2,
+                "name": "Conference room",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.289551",
+                "updated_at": "2021-09-23T10:18:45.870538"
+            },
+            {
+                "id": 3,
+                "name": "Bike racks",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.297845",
+                "updated_at": "2021-09-23T10:18:45.877606"
+            },
+            {
+                "id": 4,
+                "name": "Common area Wi-Fi",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.306708",
+                "updated_at": "2021-09-23T10:18:45.884292"
+            },
+            {
+                "id": 5,
+                "name": "Dining options",
+                "thumbnail_url": "",
+                "created_at": "2021-09-10T05:53:36.316760",
+                "updated_at": "2021-09-23T10:18:45.891361"
+            }
+        ],
+        "housing_rules": [
+            {
+                "id": 139,
+                "name": "No Parties",
+                "created_at": "2021-11-26T16:22:28.580742",
+                "updated_at": "2021-11-26T16:22:28.580754",
+                "user": 88
+            }
+        ],
+        "media": [
+            {
+                "id": 148,
+                "property_media": "https://student-housing-app-23717.s3.amazonaws.com/media/media/f35cae85-8301-41b4-ae67-18a2a5278aa5.jpg?AWSAccessKeyId=AKIA4KGTUZ6KDIESHE5V&Signature=UO9HjrNM6o81v%2BE2TSjwfgw96W8%3D&Expires=1664194626",
+                "uploaded_at": "2021-11-26T16:22:54.167878",
+                "user": 88
+            },
+            {
+                "id": 149,
+                "property_media": "https://student-housing-app-23717.s3.amazonaws.com/media/media/ca4df72d-252a-4a66-b645-9cc521510a24.jpg?AWSAccessKeyId=AKIA4KGTUZ6KDIESHE5V&Signature=hPeuD2rAMyQja%2BVghq%2F4BjnI8sM%3D&Expires=1664194626",
+                "uploaded_at": "2021-11-26T16:22:54.296655",
+                "user": 88
+            },
+            {
+                "id": 150,
+                "property_media": "https://student-housing-app-23717.s3.amazonaws.com/media/media/ff307e2d-bceb-4194-a125-c62fd3c70582.jpg?AWSAccessKeyId=AKIA4KGTUZ6KDIESHE5V&Signature=5Ng8cf79o4wDlUaPAa5ec1Ay8ws%3D&Expires=1664194626",
+                "uploaded_at": "2021-11-26T16:22:54.421607",
+                "user": 88
+            },
+            {
+                "id": 151,
+                "property_media": "https://student-housing-app-23717.s3.amazonaws.com/media/media/612f96e9-f524-499c-a016-5220bade9cf4.mp4?AWSAccessKeyId=AKIA4KGTUZ6KDIESHE5V&Signature=%2Fv8OknmYlBtNpRAkbbyAlBHuJBE%3D&Expires=1664194626",
+                "uploaded_at": "2021-11-26T16:22:55.444107",
+                "user": 88
+            }
+        ]
+    },
+    "user": {
+        "id": 42,
+        "city": "California",
+        "country": "USA",
+        "college": "Stanford University ",
+        "profile_image": "https://student-housing-app-23717.s3.amazonaws.com/media/profile_images/4MLNzl.jpg?AWSAccessKeyId=AKIA4KGTUZ6KDIESHE5V&Signature=WdIjEf1gvIlKjAx%2FKAPU3vDgpD4%3D&Expires=1664194626",
+        "created_at": "2021-09-21T11:30:05.496049",
+        "updated_at": "2022-09-09T18:30:12.746214",
+        "longitude": null,
+        "latitude": null,
+        "user": {
+            "id": 7,
+            "last_login": null,
+            "is_superuser": false,
+            "username": "vimal@crowdbotics.com",
+            "first_name": "Vimal",
+            "last_name": "Vimal",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-08-17T10:15:52",
+            "country_code": null,
+            "email": "muhammad.talha@crowdbotics.com",
+            "phone_number": "+929913074631",
+            "full_name": "Vimal",
+            "name": "Vimal",
+            "is_verified": false,
+            "is_email_verify": false,
+            "is_phone_verify": false,
+            "is_student": true,
+            "is_property_owner": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    "book_from": "2021-12-03",
+    "book_to": "2022-01-05",
+    "total_days": 34,
+    "price_per_night": 3220.0,
+    "total_bill": 109480.0,
+    "is_paid": false
+}

@@ -138,6 +138,8 @@ const Students = () => {
     }
   }
 
+
+
   return (
       <View style={{ backgroundColor: Colors.background, flex: 1 }}>
         {
@@ -186,6 +188,7 @@ const UserItem = ({ selected, data }) => {
   useEffect(() => {
     setIsSelected(selected);
   }, [selected]);
+
 
   return (
     <View style={{ ...styles.card, height: showBookings ? 'auto' : 70 }}>

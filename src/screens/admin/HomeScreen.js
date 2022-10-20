@@ -27,16 +27,16 @@ export default function AdminHomeScreen() {
           />
         </View>
         <View style={{ flexDirection: 'row', top: hp('6%') }}>
-          <Pressable onPress={()=>{alert('Working')}}>
+          <Pressable onPress={()=>{ navigate('Properties') }}>
             <View style={styles.section__view}>
               <Icon.Ionicon name='home' size={20} color={Colors.primaryColor} />
               <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Properties</LatoText>
             </View>
           </Pressable>
-          <Pressable onPress={()=>{alert('Working')}}>
+          <Pressable onPress={()=>{ navigate('AllChats') }}>
             <View style={styles.section__view}>
-              <Icon.FontAwesome name='dollar' size={20} color={Colors.primaryColor} />
-              <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Transaction</LatoText>
+              <Icon.Entypo name='chat' size={20} color={Colors.primaryColor} />
+              <LatoText bold color={Colors.text} fontSize={rf(1.8)}>Conversations</LatoText>
             </View>
           </Pressable>
         </View>
@@ -66,9 +66,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   main__view: {
-    marginHorizontal: '5%',
-    top: hp('2.5%')
+      marginHorizontal: '5%',
+      top: hp('2.5%')
   },
-  section__view: { height: hp('20%'), width: wp('40%'), alignItems: 'center', justifyContent: "center", borderWidth: 1, borderColor: Colors.primaryColor, borderRadius: 6, backgroundColor: '#F7FAFC', margin: '3%' }
+  section__view: {
+    height: hp('20%'),
+    width: wp('40%'),
+    alignItems: 'center',
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.primaryColor,
+    borderRadius: 6,
+    backgroundColor: '#F7FAFC',
+    margin: '3%'
+  }
 });
 

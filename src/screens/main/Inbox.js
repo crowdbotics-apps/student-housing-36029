@@ -1,14 +1,13 @@
 /* eslint-disable arrow-body-style */
 import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Avatar, Badge, Input, ListItem } from 'react-native-elements';
+import { Avatar, Badge, ListItem } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
 import Footer from '../../components/Footer';
 import LatoText from '../../components/LatoText';
 import ListEmpty from '../../components/ListEmpty';
 import NavigationHeader from '../../components/NavigationHeader';
-import Row from '../../components/Row';
 import { TextButton } from '../../components/TextButton';
 import Colors from '../../constants/Colors';
 import { hp, rf, wp } from '../../constants/Constants';
@@ -18,6 +17,7 @@ import { useUser } from '../../redux/reducers/AuthReducer';
 import { setChatDetails, setChats, useChannelList } from '../../redux/reducers/ChatReducer';
 import { getChannelName, useUnreadMessageCounts } from '../../services/PubNubChat';
 import { timeInWords } from '../../utilities/utils';
+import ChatSearchbar from '../../components/ChatSearchbar';
 
 export default function Inbox() {
   
@@ -49,7 +49,7 @@ const Chats = () => {
             channel: getChannelName(channel),
             ...participants.find((p) => p.user.id !== activeUserId),
           };
-        else return null
+        else return null;
       });
       chats = chats.filter((i) => i!==null);
       setAllChats(chats);
@@ -111,40 +111,6 @@ const Chats = () => {
   )
  }
 
-  const SEARCHBAR_WIDTH = wp('90%'); 
-
-  const ChatSearchbar = ({ onChangeText }) => { 
-    const [text, setText] = useState('');
-
-    const updateText = (text) => {
-      setText(text)
-      onChangeText && onChangeText(text);
-    }
-  
-    const _onEndEditting = (event) => {
-      const value = event.nativeEvent.text; 
-      if (!value || value.length === 0) return;
-    }
-  
-    return(
-      <View style={styles.searchbarContainer}>
-        <Row style={styles.searchBar} >
-          <Icon.FontAwesome name='search' size={rf(2.8)} color={Colors.text}/>
-          <Input 
-            containerStyle={{ width: SEARCHBAR_WIDTH-30, height: 50}}
-            inputContainerStyle={styles.inputContainer}
-            inputStyle={[styles.inputText]}
-            onChangeText={updateText}
-            value={text}
-            onEndEditing={_onEndEditting}
-            placeholder={'Search by name'}
-            placeholderTextColor={Colors.text}
-            />
-        </Row>
-      </View>
-
-    )
-  }
  const ChatItem = ({ id, profile_image, user, onPress, unreadCount, timeToken }) => { 
   const isUnread = unreadCount>0; 
   const backgroundColor = isUnread ? '#4797AF' : '#F7FAFC'; 
@@ -181,42 +147,13 @@ const Chats = () => {
 
   )
   }
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.background
   },
-  searchbarContainer: {
-    height: 50,
-    width: SEARCHBAR_WIDTH,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor:  Colors.primaryColor,
-    justifyContent: 'center',
-    alignItems:'center',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-  },
-  searchBar: {
-    height: 50,
-    width: '100%',
-    borderRadius: 24,
-    justifyContent: 'space-between',
-    alignItems:'center',
-    flexDirection: 'row',
-  },
-  inputContainer: {
-    height: 50,
-    borderBottomWidth: 0
-},
-  inputText: {
-      fontFamily: 'Lato-Regular',
-      color: Colors.text,
-      fontSize: rf(1.8)
-  },
-
 })
 const styles2 = StyleSheet.create({
   container: {

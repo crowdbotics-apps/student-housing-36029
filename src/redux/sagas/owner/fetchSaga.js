@@ -22,3 +22,23 @@ function* fetchOwnerPropertyData() {
 export function* fetchOwnerPropertySaga() {
   yield takeLatest(fetchPostedProperty, fetchOwnerPropertyData);
 }
+
+
+export const fetchAllProperty = createAction("admin/fetchAllProperty");
+
+function* fetchAllData() {
+  yield put(startLoading(true))
+  try {
+    let res = yield call(ApiService.getAllProperty);
+    console.log('getAllProperty res.data: ', res.data)
+    if(res.data.results)
+        yield put(setProperty(res.data.results));
+  } catch (error) {
+    console.log({ error });
+    yield put(setError(getSimplifiedError(error)))
+  }
+}
+
+export function* fetchAllPropertySaga() {
+  yield takeLatest(fetchAllProperty, fetchAllData);
+}

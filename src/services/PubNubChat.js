@@ -362,14 +362,14 @@ export function getChannelName(channel) {
   const user1 = channel.participants[0];
   const user2 = channel.participants[1];
   let owner, student;
-  if (user1 && user1.user.is_property_owner && user2.user.is_student) {
+  if (user1 && user1.user?.is_property_owner && user2.user?.is_student) {
     owner = user1; student = user2;
   }
-  else if (user2 && user2.user.is_property_owner && user1.user.is_student) {
+  else if (user2 && user2.user?.is_property_owner && user1.user?.is_student) {
     owner = user2; student = user1;
   }
   if (student && owner) {
-    return `student_housing_${owner.user.id}_${student.user.id}`;
+    return `student_housing_${owner.user?.id}_${student.user?.id}`;
   } 
   else return null;
 }

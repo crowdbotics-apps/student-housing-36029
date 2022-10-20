@@ -32,6 +32,7 @@
     "pubnub-react": "^3.0.1",
     "react": "17.0.1",
     "react-error-boundary": "^3.1.4",
+    "react-i18next": "^11.18.6",
     "react-native": "0.64.0",
     "react-native-collapsible": "^1.6.0",
     "react-native-create-thumbnail": "^1.5.1",

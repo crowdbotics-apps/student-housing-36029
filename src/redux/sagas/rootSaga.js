@@ -8,7 +8,7 @@ import { fetchChannelListSaga } from './chat/fetchSaga';
 import { createNewChatSaga } from './chat/insertSaga';
 import { deleteMediaSaga } from './owner/deleteMediaSaga';
 import { fetchPropertyRatingSaga } from './owner/fetchReviewsSaga';
-import { fetchOwnerPropertySaga } from './owner/fetchSaga';
+import { fetchOwnerPropertySaga, fetchAllPropertySaga } from './owner/fetchSaga';
 import { houseRulesSaga } from './owner/houseRulesSaga';
 import { postPropertySaga } from './owner/postPropertySaga';
 import { updatePropertySaga } from './owner/updateSaga';
@@ -20,9 +20,12 @@ import { insertProfileSaga } from './profile/insertSaga';
 import { paymentMethodSaga } from './profile/paymentMethodSaga';
 import { updateProfileSaga } from './profile/updateSaga';
 import { bookPropertySaga } from './property/bookPropertySaga';
-import { fetchConfigSaga, fetchPropertyDetailsSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
-import { updateWishlistSaga } from './property/updateSaga';
+import { fetchAllProperty, fetchConfigSaga, fetchPropertyDetailsSaga, fetchPropertySaga, fetchWishlistSaga, searchPropertySaga } from './property/fetchSaga';
+import { updateByAdminSaga, updateWishlistSaga } from './property/updateSaga';
 import { fetchUsersSaga } from './users/fetchSaga';
+import {fetchBookingsSaga} from './bookings/fetchSaga';
+import { fetchAllChatsSaga } from './chat/fetchAllChats';
+import { deletePropertySaga } from './property/deleteSaga';
 
 export default function* rootSaga() {
     yield all([
@@ -59,6 +62,11 @@ export default function* rootSaga() {
         fetchBookingSaga(),
         fetchChannelListSaga(),
         createNewChatSaga(),
-        fetchUsersSaga()
+        fetchUsersSaga(),
+        fetchBookingsSaga(),
+        fetchAllChatsSaga(),
+        fetchAllPropertySaga(),
+        deletePropertySaga(),
+        updateByAdminSaga()
     ])
 }

@@ -83,7 +83,8 @@ function* insertCardData({ payload }) {
     }
   } catch (error) {
     console.log({ error });
-    yield put(setError(getSimplifiedError(error)))
+    yield put(setError(getSimplifiedError(error)));
+    alert(getSimplifiedError(error))
   }
 }
 

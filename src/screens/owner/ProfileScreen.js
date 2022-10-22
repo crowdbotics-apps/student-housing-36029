@@ -333,7 +333,7 @@ const Reviews = ({ title, data }) => {
           ))
         }
         {
-        paymentMethods.length === 0 &&
+        !showCardInput && paymentMethods.length === 0 &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}
@@ -357,6 +357,9 @@ const Reviews = ({ title, data }) => {
             cardStyle={{
               backgroundColor: '#FFFFFF',
               textColor: Colors.text,
+              fontFamily: 'Lato-Regular',
+              fontSize: rf(2),
+              placeholderColor: "#aaaaaa"
             }}
             style={{
               width: '100%',
@@ -384,8 +387,6 @@ const Reviews = ({ title, data }) => {
 
         </View>
         }
-
-
       </View>
     }
   </>

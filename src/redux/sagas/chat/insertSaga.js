@@ -11,7 +11,7 @@ function* insertData({ payload: id  }) {
   yield put(startLoading(true))
   try {
     let res = yield call(ApiService.createNewChat, { u_id: id });
-    console.log('res.data: ', res.data)
+    console.log('createNewChat res.data: ', res.data)
     if(res.data?.channel_name)
         yield put(updateChannelList(res.data));
     else if(res.data.error) {

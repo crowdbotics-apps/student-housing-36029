@@ -312,13 +312,16 @@ const Reviews = ({ title, data }) => {
       name: user.full_name,
     });
     console.log('[Token]: ', result);
+    setCardValues({});
     if (result.error) {
       console.log(result.error.message);
     } else if (result.token) {
       setTokenLoading(false);
       dispatch(saveStripeToken({ token: result.token.id }));
     }
-
+    setCardValues({});
+    setTokenLoading(false);
+    setShowCardInput(false);
   }
   return (
     <>
@@ -336,12 +339,12 @@ const Reviews = ({ title, data }) => {
             <Row style={{ width: '100%', height: 40}}>
               <LatoText fontSize={rf(1.6)}>{`Saved Card: `}</LatoText>
               <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• ${card.last4}  `}</LatoText>
-              <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10}} onPress={() => setEditCard(true)}/>
+              <Icon.Community name='pencil-outline' color={Colors.primaryColor} size={20} style={{ marginLeft: 10 }} onPress={() => setEditCard(true)}/>
             </Row>
           ))
         }
         {
-        paymentMethods.length === 0 &&
+        !showCardInput && paymentMethods.length === 0 &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}
@@ -367,7 +370,7 @@ const Reviews = ({ title, data }) => {
               textColor: Colors.text,
               fontFamily: 'Lato-Regular',
               fontSize: rf(2),
-              
+              placeholderColor: "#aaaaaa"
             }}
             style={{
               width: wp('90%'),

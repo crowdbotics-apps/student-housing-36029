@@ -50,7 +50,7 @@ export default function PropertyDetails() {
   const isLoading = useIsLoading()
   const channelListUpdated = useChannelListUpdated()
   const channelListData = useChannelList()
-  const channelStore = channelListData.results
+  const channelStore = channelListData.results;
   const authUser = useUser()
   const pubnub = usePubNub()
 
@@ -80,30 +80,45 @@ export default function PropertyDetails() {
     owner
   } = details
 
+  const channel = channelStore?.find(c => {
+    if (c.participants?.length===2)
+      return c.participants?.findIndex(p => p.user.id === owner?.id) !== -1
+    return false
+  })
+
   useDispatchEffect(fetchPropertyDetails, id, id)
-  useDispatchEffect(createNewChat, owner?.id, owner?.id)
+
+  useEffect(() => {
+      if (channel) {
+        dispatch(
+          setChatDetails({
+            channel: getChannelName(channel),
+            ...channel.participants.find(p => p.user.id !== authUser.id)
+          })
+        )
+        setMetaData(pubnub, getChannelName(channel));
+      }
+  }, [channel]);
 
   useEffect(() => {
     if (channelListUpdated) {
       const channel = channelStore.find(c => {
-        if (c.participants?.length)
+        if (c.participants?.length===2)
           return c.participants?.findIndex(p => p.user.id === owner?.id) !== -1
         return false
       })
       if (channel) {
-        const { participants = [] } = channel
-        if (participants.length)
-          dispatch(
-            setChatDetails({
-              channel: getChannelName(channel),
-              ...participants.find(p => p.user.id !== authUser.id)
-            })
-          )
-        setMetaData(pubnub, getChannelName(channel))
+        dispatch(
+          setChatDetails({
+            channel: getChannelName(channel),
+            ...participants.find(p => p.user.id !== authUser.id)
+          })
+        )
+        setMetaData(pubnub, getChannelName(channel));
       }
       dispatch(setChannelListUpdated(false))
     }
-  }, [channelListUpdated])
+  }, [channelListUpdated]);
 
   const mediaFiles = media.map(file => file.property_media.split("?")[0])
 
@@ -454,7 +469,9 @@ export default function PropertyDetails() {
             title={"Contact Property Owner"}
             type="solid"
             onPress={() => {
-              setShowChatbox(true)
+              setShowChatbox(true);
+              if(!channel)
+                dispatch(createNewChat(owner?.id));
             }}
             titleStyle={{
               color: Colors.white,

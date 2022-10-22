@@ -28,7 +28,6 @@ function* login({ payload }) {
       const token = res.data.token;
       const user = res.data.user;
       yield put(setUser(user));  
-      yield put(setAuthToken(token));
       yield put(setAdmin(user.is_admin || user.email===ADMIN_EMAIL));
       yield call(LocalStorage.storeData, AUTH_TOKEN, token);
       yield call(LocalStorage.storeData, USER_DATA, user);
@@ -37,6 +36,7 @@ function* login({ payload }) {
       yield put(fetchConfig());
       yield put(fetchChannelList());
       RNToast.showShort('Login Successfully');
+      yield put(setAuthToken(token));
     }
     else if(res.data.detail) {
       alert(res.data.detail);

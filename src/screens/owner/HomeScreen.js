@@ -48,7 +48,7 @@ const PropertyList = () => {
   const dispatch = useDispatch();
   const isLoading = useIsLoading();
 
-  useDispatchEffect(fetchPostedProperty);
+  useDispatchEffect(fetchPostedProperty, null, properties.length===0);
 
   const onViewProperty = (id) => { 
     dispatch(setPropertyDetails(properties.find(p => p.id === id)));

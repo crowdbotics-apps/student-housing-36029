@@ -51,9 +51,9 @@ const createPropertyPayload = (values, rules) => ({
   longitude: values.longitude,
   available_from: values.available_from,
   available_to: values.available_to,
-  room_facilities: values.facilities.join(),
-  room_accessibilities: values.accessiblities.join(),
-  property_amenities: values.amenities.join(),
+  room_facilities: values.facilities.length>0 ? values.facilities.join() : "0",
+  room_accessibilities: values.accessiblities.length>0 ? values.accessiblities.join() : "0",
+  property_amenities: values.amenities.length>0 ? values.amenities.join() : "0",
   time_type: values.time_type,
-  housing_rules: rules.map(rule => rule.id).join()
+  housing_rules: rules.length>0 ? rules.map(rule => rule.id).join() : "0"
 })

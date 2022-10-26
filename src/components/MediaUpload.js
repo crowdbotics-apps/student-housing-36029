@@ -24,9 +24,10 @@ export default function MediaUpload({ uploading, data, closeModal, propertyId })
             formData.append(`prop_media`, file, file.name);
         });
         const token = await LocalStorage.getData(AUTH_TOKEN); 
+        console.log('formData: ', formData);
         try {
           let response = await fetch(
-            `https://student-housing-app-23717.botics.co/api/v1/property/${propertyId}/`,
+            `https://www.studenthousingbyowner.com/api/v1/property/${propertyId}/`,
             {
                 method: 'PUT',
                 headers: {
@@ -51,9 +52,7 @@ export default function MediaUpload({ uploading, data, closeModal, propertyId })
           closeModal();
           console.error({error});
           alert(getSimplifiedError(error))
-        } finally {
-          goBack();
-        }
+        } 
       }
     return (
         <UploadingModal uploading={uploading} />

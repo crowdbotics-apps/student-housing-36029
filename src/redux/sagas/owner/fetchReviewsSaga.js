@@ -11,8 +11,8 @@ function* fetchData() {
   try {
     let res = yield call(ApiService.getPropertRating);
     console.log('fetchPropertyRating res.data: ', res.data)
-    if(res.data.property)
-        yield put(setPropertyRating(res.data.property));
+    if(res.data?.results)
+        yield put(setPropertyRating(res.data?.results));
   } catch (error) {
     console.log({ error });
     yield put(setError(getSimplifiedError(error)))

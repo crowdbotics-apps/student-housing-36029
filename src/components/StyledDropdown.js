@@ -2,18 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Colors from '../constants/Colors';
-import { hp, wp } from '../constants/Constants';
-import Icon from '../constants/Icon';
 
 export default function StyledDropdown({ placeholder, items, onValueChange, containerStyle, pickerStyles }) {
-  
+
     return (
         <View style={[styles.container, containerStyle]}>
 
           <RNPickerSelect
-            onValueChange={onValueChange}
+            onValueChange={(value) => { value!=="0" && onValueChange(value) }}
             items={items}
-            placeholder={{ value: 0, label: placeholder, key: 0 }}
+            placeholder={{ value: "0", label: placeholder }}
             style={{ ...pickerSelectStyles, ...pickerStyles }}
             useNativeAndroidPickerStyle={true}
             textInputProps={{ underlineColor: 'white', placeholderTextColor: '#828282' }}

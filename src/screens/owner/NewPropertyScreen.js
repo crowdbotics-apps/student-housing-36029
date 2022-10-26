@@ -102,6 +102,7 @@ const NewPropertyForm = () => {
   }, []);
 
   const onSubmitValue = (key, value, error) => {
+    console.log('key, value: ', key, value)
     if(error)
       dispatch(setFormError({ 
         [key]: `[${key}]: ${error}` 
@@ -141,12 +142,14 @@ const NewPropertyForm = () => {
     if(createSucess) {
       const allMedia = [ ...photos, ...videos ]; 
       if(allMedia.length) {
+        console.log('allMedia: ', allMedia)
         setUploading(true);
       } else {
         goBack();
       }
     }
-    if(updateSucess) goBack();
+    if(updateSucess) 
+      goBack();
   }, [createSucess, updateSucess]);
 
    console.log('formValues: ', formValues);

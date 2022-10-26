@@ -81,7 +81,7 @@ export default function ProfileScreen() {
       try {
         setUploading(true)
         let response = await fetch(
-          `https://student-housing-app-23717.botics.co/api/v1/profile/${user.id}/`,
+          `https://www.studenthousingbyowner.com/api/v1/profile/${user.id}/`,
           {
               method: 'PATCH',
               headers: {

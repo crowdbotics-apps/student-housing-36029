@@ -120,7 +120,6 @@ export const ownerSlice = createSlice({
       state.error = action.payload;
       state.success =false;
       state.isLoading = false;
-      state.property = []
     }
   },
   extraReducers: {}

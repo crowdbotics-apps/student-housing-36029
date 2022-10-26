@@ -76,7 +76,7 @@ export default function OwnerProfileScreen() {
   
   const onPickImage = (imageObj) => {
     setImgFile(imageObj);
-    dispatch(setProfileImage(imageObj.uri))
+    dispatch(setProfileImage(imageObj.uri));
   }
   const uploadImage = async (image) => { 
       const formData = new FormData();
@@ -85,7 +85,7 @@ export default function OwnerProfileScreen() {
       try {
         setUploading(true)
         let response = await fetch(
-          `https://student-housing-app-23717.botics.co/api/v1/profile/${user.id}/`,
+          `https://www.studenthousingbyowner.com/api/v1/profile/${user.id}/`,
           {
               method: 'PATCH',
               headers: {
@@ -102,12 +102,12 @@ export default function OwnerProfileScreen() {
             dispatch(setProfileImage(result.user_profile.profile_image_url))
           }
           else if(result.error){
-            alert(getSimplifiedError(result.error))    
+            alert(getSimplifiedError(result.error));
             dispatch(setProfileImage(''));
           }
       } catch (error) {
         console.error({error});
-        alert(getSimplifiedError(error))
+        alert(getSimplifiedError(error));
         dispatch(setProfileImage(''));
       } finally {
         setUploading(false)

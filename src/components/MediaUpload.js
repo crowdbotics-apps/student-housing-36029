@@ -2,22 +2,24 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AUTH_TOKEN } from '../constants/Constants';
 import { goBack } from '../navigations/NavigationService';
-import { setPropertyDetails, updatePropertyList } from '../redux/reducers/OwnerReducer';
+import { setPropertyDetails, updatePropertyList, usePropertyDetails } from '../redux/reducers/OwnerReducer';
 import { getSimplifiedError } from '../services/ApiErrorhandler';
 import LocalStorage from '../services/LocalStorage';
 import UploadingModal from './UploadingModal';
 
-export default function MediaUpload({ uploading, data, closeModal, propertyId }) {
+export default function MediaUpload({ uploading, data, closeModal }) {
     const dispatch = useDispatch();
-
-    console.log('propertyId: ', propertyId);
-      
+    const createdProperty = usePropertyDetails(); 
+    const propertyId = createdProperty.id; 
+      console.log('image uploading: ', uploading);
     useEffect(() => {
       if(uploading) uploadMedia(data, propertyId);
     }, [uploading]);
 
 
     const uploadMedia = async (data, propertyId) => { 
+      console.log('propertyId: ', propertyId);
+
         const formData = new FormData();
         data.forEach((file, i) => {
           if(file.uri)
@@ -38,16 +40,16 @@ export default function MediaUpload({ uploading, data, closeModal, propertyId })
                 body: formData
             }
           );
-            const result = await response.json();
-            console.log('uploadMedia data: ', result);
-            closeModal();
-            if(result && result.property){
-              dispatch(updatePropertyList({ id: propertyId, property: result.property }));
-              dispatch(setPropertyDetails(result.property));
-            }
-            else if(result.error){
-              alert(getSimplifiedError(result.error))    
-            }
+          const result = await response.json();
+          console.log('uploadMedia data: ', result);
+          closeModal();
+          if(result && result.property){
+            dispatch(updatePropertyList({ id: propertyId, property: result.property }));
+            goBack();
+          }
+          else if(result.error){
+            alert(getSimplifiedError(result.error))    
+          }
         } catch (error) {
           closeModal();
           console.error({error});

@@ -34,7 +34,9 @@ export const ownerSlice = createSlice({
       state.isLoading = false;
     },
     addProperty: (state, action) => {
-      state.property.push(action.payload);
+      const newProperty = action.payload; 
+      state.property = [ newProperty, ...state.property ];
+      state.propertyDetails = newProperty;
       state.createSuccess = true;
       state.error = null;
       state.isLoading = false
@@ -48,6 +50,7 @@ export const ownerSlice = createSlice({
         else 
           state.property.splice(index,1);
       }
+      state.createSuccess = false;
       state.updateSuccess = true;
       state.error = null;
       state.isLoading = false
@@ -115,11 +118,15 @@ export const ownerSlice = createSlice({
       state.updateSuccess = null;
       state.houseRules = [];
       state.media = { photos: [], videos: [] };
+      state.propertyDetails = {}
     },
     setError: (state, action) => {
       state.error = action.payload;
       state.success =false;
       state.isLoading = false;
+    },
+    setCreateSuccess: (state, action) => {
+      state.createSuccess = action.payload;
     }
   },
   extraReducers: {}
@@ -142,6 +149,7 @@ export const {
   setPhotos,
   setVideos,
   setError,
+  setCreateSuccess
 } = ownerSlice.actions;
 
 export const useSuccess =  () => useSelector(state => state.Owner.success)

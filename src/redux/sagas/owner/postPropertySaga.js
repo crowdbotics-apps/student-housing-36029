@@ -3,7 +3,7 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 import RNToast from "../../../components/RNToast";
 import { getSimplifiedError, getStringError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
-import { startLoading, setError, addProperty, setPropertyDetails } from "../../reducers/OwnerReducer";
+import { startLoading, setError, addProperty, setPropertyDetails, setCreateSuccess } from "../../reducers/OwnerReducer";
 
 export const postProperty = createAction("owner/postProperty");
 
@@ -18,7 +18,6 @@ function* insertData() {
     console.log('postProperty res.data: ', res.data);
     if(res.data.property) {
       yield put(addProperty(res.data.property));
-      yield put(setPropertyDetails(res.data.property));
       RNToast.showShort('Successfully posted');
     }
     if(res.data.error) {

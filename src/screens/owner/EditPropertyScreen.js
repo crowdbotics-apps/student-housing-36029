@@ -422,7 +422,6 @@ const EditPropertyForm = () => {
         uploading={uploading}
         closeModal={() => setUploading(false)}
         data={[ ...photos, ...videos ]}
-        propertyId={propertyDetails?.id}
       />
 
     </KeyboardAvoidingView>

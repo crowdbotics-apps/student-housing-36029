@@ -26,7 +26,7 @@ import CommonStyles from '../../constants/CommonStyles';
 import { hp, rf, wp } from '../../constants/Constants';
 import Icon from '../../constants/Icon';
 import { goBack } from '../../navigations/NavigationService';
-import { resetForm, setFormError, setPhotos, setPropertyForm, setVideos, updatePropertyForm, useCreateSuccess, useFormErrors, useHouseRules, useIsLoading, useMedia, usePropertyDetails, usePropertyForm, useSuccess, useUpdateSuccess } from '../../redux/reducers/OwnerReducer';
+import { resetForm, setCreateSuccess, setFormError, setPhotos, setPropertyForm, setVideos, updatePropertyForm, useCreateSuccess, useFormErrors, useHouseRules, useIsLoading, useMedia, usePropertyDetails, usePropertyForm, useSuccess, useUpdateSuccess } from '../../redux/reducers/OwnerReducer';
 import { usePropertyConfig } from '../../redux/reducers/PropertyReducer';
 import { addHouseRule, deleteHouseRule, updateHouseRule } from '../../redux/sagas/owner/houseRulesSaga';
 import { postProperty } from '../../redux/sagas/owner/postPropertySaga';
@@ -62,7 +62,7 @@ const NewPropertyForm = () => {
   const formValues = usePropertyForm();
   const formErrors = useFormErrors();
   const isLoading = useIsLoading();
-  const createSucess = useCreateSuccess();
+  const createSuccess = useCreateSuccess();
   const updateSucess = useUpdateSuccess();
   const createdProperty = usePropertyDetails(); 
   const { photos, videos } = useMedia();
@@ -139,18 +139,16 @@ const NewPropertyForm = () => {
   }
 
   useEffect(() => {
-    if(createSucess) {
+    console.log('createSuccess: ', createSuccess)
+    if(createSuccess) {
       const allMedia = [ ...photos, ...videos ]; 
+      console.log('allMedia: ', allMedia)
       if(allMedia.length) {
-        console.log('allMedia: ', allMedia)
         setUploading(true);
-      } else {
-        goBack();
+        dispatch(setCreateSuccess(false))
       }
     }
-    if(updateSucess) 
-      goBack();
-  }, [createSucess, updateSucess]);
+  }, [createSuccess]);
 
    console.log('formValues: ', formValues);
 
@@ -403,7 +401,6 @@ const NewPropertyForm = () => {
         uploading={uploading}
         closeModal={() => setUploading(false)}
         data={[ ...photos, ...videos ]}
-        propertyId={createdProperty?.id}
       />
     </KeyboardAvoidingView>
   )

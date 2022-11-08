@@ -2001,7 +2001,7 @@ babel-plugin-dynamic-import-node@^2.3.3:
 
 "babel-plugin-import-glob-meta@github:crowdbotics/babel-plugin-import-glob-meta":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/crowdbotics/babel-plugin-import-glob-meta.git#fdffe71d6c97b2c1fc7cdffbaf15dbe1d023dfa5"
+  resolved "https://codeload.github.com/crowdbotics/babel-plugin-import-glob-meta/tar.gz/fdffe71d6c97b2c1fc7cdffbaf15dbe1d023dfa5"
   dependencies:
     glob "^7.1.7"
     identifierfy "^2.0.0"
@@ -4008,7 +4008,7 @@ iconv-lite@^0.6.2:
 
 identifierfy@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/identifierfy/-/identifierfy-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/identifierfy/-/identifierfy-2.0.0.tgz#82922a33791e28b4e4d119dd1bc4a20c9a69c9c0"
   integrity sha512-Gx1CmO0DbL5aECe3kclZNNDsGPIRo9NThTSTAeS3U8Pn58OsadGpU6ByxFriVHT8HQtGO9WErxZOfrXcx3yHOw==
   dependencies:
     esutils "^2.0.2"
@@ -6529,6 +6529,13 @@ react-native-maps@^1.1.0:
   integrity sha512-PmdEVCisYkbvS5qKn/N5jiAP/zoUau0PBOc4CAil3lSMzLLwIqiLUzK1VNKQnbxwOaJalTZFxBoRUyPGgVAvmQ==
   dependencies:
     "@types/geojson" "^7946.0.8"
+
+react-native-modal-datetime-picker@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-14.0.0.tgz#ca2c81a275ee3a23d9ad02113e76ed243c90781e"
+  integrity sha512-orI0BMgX9uooSZWYIILmMaZXqi8Ebr0vqsLUFL03zORpv9NvkBlLMQ8dZVdDxWUc1Lbx/N5DJskC16AOypPy8Q==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-native-modal@^13.0.1:
   version "13.0.1"

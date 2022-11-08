@@ -12,6 +12,18 @@ PODS:
     - React-jsi (= 0.64.0)
     - ReactCommon/turbomodule/core (= 0.64.0)
   - glog (0.3.5)
+  - Permission-Camera (3.6.0):
+    - RNPermissions
+  - Permission-LocationAccuracy (3.6.0):
+    - RNPermissions
+  - Permission-LocationAlways (3.6.0):
+    - RNPermissions
+  - Permission-LocationWhenInUse (3.6.0):
+    - RNPermissions
+  - Permission-MediaLibrary (3.6.0):
+    - RNPermissions
+  - Permission-PhotoLibrary (3.6.0):
+    - RNPermissions
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -337,6 +349,12 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
+  - Permission-LocationAccuracy (from `../node_modules/react-native-permissions/ios/LocationAccuracy`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -403,6 +421,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera"
+  Permission-LocationAccuracy:
+    :path: "../node_modules/react-native-permissions/ios/LocationAccuracy"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -495,8 +525,14 @@ SPEC CHECKSUMS:
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: 44ad2bb588c7043d6ccb2178ef5bc6c66b477b89
+  FBReactNativeSpec: fdfb66755fa35a6f6d87ffe036f1f3eec995008d
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  Permission-Camera: 0a0fb4341f50ab242f496fb2f73380e0ec454fe7
+  Permission-LocationAccuracy: 13cbce13607e0738f1339447b4c5f51aa2c2b597
+  Permission-LocationAlways: 6b9874937f2092664dd71fbc53a10f7f0adfff51
+  Permission-LocationWhenInUse: 51aa065819cd582517e98e89b564e2465a4a83c6
+  Permission-MediaLibrary: ed0054dbd841f3ed5a2debb4eda9ebe069b43cc1
+  Permission-PhotoLibrary: fda0fda455bebaa2602f3dfdf8296b28247c1484
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 2f8cb5b7533219bf4218a045f92768129cf7050a
   RCTTypeSafety: 512728b73549e72ad7330b92f3d42936f2a4de5b
@@ -546,6 +582,6 @@ SPEC CHECKSUMS:
   StripeUICore: eed17e95a4517fc02482e250a6422c2a81a14ce8
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: f9a0b0b88e7e566fe1195bc9ecdcb17f5bc97701
+PODFILE CHECKSUM: 41f2b2b59212c297572e8f409387cbb05fe792c1
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AUTH_TOKEN } from '../constants/Constants';
-import { goBack } from '../navigations/NavigationService';
 import { setPropertyDetails, updatePropertyList } from '../redux/reducers/OwnerReducer';
 import { getSimplifiedError } from '../services/ApiErrorhandler';
 import LocalStorage from '../services/LocalStorage';

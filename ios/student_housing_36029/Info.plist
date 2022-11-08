@@ -24,10 +24,18 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+  
 	<key>NSCameraUsageDescription</key>
 	<string>Student housing requires your camera permission to upload your picture to profile and property</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Student housing requires your location permission to show your location on the map</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Student housing requires your location permission to show your location on the map</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>Student housing requires your location permission to show your location on the map</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Student Housing needs access to your gallery to update profile picture</string>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,8 +49,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Student Housing needs access to your gallery to update profile picture</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Black.ttf</string>

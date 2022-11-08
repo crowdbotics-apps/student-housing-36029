@@ -6,6 +6,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from "react-native"
 import { Button, Header } from "react-native-elements"
@@ -18,7 +19,7 @@ import Colors from "../constants/Colors"
 import { rf, wp } from "../constants/Constants"
 import { CITIES } from "../constants/Data"
 import Icon from "../constants/Icon"
-import { navigate } from "../navigations/NavigationService"
+import { navigate, reset } from "../navigations/NavigationService"
 import { useAuhToken, useIsAdmin } from "../redux/reducers/AuthReducer"
 import { setFilters } from "../redux/reducers/PropertyReducer"
 import { signOutAction } from "../redux/sagas/auth/AuthSagas"
@@ -35,7 +36,7 @@ export default function NavigationHeader({
   const insets = useSafeAreaInsets()
   const authToken = useAuhToken()
 
-  let leftComponent = <Logo />
+  let leftComponent = <TouchableWithoutFeedback onPress={() => reset('Main')}><Logo /></TouchableWithoutFeedback>
 
   let _rightComponent
   if (rightComponent) _rightComponent = rightComponent

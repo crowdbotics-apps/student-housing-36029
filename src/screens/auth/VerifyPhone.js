@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Button, CheckBox, Image } from 'react-native-elements';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, Image } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 import images from '../../assets/images';
 import LatoText from '../../components/LatoText';
-import PasswordInput from '../../components/PasswordInput';
+import NavigationHeader from '../../components/NavigationHeader';
 import PrimaryButton from '../../components/PrimaryButton';
+import Row from '../../components/Row';
 import StyledInput from '../../components/StyledInput';
 import Colors from '../../constants/Colors';
 import CommonStyles from '../../constants/CommonStyles';
 import { hp, rf, wp } from '../../constants/Constants';
-import { goBack, navigate } from '../../navigations/NavigationService';
 import Icon from '../../constants/Icon';
-import { forgetPassAction } from '../../redux/sagas/auth/forgetPassSaga';
-import { setAuthToken, setCounter, useCounter, useError, useIsLoading, useSuccess, useUser } from '../../redux/reducers/AuthReducer';
-import NavigationHeader from '../../components/NavigationHeader';
+import { goBack } from '../../navigations/NavigationService';
+import { setCounter, useCounter, useError, useIsLoading, useUser } from '../../redux/reducers/AuthReducer';
 import { resendOtpAction, verifyOtpAction } from '../../redux/sagas/auth/AuthSagas';
-import Row from '../../components/Row';
 
 
 
@@ -100,7 +97,7 @@ function VerifyPhone() {
 
           <Row>
             <LatoText fontSize={rf(1.4)}>Dont receive the OTP ? {!!counter && `  Wait for ${counter}s to `}</LatoText>
-             <Button
+              <Button
                 title='RESEND OTP'
                 type='clear'
                 onPress={() => resendOtp(counter, isLoading)}

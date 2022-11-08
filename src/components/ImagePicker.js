@@ -142,7 +142,9 @@ export default function ImagePicker({
           <ListItem style={{ width: WIDTH - 60, height: 40 }}
             onPress={() => {
               closePicker();
-              openCamera();
+              setTimeout(() => {
+                openCamera();
+              }, 500);
             }}
             Component={TouchableOpacity}
             >
@@ -154,7 +156,9 @@ export default function ImagePicker({
           <ListItem style={{ width: WIDTH - 60, height: 40 }}
             onPress={() => {
               closePicker();
-              openGallery();
+              setTimeout(() => {
+                openGallery();
+              }, 600);
             }}
             Component={TouchableOpacity}
             >

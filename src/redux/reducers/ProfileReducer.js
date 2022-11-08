@@ -12,7 +12,7 @@ export const profileSlice = createSlice({
     success: null,
     reviews: [],
     reviewsResponse: {},
-    paymentMethods: [],
+    paymentMethod: null,
     bookingHistory: [],
     profilePreview: {}
   },
@@ -44,7 +44,7 @@ export const profileSlice = createSlice({
       state.isLoading = false
     },
     setPaymentMethod: (state, action) => {
-      state.paymentMethods = action.payload;
+      state.paymentMethod = action.payload;
       state.error = null;
       state.isLoading = false
     },
@@ -89,7 +89,7 @@ export const useSuccess =  () => useSelector(state => state.Profile.success)
 export const useProfile =  () => useSelector(state => state.Profile.profile)
 export const useReviews =  () => useSelector(state => state.Profile.reviews)
 export const useReviewResponse =  () => useSelector(state => state.Profile.reviewsResponse)
-export const usePaymentMethod =  () => useSelector(state => state.Profile.paymentMethods)
+export const usePaymentMethod =  () => useSelector(state => state.Profile.paymentMethod)
 export const useBookingHistory =  () => useSelector(state => state.Profile.bookingHistory)
 export const useProfilePreview =  () => useSelector(state => state.Profile.profilePreview)
 export const useIsLoading =  () => useSelector(state => state.Profile.isLoading)

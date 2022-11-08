@@ -73,16 +73,16 @@ function* deleteData({ payload: id }) {
 export const saveStripeToken = createAction("profile/saveStripeToken");
 
 function* insertCardData({ payload }) {
+  console.log('payload: ', payload)
   yield put(startLoading(true))
   try {
     let res = yield call(ApiService.saveStripeToken, payload);
     console.log('saveStripeToken res.data: ', res.data)
-    if(res.data) {
-      yield put(setPaymentMethod(res.data));
+    if(res.data.data?.id) {
       RNToast.showShort('Successfully added');
     }
   } catch (error) {
-    console.log({ error });
+    console.log('errorResponse: ', error.response.data);
     yield put(setError(getSimplifiedError(error)));
     alert(getSimplifiedError(error))
   }

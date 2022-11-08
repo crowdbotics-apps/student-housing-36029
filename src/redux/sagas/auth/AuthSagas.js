@@ -6,7 +6,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { logoutUser, setAdmin, setAuthToken, setCounter, setError, setSuccess, setUser, startLogin } from "../../reducers/AuthReducer";
 import RNToast from "../../../components/RNToast";
 import { getSimplifiedError } from "../../../services/ApiErrorhandler";
-import { navigate } from "../../../navigations/NavigationService";
+import { navigate, reset } from "../../../navigations/NavigationService";
 import { fetchProfile } from "../profile/fetchSaga";
 import { fetchConfig } from "../property/fetchSaga";
 import { fetchChannelList } from "../chat/fetchSaga";
@@ -67,7 +67,7 @@ function* signup ({ payload }) {
       LocalStorage.storeData(USER_DATA, user);
       yield put(setUser(user));  
       RNToast.showShort('Signup Successfully');
-      navigate('VerifyPhone')
+      reset('VerifyPhone')
     }
     else if(res.data.detail) {
       alert(res.data.detail);

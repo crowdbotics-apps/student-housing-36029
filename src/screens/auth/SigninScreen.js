@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
-
 import LatoText from '../../components/LatoText';
 import PasswordInput from '../../components/PasswordInput';
 import PrimaryButton from '../../components/PrimaryButton';
@@ -11,7 +10,6 @@ import Colors from '../../constants/Colors';
 import CommonStyles from '../../constants/CommonStyles';
 import { hp, rf, wp } from '../../constants/Constants';
 import { goBack, navigate, reset } from '../../navigations/NavigationService';
-import SocialButton from '../../components/SocialButton';
 import Icon from '../../constants/Icon';
 import {
   setAuthToken,
@@ -51,10 +49,10 @@ function SigninScreen() {
 
     
 
-  // // useEffect(() => {
-  // //   if (authToken) 
-  // //     reset("Main");
-  // // }, [authToken]);
+  // useEffect(() => {
+  //   if (authToken) 
+  //     reset("Main");
+  // }, [authToken]);
 
   // const onSignup = () => {
   //   dispatch(setSuccess(false));

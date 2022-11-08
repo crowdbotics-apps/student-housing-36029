@@ -113,7 +113,6 @@ export default function ProfileScreen() {
     useDispatchEffect(fetchReviews, null, true);
     useDispatchEffect(fetchPaymentMethod, null, true);
     useDispatchEffect(fetchBookingHistory, null, true);
-    useDispatchEffect(fetchPaymentMethod, null, true);
 
     const scrollRef = useRef(); 
 
@@ -335,7 +334,7 @@ const Reviews = ({ title, data }) => {
     !collapsed &&
       <View style={styles.content}>
         {
-          paymentMethods.map(({card},i) => (
+          paymentMethods?.map(({card},i) => (
             <Row style={{ width: '100%', height: 40}}>
               <LatoText fontSize={rf(1.6)}>{`Saved Card: `}</LatoText>
               <LatoText fontSize={rf(1.6)}> <Icon.FontAwesome name='cc-visa' size={rf(2)}/> {` •••• •••• •••• ${card.last4}  `}</LatoText>
@@ -344,7 +343,7 @@ const Reviews = ({ title, data }) => {
           ))
         }
         {
-        !showCardInput && paymentMethods.length === 0 &&
+        !showCardInput &&
         <Row style={{ width: '100%', height: 40, marginVertical: 12, }}>
           <Button
             title={'Add Payment Method'}

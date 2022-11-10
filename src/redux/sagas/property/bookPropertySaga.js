@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
+import RNToast from "../../../components/RNToast";
 import { getSimplifiedError, getStringError } from "../../../services/ApiErrorhandler";
 import ApiService from "../../../services/ApiService";
 import { startLoading, updateProperty, setError } from "../../reducers/PropertyReducer";
@@ -16,7 +17,8 @@ function* updateData({ payload }) {
         alert(getStringError(res.data.error));
         yield put(setError(res.data.error));
     }
-    else {
+    else if (res.data.message === 'Property booked successfully'){
+      RNToast.showShort('Successfully booked!')
     }    
   } catch (error) {
     console.log({ error });

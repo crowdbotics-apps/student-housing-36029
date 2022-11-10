@@ -12,6 +12,30 @@ PODS:
     - React-jsi (= 0.64.0)
     - ReactCommon/turbomodule/core (= 0.64.0)
   - glog (0.3.5)
+  - Google-Maps-iOS-Utils (4.1.0):
+    - Google-Maps-iOS-Utils/Clustering (= 4.1.0)
+    - Google-Maps-iOS-Utils/Geometry (= 4.1.0)
+    - Google-Maps-iOS-Utils/GeometryUtils (= 4.1.0)
+    - Google-Maps-iOS-Utils/Heatmap (= 4.1.0)
+    - Google-Maps-iOS-Utils/QuadTree (= 4.1.0)
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Clustering (4.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Geometry (4.1.0):
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/GeometryUtils (4.1.0):
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/Heatmap (4.1.0):
+    - Google-Maps-iOS-Utils/QuadTree
+    - GoogleMaps
+  - Google-Maps-iOS-Utils/QuadTree (4.1.0):
+    - GoogleMaps
+  - GoogleMaps (7.0.0):
+    - GoogleMaps/Maps (= 7.0.0)
+  - GoogleMaps/Base (7.0.0)
+  - GoogleMaps/Maps (7.0.0):
+    - GoogleMaps/Base
   - Permission-Camera (3.6.0):
     - RNPermissions
   - Permission-LocationAccuracy (3.6.0):
@@ -223,6 +247,10 @@ PODS:
     - React
   - react-native-geolocation-service (5.3.0):
     - React
+  - react-native-google-maps (1.1.0):
+    - Google-Maps-iOS-Utils (= 4.1.0)
+    - GoogleMaps (= 7.0.0)
+    - React-Core
   - react-native-image-picker (4.8.4):
     - React-Core
   - react-native-maps (1.1.0):
@@ -371,6 +399,7 @@ DEPENDENCIES:
   - react-native-create-thumbnail (from `../node_modules/react-native-create-thumbnail`)
   - "react-native-geocoder (from `../node_modules/@timwangdev/react-native-geocoder`)"
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -404,6 +433,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - Google-Maps-iOS-Utils
+    - GoogleMaps
     - Stripe
     - StripeApplePay
     - StripeCore
@@ -461,6 +492,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@timwangdev/react-native-geocoder"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
+  react-native-google-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
@@ -527,6 +560,8 @@ SPEC CHECKSUMS:
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
   FBReactNativeSpec: fdfb66755fa35a6f6d87ffe036f1f3eec995008d
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
+  GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
   Permission-Camera: 0a0fb4341f50ab242f496fb2f73380e0ec454fe7
   Permission-LocationAccuracy: 13cbce13607e0738f1339447b4c5f51aa2c2b597
   Permission-LocationAlways: 6b9874937f2092664dd71fbc53a10f7f0adfff51
@@ -547,6 +582,7 @@ SPEC CHECKSUMS:
   react-native-create-thumbnail: dedcb7cd3d14a4b6cc2026563197242081edb52b
   react-native-geocoder: 225895386f04bf37515eaa09c419dea9b923f40b
   react-native-geolocation-service: f32ef48fa665bd710207a3ac39bc127cac9cb993
+  react-native-google-maps: ddb50b6803641170d52c22d24629c51086bbd27e
   react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
   react-native-maps: de23d141fa0289d1896739d0ddc8c5d11d9ca800
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
@@ -582,6 +618,6 @@ SPEC CHECKSUMS:
   StripeUICore: eed17e95a4517fc02482e250a6422c2a81a14ce8
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: 41f2b2b59212c297572e8f409387cbb05fe792c1
+PODFILE CHECKSUM: a3029d132f2947957fff37fbc56b1ffc58da784c
 
 COCOAPODS: 1.11.3
